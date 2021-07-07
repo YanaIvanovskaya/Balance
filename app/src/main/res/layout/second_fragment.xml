@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/enter_the_passcode" />
+
+    <EditText
+        android:id="@+id/editTextNumberPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="#E8D3D3"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="numberPassword"
+        android:maxLength="5"
+        android:text="@string/_12345"
+        android:textSize="34sp"
+        android:autofillHints="21212" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_1"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_2"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_3"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_4"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+            <Button
+                android:id="@+id/button5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_5"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+            <Button
+                android:id="@+id/button6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_6"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_7"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_8"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_9"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="0"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+            <Button
+                android:id="@+id/button0"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:text="@string/_0"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF" />
+
+            <Button
+                android:id="@+id/button_clear_passcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#EDCCCC"
+                android:textColor="#504444"
+                android:textSize="24sp"
+                app:backgroundTint="#EADFDF"
+                app:icon="@android:drawable/ic_input_delete"
+                app:iconSize="35dp"
+                app:iconTint="#1A181B" />
+
+        </TableRow>
+
+    </TableLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/button_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/previous"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -4,4 +4,19 @@
     <string name="hide_this">hide this</string>
     <string name="continue_str">Продолжить</string>
     <string name="hello">Привет\n Я Балансе \nЯ помогу тебе быть спокойнее за свои деньги</string>
+    <string name="enter_the_password">Придумай пароль для входа, чтобы твои данные были в безопасности</string>
+    <string name="enter_the_passcode">Придумай пароль для входа, чтобы твои данные были в безопасности</string>
+    <string name="_12345">12345</string>
+    <string name="_2">2</string>
+    <string name="_1">1</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
+    <string name="_5">5</string>
+    <string name="_6">6</string>
+    <string name="_7">7</string>
+    <string name="_8">8</string>
+    <string name="_9">9</string>
+    <string name="_0">0</string>
+    <string name="next">Вперед</string>
+    <string name="previous">Назад</string>
 </resources>
