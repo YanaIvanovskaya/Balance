@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Balance</string>
+    <string name="fragment1">Fragment1</string>
+    <string name="hide_this">hide this</string>
+    <string name="continue_str">Продолжить</string>
+    <string name="hello">Привет\n Я Балансе \nЯ помогу тебе быть спокойнее за свои деньги</string>
 </resources>
