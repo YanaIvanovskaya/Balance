@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Balance</string>
     <string name="continue_btn">Продолжить</string>
-    <string name="greeting_new_user">Привет\n Я Balance \nЯ помогу тебе быть спокойнее за свои деньги</string>
+    <string name="greeting_new_user">Привет Я Balance Я помогу тебе быть спокойнее за свои деньги</string>
     <string name="enter_the_passcode">Придумай пароль для входа, чтобы твои данные были в безопасности</string>
     <string name="_12345">12345</string>
     <string name="_2">2</string>
@@ -17,8 +17,8 @@
     <string name="next_btn">Вперед</string>
     <string name="previous_btn">Назад</string>
     <string name="greeting_new_user_image">TODO</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="title_creation_balance">Время посчитать свои денежки</string>
     <string name="balance_cash">Наличными</string>
     <string name="balance_cards">На картах</string>
+    <string name="greeting">Доброе утро!</string>
 </resources>

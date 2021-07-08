@@ -14,6 +14,6 @@
         android:title="3" />
     <item
         android:id="@+id/action_settings"
-        android:icon="@android:drawable/edit_text"
+        android:icon="@android:drawable/ic_menu_view"
         android:title="4" />
 </menu>

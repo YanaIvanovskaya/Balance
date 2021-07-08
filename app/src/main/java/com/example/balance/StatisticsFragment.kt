@@ -1,4 +1,5 @@
 package com.example.balance
 
-class StatisticsFragment {
-}
+import androidx.fragment.app.Fragment
+
+class StatisticsFragment: Fragment(R.layout.statistics_fragment)

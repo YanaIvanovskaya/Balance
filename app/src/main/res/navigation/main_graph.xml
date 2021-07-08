@@ -22,7 +22,7 @@
         android:label="PasscodeEntryFragment" >
         <action
             android:id="@+id/action_passcodeEntryFragment_to_navigationFragment"
-            app:destination="@id/navigationFragment" />
+            app:destination="@id/navigation" />
     </fragment>
     <fragment
         android:id="@+id/greetingNewUserFragment"
@@ -48,14 +48,29 @@
         android:name="com.example.balance.CreatingBalanceFragment"
         android:label="CreatingBalanceFragment" >
         <action
-            android:id="@+id/action_creatingBalanceFragment2_to_passcodeCreationFragment"
-            app:destination="@id/passcodeCreationFragment" />
-        <action
             android:id="@+id/action_creatingBalanceFragment_to_navigationFragment"
-            app:destination="@id/navigationFragment" />
+            app:destination="@id/navigation" />
     </fragment>
-    <fragment
-        android:id="@+id/navigationFragment"
-        android:name="com.example.balance.NavigationFragment"
-        android:label="NavigationFragment" />
+    <navigation android:id="@+id/navigation"
+        app:startDestination="@id/homeFragment">
+        <fragment
+            android:id="@+id/navigationFragment"
+            android:name="com.example.balance.NavigationFragment"
+            android:label="NavigationFragment" >
+            <action
+                android:id="@+id/action_navigationFragment_to_homeFragment"
+                app:destination="@id/homeFragment" />
+            <action
+                android:id="@+id/action_navigationFragment_to_historyFragment"
+                app:destination="@id/historyFragment" />
+        </fragment>
+        <fragment
+            android:id="@+id/homeFragment"
+            android:name="com.example.balance.HomeFragment"
+            android:label="HomeFragment" />
+        <fragment
+            android:id="@+id/historyFragment"
+            android:name="com.example.balance.HistoryFragment"
+            android:label="HistoryFragment" />
+    </navigation>
 </navigation>

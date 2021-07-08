@@ -25,6 +25,7 @@ class PasscodeCreationFragment : Fragment(R.layout.passcode_creation_fragment) {
         binding.buttonPrevious.setOnClickListener {
             navController.navigate(R.id.greetingNewUserFragment)
         }
+
         binding.buttonNext.setOnClickListener {
             navController.navigate(R.id.creatingBalanceFragment)
         }
@@ -36,5 +37,4 @@ class PasscodeCreationFragment : Fragment(R.layout.passcode_creation_fragment) {
         mBinding = null
         super.onDestroyView()
     }
-
 }
