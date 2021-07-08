@@ -12,7 +12,7 @@
         android:layout_width="362dp"
         android:layout_height="63dp"
         android:layout_margin="20dp"
-        android:text="@string/continue_str"
+        android:text="@string/continue_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -28,7 +28,7 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="144dp"
         android:gravity="center"
-        android:text="@string/hello"
+        android:text="@string/greeting_new_user"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/button_start_next"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,5 +44,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="@string/start_image" />
+        android:contentDescription="@string/greeting_new_user_image" />
 </androidx.constraintlayout.widget.ConstraintLayout>

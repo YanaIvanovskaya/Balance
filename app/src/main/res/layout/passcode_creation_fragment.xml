@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="20dp"
@@ -25,7 +24,8 @@
         android:maxLength="5"
         android:text="@string/_12345"
         android:textSize="34sp"
-        android:autofillHints="21212" />
+        android:autofillHints="21212"
+        android:hint="@string/_12345" />
 
     <TableLayout
         android:layout_width="match_parent"
@@ -56,7 +56,8 @@
                 android:text="@string/_2"
                 android:textColor="#504444"
                 android:textSize="24sp"
-                app:backgroundTint="#EADFDF" />
+                app:backgroundTint="#EADFDF"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/button3"
@@ -85,7 +86,8 @@
                 android:text="@string/_4"
                 android:textColor="#504444"
                 android:textSize="24sp"
-                app:backgroundTint="#EADFDF" />
+                app:backgroundTint="#EADFDF"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/button5"
@@ -125,7 +127,8 @@
                 android:text="@string/_7"
                 android:textColor="#504444"
                 android:textSize="24sp"
-                app:backgroundTint="#EADFDF" />
+                app:backgroundTint="#EADFDF"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/button8"
@@ -136,7 +139,8 @@
                 android:text="@string/_8"
                 android:textColor="#504444"
                 android:textSize="24sp"
-                app:backgroundTint="#EADFDF" />
+                app:backgroundTint="#EADFDF"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/button9"
@@ -147,7 +151,8 @@
                 android:text="@string/_9"
                 android:textColor="#504444"
                 android:textSize="24sp"
-                app:backgroundTint="#EADFDF" />
+                app:backgroundTint="#EADFDF"
+                style="?android:attr/buttonBarButtonStyle" />
 
         </TableRow>
 
@@ -162,10 +167,11 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:background="#EDCCCC"
-                android:text="0"
                 android:textColor="#504444"
                 android:textSize="24sp"
-                app:backgroundTint="#EADFDF" />
+                android:visibility="invisible"
+                app:backgroundTint="#EADFDF"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/button0"
@@ -176,7 +182,8 @@
                 android:text="@string/_0"
                 android:textColor="#504444"
                 android:textSize="24sp"
-                app:backgroundTint="#EADFDF" />
+                app:backgroundTint="#EADFDF"
+                style="?android:attr/buttonBarButtonStyle" />
 
             <Button
                 android:id="@+id/button_clear_passcode"
@@ -189,7 +196,8 @@
                 app:backgroundTint="#EADFDF"
                 app:icon="@android:drawable/ic_input_delete"
                 app:iconSize="35dp"
-                app:iconTint="#1A181B" />
+                app:iconTint="#1A181B"
+                style="?android:attr/buttonBarButtonStyle" />
 
         </TableRow>
 
@@ -203,7 +211,7 @@
             android:id="@+id/button_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/previous"
+            android:text="@string/previous_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -212,7 +220,7 @@
             android:id="@+id/button_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/next"
+            android:text="@string/next_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

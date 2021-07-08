@@ -1,23 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/firstFragment">
+    app:startDestination="@id/startingAppFragment">
 
     <fragment
-        android:id="@+id/firstFragment"
-        android:name="com.example.balance.FirstFragment"
-        android:label="FirstFragment" >
+        android:id="@+id/startingAppFragment"
+        android:name="com.example.balance.StartingAppFragment"
+        android:label="StartingAppFragment" >
         <action
-            android:id="@+id/action_firstFragment_to_secondFragment"
-            app:destination="@id/secondFragment" />
+            android:id="@+id/action_startingAppFragment_to_passcodeEntryFragment"
+            app:destination="@id/passcodeEntryFragment" />
+        <action
+            android:id="@+id/action_startingAppFragment_to_greetingNewUserFragment"
+            app:destination="@id/greetingNewUserFragment" />
     </fragment>
     <fragment
-        android:id="@+id/secondFragment"
-        android:name="com.example.balance.SecondFragment"
-        android:label="SecondFragment" >
+        android:id="@+id/passcodeEntryFragment"
+        android:name="com.example.balance.PasscodeEntryFragment"
+        android:label="PasscodeEntryFragment" >
         <action
-            android:id="@+id/action_secondFragment_to_firstFragment"
-            app:destination="@id/firstFragment" />
+            android:id="@+id/action_passcodeEntryFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/greetingNewUserFragment"
+        android:name="com.example.balance.GreetingNewUserFragment"
+        android:label="GreetingNewUserFragment" >
+        <action
+            android:id="@+id/action_greetingNewUserFragment_to_passcodeCreationFragment"
+            app:destination="@id/passcodeCreationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passcodeCreationFragment"
+        android:name="com.example.balance.PasscodeCreationFragment"
+        android:label="PasscodeCreationFragment" >
+        <action
+            android:id="@+id/action_passcodeCreationFragment_to_creatingBalanceFragment2"
+            app:destination="@id/creatingBalanceFragment" />
+        <action
+            android:id="@+id/action_passcodeCreationFragment_to_greetingNewUserFragment"
+            app:destination="@id/greetingNewUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/creatingBalanceFragment"
+        android:name="com.example.balance.CreatingBalanceFragment"
+        android:label="CreatingBalanceFragment" >
+        <action
+            android:id="@+id/action_creatingBalanceFragment2_to_passcodeCreationFragment"
+            app:destination="@id/passcodeCreationFragment" />
+        <action
+            android:id="@+id/action_creatingBalanceFragment_to_navigationFragment"
+            app:destination="@id/navigationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigationFragment"
+        android:name="com.example.balance.NavigationFragment"
+        android:label="NavigationFragment" />
 </navigation>
