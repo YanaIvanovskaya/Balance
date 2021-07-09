@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.example.balance.databinding.CreatingBalanceFragmentBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class CreatingBalanceFragment  : Fragment(R.layout.creating_balance_fragment) {
@@ -24,7 +25,7 @@ class CreatingBalanceFragment  : Fragment(R.layout.creating_balance_fragment) {
         val navController = NavHostFragment.findNavController(this)
 
         binding.buttonStartUse.setOnClickListener {
-            navController.navigate(R.id.navigationFragment)
+            navController.navigate(R.id.homeFragment)
         }
         return binding.root
     }

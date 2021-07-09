@@ -29,7 +29,6 @@ class PasscodeCreationFragment : Fragment(R.layout.passcode_creation_fragment) {
         binding.buttonNext.setOnClickListener {
             navController.navigate(R.id.creatingBalanceFragment)
         }
-
         return binding.root
     }
 

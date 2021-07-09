@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/startingAppFragment"
         android:name="com.example.balance.StartingAppFragment"
-        android:label="StartingAppFragment" >
+        android:label="StartingAppFragment">
         <action
             android:id="@+id/action_startingAppFragment_to_passcodeEntryFragment"
             app:destination="@id/passcodeEntryFragment" />
@@ -21,13 +21,13 @@
         android:name="com.example.balance.PasscodeEntryFragment"
         android:label="PasscodeEntryFragment" >
         <action
-            android:id="@+id/action_passcodeEntryFragment_to_navigationFragment"
-            app:destination="@id/navigation" />
+            android:id="@+id/action_passcodeEntryFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/greetingNewUserFragment"
         android:name="com.example.balance.GreetingNewUserFragment"
-        android:label="GreetingNewUserFragment" >
+        android:label="GreetingNewUserFragment">
         <action
             android:id="@+id/action_greetingNewUserFragment_to_passcodeCreationFragment"
             app:destination="@id/passcodeCreationFragment" />
@@ -48,29 +48,63 @@
         android:name="com.example.balance.CreatingBalanceFragment"
         android:label="CreatingBalanceFragment" >
         <action
-            android:id="@+id/action_creatingBalanceFragment_to_navigationFragment"
-            app:destination="@id/navigation" />
+            android:id="@+id/action_creatingBalanceFragment_to_homeFragment4"
+            app:destination="@id/homeFragment" />
     </fragment>
-    <navigation android:id="@+id/navigation"
-        app:startDestination="@id/homeFragment">
-        <fragment
-            android:id="@+id/navigationFragment"
-            android:name="com.example.balance.NavigationFragment"
-            android:label="NavigationFragment" >
-            <action
-                android:id="@+id/action_navigationFragment_to_homeFragment"
-                app:destination="@id/homeFragment" />
-            <action
-                android:id="@+id/action_navigationFragment_to_historyFragment"
-                app:destination="@id/historyFragment" />
-        </fragment>
-        <fragment
-            android:id="@+id/homeFragment"
-            android:name="com.example.balance.HomeFragment"
-            android:label="HomeFragment" />
-        <fragment
-            android:id="@+id/historyFragment"
-            android:name="com.example.balance.HistoryFragment"
-            android:label="HistoryFragment" />
-    </navigation>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.balance.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_historyFragment2"
+            app:destination="@id/historyFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.balance.HistoryFragment"
+        android:label="HistoryFragment" >
+        <action
+            android:id="@+id/action_historyFragment2_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_historyFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_historyFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_historyFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="com.example.balance.StatisticsFragment"
+        android:label="StatisticsFragment" >
+        <action
+            android:id="@+id/action_statisticsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_statisticsFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
+        <action
+            android:id="@+id/action_statisticsFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.balance.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_statisticsFragment"
+            app:destination="@id/statisticsFragment" />
+    </fragment>
 </navigation>

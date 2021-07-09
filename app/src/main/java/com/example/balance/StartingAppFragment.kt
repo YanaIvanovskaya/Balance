@@ -1,6 +1,8 @@
 package com.example.balance
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
@@ -13,10 +15,12 @@ class StartingAppFragment: Fragment(R.layout.starting_app_fragment) {
 
         val navController = NavHostFragment.findNavController(this)
 
-        if (checkNewUser())
-            navController.navigate(R.id.greetingNewUserFragment)
-        else
-            navController.navigate(R.id.passcodeEntryFragment)
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (checkNewUser())
+                navController.navigate(R.id.greetingNewUserFragment)
+            else
+                navController.navigate(R.id.passcodeEntryFragment)
+        },5000)
     }
 }
 
