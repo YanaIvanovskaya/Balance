@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/creatingBalanceFragment"
-        android:name="com.example.balance.CreatingBalanceFragment"
+        android:name="com.example.balance.ui.auth.CreatingBalanceFragment"
         android:label="CreatingBalanceFragment"
         tools:layout="@layout/fragment_creating_balance">
         <action

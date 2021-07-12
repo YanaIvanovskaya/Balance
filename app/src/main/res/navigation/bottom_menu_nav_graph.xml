@@ -21,7 +21,7 @@
     </fragment>
     <fragment
         android:id="@+id/historyFragment"
-        android:name="com.example.balance.HistoryFragment"
+        android:name="com.example.balance.ui.history.HistoryFragment"
         android:label="HistoryFragment"
         tools:layout="@layout/fragment_history">
         <action

@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/bottomNavigationFragment"
-        android:name="com.example.balance.BottomNavigationFragment"
+        android:name="com.example.balance.ui.menu.BottomNavigationFragment"
         android:label="BottomNavigationFragment"
         tools:layout="@layout/fragment_bottom_navigation">
         <action
