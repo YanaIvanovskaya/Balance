@@ -17,15 +17,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:autofillHints="21212"
         android:background="#E8D3D3"
         android:ems="10"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
         android:gravity="center"
+        android:hint="@string/_12345"
         android:inputType="numberPassword"
         android:maxLength="5"
         android:text="@string/_12345"
-        android:textSize="34sp"
-        android:autofillHints="21212"
-        android:hint="@string/_12345" />
+        android:textSize="34sp" />
 
     <TableLayout
         android:layout_width="match_parent"

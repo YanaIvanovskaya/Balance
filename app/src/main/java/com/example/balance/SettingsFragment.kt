@@ -2,4 +2,4 @@ package com.example.balance
 
 import androidx.fragment.app.Fragment
 
-class SettingsFragment: Fragment(R.layout.settings_fragment)
+class SettingsFragment: Fragment(R.layout.fragment_settings)

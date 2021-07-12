@@ -45,4 +45,5 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars"
         android:contentDescription="@string/greeting_new_user_image" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

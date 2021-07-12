@@ -6,26 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
-import com.example.balance.databinding.PasscodeCreationFragmentBinding
+import com.example.balance.databinding.FragmentPasscodeCreationBinding
 
+class PasscodeCreationFragment : Fragment(R.layout.fragment_passcode_creation) {
 
-class PasscodeCreationFragment : Fragment(R.layout.passcode_creation_fragment) {
-    private var mBinding: PasscodeCreationFragmentBinding? = null
+    private var mBinding: FragmentPasscodeCreationBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val binding = PasscodeCreationFragmentBinding.inflate(inflater,container,false)
+    ): View {
+        val binding = FragmentPasscodeCreationBinding.inflate(inflater, container, false)
         mBinding = binding
-
         val navController = NavHostFragment.findNavController(this)
 
         binding.buttonPrevious.setOnClickListener {
             navController.navigate(R.id.greetingNewUserFragment)
         }
-
         binding.buttonNext.setOnClickListener {
             navController.navigate(R.id.creatingBalanceFragment)
         }
@@ -36,4 +34,5 @@ class PasscodeCreationFragment : Fragment(R.layout.passcode_creation_fragment) {
         mBinding = null
         super.onDestroyView()
     }
+
 }

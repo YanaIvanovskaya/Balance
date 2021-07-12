@@ -5,24 +5,25 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 
+class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
 
-class StartingAppFragment: Fragment(R.layout.starting_app_fragment) {
+    private val isNewUser: Boolean
+        get() = (0..1).random() == 1
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val navController = NavHostFragment.findNavController(this)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (checkNewUser())
-                navController.navigate(R.id.greetingNewUserFragment)
-            else
-                navController.navigate(R.id.passcodeEntryFragment)
-        },5000)
+        findNavController().navigate(R.id.onboarding_nav_graph)
+//        findNavController().navigate(R.id.onboarding_nav_graph)
+//        Handler(Looper.getMainLooper()).postDelayed(
+//            {
+//                if (isNewUser)
+//                    findNavController().navigate(R.id.auth_nav_graph)
+//                else
+//                    findNavController().navigate(R.id.onboarding_nav_graph)
+//            }, 1000
+//        )
     }
+
 }
-
-fun checkNewUser(): Boolean = (1..1).random() == 1
-

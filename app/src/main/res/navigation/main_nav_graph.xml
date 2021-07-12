@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/startingAppFragment">
+
+    <fragment
+        android:id="@+id/startingAppFragment"
+        android:name="com.example.balance.StartingAppFragment"
+        android:label="StartingAppFragment"
+        tools:layout="@layout/fragment_starting_app">
+        <action
+            android:id="@+id/action_startingAppFragment_to_onboarding_nav_graph"
+            app:destination="@id/onboarding_nav_graph" />
+        <action
+            android:id="@+id/action_startingAppFragment_to_bottomNavigationFragment"
+            app:destination="@id/bottomNavigationFragment" />
+        <action
+            android:id="@+id/action_startingAppFragment_to_auth_nav_graph"
+            app:destination="@id/auth_nav_graph" />
+    </fragment>
+    <fragment
+        android:id="@+id/bottomNavigationFragment"
+        android:name="com.example.balance.BottomNavigationFragment"
+        android:label="BottomNavigationFragment"
+        tools:layout="@layout/fragment_bottom_navigation">
+        <action
+            android:id="@+id/action_bottomNavigationFragment_to_recordCreationFragment"
+            app:destination="@id/recordCreationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recordCreationFragment"
+        android:name="com.example.balance.RecordCreationFragment"
+        android:label="RecordCreationFragment"
+        tools:layout="@layout/fragment_record_creation">
+        <action
+            android:id="@+id/action_recordCreationFragment_to_bottomNavigationFragment"
+            app:destination="@id/bottomNavigationFragment" />
+    </fragment>
+
+    <include app:graph="@navigation/onboarding_nav_graph" />
+    <include app:graph="@navigation/auth_nav_graph" />
+</navigation>

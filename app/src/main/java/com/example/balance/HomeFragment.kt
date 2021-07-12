@@ -1,13 +1,35 @@
 package com.example.balance
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.navigation.Navigation.findNavController
+import com.example.balance.databinding.FragmentHomeBinding
 
-class HomeFragment  : Fragment(R.layout.home_fragment) {
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        activity?.findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility  = View.VISIBLE
-        super.onViewCreated(view, savedInstanceState)
+class HomeFragment : Fragment(R.layout.fragment_home) {
+
+    private var mBinding: FragmentHomeBinding? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding = FragmentHomeBinding.inflate(inflater, container, false)
+        mBinding = binding
+
+        val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
+        binding.floatingButtonCreateNewRecord.setOnClickListener {
+            navController.navigate(R.id.recordCreationFragment)
+        }
+        return binding.root
     }
+
+    override fun onDestroyView() {
+        mBinding = null
+        super.onDestroyView()
+    }
+
 }

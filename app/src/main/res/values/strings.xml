@@ -21,4 +21,14 @@
     <string name="balance_cash">Наличными</string>
     <string name="balance_cards">На картах</string>
     <string name="greeting">Доброе утро!</string>
+    <string name="home">Главная</string>
+    <string name="history">История</string>
+    <string name="statistics">Статистика</string>
+    <string name="settings">Настройки</string>
+    <string name="profits">Доходы</string>
+    <string name="costs">Расходы</string>
+    <string name="cash">Наличные</string>
+    <string name="card">Карта</string>
+    <string name="create_record">Create!</string>
+    <string name="new_record">Новая запись</string>
 </resources>

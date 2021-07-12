@@ -6,19 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
-import com.example.balance.databinding.GreetingNewUserFragmentBinding
+import com.example.balance.databinding.FragmentGreetingNewUserBinding
 
+class GreetingNewUserFragment : Fragment(R.layout.fragment_greeting_new_user) {
 
-class GreetingNewUserFragment : Fragment(R.layout.greeting_new_user_fragment) {
-
-    private var mBinding: GreetingNewUserFragmentBinding? = null
+    private var mBinding: FragmentGreetingNewUserBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val binding = GreetingNewUserFragmentBinding.inflate(inflater,container,false)
+    ): View {
+        val binding = FragmentGreetingNewUserBinding.inflate(inflater, container, false)
         mBinding = binding
 
         val navController = NavHostFragment.findNavController(this)
@@ -33,6 +32,5 @@ class GreetingNewUserFragment : Fragment(R.layout.greeting_new_user_fragment) {
         mBinding = null
         super.onDestroyView()
     }
+
 }
-
-

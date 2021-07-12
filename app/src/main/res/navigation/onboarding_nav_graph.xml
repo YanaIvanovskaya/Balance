@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/onboarding_nav_graph"
+    app:startDestination="@id/greetingNewUserFragment">
+
+    <fragment
+        android:id="@+id/greetingNewUserFragment"
+        android:name="com.example.balance.GreetingNewUserFragment"
+        android:label="GreetingNewUserFragment"
+        tools:layout="@layout/fragment_greeting_new_user">
+        <action
+            android:id="@+id/action_greetingNewUserFragment_to_passcodeCreationFragment"
+            app:destination="@id/passcodeCreationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/passcodeCreationFragment"
+        android:name="com.example.balance.PasscodeCreationFragment"
+        android:label="PasscodeCreationFragment"
+        tools:layout="@layout/fragment_passcode_creation">
+        <action
+            android:id="@+id/action_passcodeCreationFragment_to_creatingBalanceFragment"
+            app:destination="@id/creatingBalanceFragment" />
+        <action
+            android:id="@+id/action_passcodeCreationFragment_to_greetingNewUserFragment"
+            app:destination="@id/greetingNewUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/creatingBalanceFragment"
+        android:name="com.example.balance.CreatingBalanceFragment"
+        android:label="CreatingBalanceFragment"
+        tools:layout="@layout/fragment_creating_balance">
+        <action
+            android:id="@+id/action_creatingBalanceFragment_to_bottomNavigationFragment"
+            app:destination="@id/bottomNavigationFragment" />
+    </fragment>
+</navigation>

@@ -6,22 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.balance.databinding.FragmentCreatingBalanceBinding
+import com.example.balance.databinding.FragmentRecordCreationBinding
 
-class CreatingBalanceFragment : Fragment(R.layout.fragment_creating_balance) {
+class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
 
-    private var mBinding: FragmentCreatingBalanceBinding? = null
+    private var mBinding: FragmentRecordCreationBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val binding = FragmentCreatingBalanceBinding.inflate(inflater, container, false)
+        val binding = FragmentRecordCreationBinding.inflate(inflater, container, false)
         mBinding = binding
-        binding.buttonStartUse.setOnClickListener {
-            findNavController().navigate(R.id.action_creatingBalanceFragment_to_bottomNavigationFragment)
+        binding.buttonCreateAndSaveNewRecord.setOnClickListener {
+            findNavController().popBackStack()
         }
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
         return binding.root
     }
 

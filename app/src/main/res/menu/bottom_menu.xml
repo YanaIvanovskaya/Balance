@@ -3,17 +3,17 @@
     <item
         android:id="@+id/action_home"
         android:icon="@android:drawable/ic_dialog_map"
-        android:title="Главная"/>
+        android:title="@string/home"/>
     <item
         android:id="@+id/action_history"
         android:icon="@android:drawable/ic_dialog_dialer"
-        android:title="История" />
+        android:title="@string/history" />
     <item
         android:id="@+id/action_statistics"
         android:icon="@android:drawable/ic_dialog_email"
-        android:title="Статистика" />
+        android:title="@string/statistics" />
     <item
         android:id="@+id/action_settings"
         android:icon="@android:drawable/ic_menu_view"
-        android:title="Настройки" />
+        android:title="@string/settings" />
 </menu>
