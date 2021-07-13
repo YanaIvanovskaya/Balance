@@ -31,4 +31,8 @@
     <string name="card">Карта</string>
     <string name="create_record">Create!</string>
     <string name="new_record">Новая запись</string>
+    <string name="hint_sum_of_operation">Сумма</string>
+    <string name="hint_kind_of_operation">Вид операции</string>
+    <string name="hint_kind_of_money">Средства</string>
+    <string name="error_msg_sum_of_money">Введите целое число</string>
 </resources>

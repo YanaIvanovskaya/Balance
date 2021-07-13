@@ -5,8 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_new_record"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#D8B4B4"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="?attr/actionModeCloseDrawable"
+        app:title="@string/new_record"
+        app:titleTextColor="#EADDDD" />
+
     <TextView
-        android:id="@+id/textView17"
+        android:id="@+id/hint_sum_of_operation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -14,24 +28,24 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="27dp"
         android:layout_marginRight="27dp"
-        android:text="Сумма"
-        app:layout_constraintEnd_toStartOf="@+id/editTextNumberSigned"
+        android:text="@string/hint_sum_of_operation"
+        app:layout_constraintEnd_toStartOf="@+id/editText_sum_of_operation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record" />
 
     <TextView
-        android:id="@+id/textView18"
+        android:id="@+id/hint_kind_of_operation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginLeft="28dp"
         android:layout_marginTop="52dp"
-        android:text="Вид операции"
+        android:text="@string/hint_kind_of_operation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView17" />
+        app:layout_constraintTop_toBottomOf="@+id/hint_sum_of_operation" />
 
     <TextView
-        android:id="@+id/textView19"
+        android:id="@+id/hint_kind_of_money"
         android:layout_width="83dp"
         android:layout_height="28dp"
         android:layout_marginStart="32dp"
@@ -39,14 +53,14 @@
         android:layout_marginTop="120dp"
         android:layout_marginEnd="70dp"
         android:layout_marginRight="70dp"
-        android:text="Средства"
-        app:layout_constraintEnd_toStartOf="@+id/radioGroup2"
+        android:text="@string/hint_kind_of_money"
+        app:layout_constraintEnd_toStartOf="@+id/radioGroup_kind_of_money"
         app:layout_constraintHorizontal_bias="0.076"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+        app:layout_constraintTop_toBottomOf="@+id/hint_kind_of_operation" />
 
     <EditText
-        android:id="@+id/editTextNumberSigned"
+        android:id="@+id/editText_sum_of_operation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="26dp"
@@ -56,12 +70,13 @@
         android:layout_marginRight="32dp"
         android:ems="10"
         android:inputType="numberSigned"
+        android:maxLength="9"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView17"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintStart_toEndOf="@+id/hint_sum_of_operation"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record" />
 
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/radioGroup_kind_of_operation"
         android:layout_width="259dp"
         android:layout_height="100dp"
         android:layout_marginStart="16dp"
@@ -70,8 +85,8 @@
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView18"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumberSigned">
+        app:layout_constraintStart_toEndOf="@+id/hint_kind_of_operation"
+        app:layout_constraintTop_toBottomOf="@+id/editText_sum_of_operation">
 
         <RadioButton
             android:id="@+id/radioButton_profits"
@@ -87,23 +102,23 @@
     </RadioGroup>
 
     <RadioGroup
-        android:id="@+id/radioGroup2"
+        android:id="@+id/radioGroup_kind_of_money"
         android:layout_width="247dp"
         android:layout_height="106dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup">
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup_kind_of_operation">
 
         <RadioButton
-            android:id="@+id/radioButton"
+            android:id="@+id/radioButton_cash"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/cash" />
 
         <RadioButton
-            android:id="@+id/radioButton2"
+            android:id="@+id/radioButton_cards"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/card" />
@@ -115,26 +130,31 @@
         android:layout_height="57dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="258dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
         android:text="@string/create_record"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="#D8B4B4"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="?attr/actionModeCloseDrawable"
-        app:title="@string/new_record"
-        app:titleTextColor="#EADDDD" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup_kind_of_money" />
+
+    <TextView
+        android:id="@+id/error_msg_sum_of_money"
+        android:layout_width="203dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="163dp"
+        android:layout_marginLeft="163dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginBottom="13dp"
+        android:text="@string/error_msg_sum_of_money"
+        android:textColor="#EA8181"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/radioGroup_kind_of_operation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText_sum_of_operation"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

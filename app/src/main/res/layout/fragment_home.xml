@@ -102,14 +102,14 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:id="@+id/floatingButton_create_new_record"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:layout_width="72dp"
         android:layout_height="72dp"
         android:layout_marginRight="44dp"
         android:layout_marginBottom="48dp"
         android:contentDescription="TODO"
-        app:backgroundTint="#CC0E0E"
+        app:backgroundTint="#81C784"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:rippleColor="#884646"

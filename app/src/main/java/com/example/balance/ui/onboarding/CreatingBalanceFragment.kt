@@ -1,4 +1,4 @@
-package com.example.balance.ui.auth
+package com.example.balance.ui.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -7,13 +7,13 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/title_passcode_creation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/enter_the_passcode" />
 
     <EditText
-        android:id="@+id/editTextNumberPassword"
+        android:id="@+id/passcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"

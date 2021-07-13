@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/greetingNewUserFragment"
-        android:name="com.example.balance.GreetingNewUserFragment"
+        android:name="com.example.balance.ui.onboarding.GreetingNewUserFragment"
         android:label="GreetingNewUserFragment"
         tools:layout="@layout/fragment_greeting_new_user">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/passcodeCreationFragment"
-        android:name="com.example.balance.PasscodeCreationFragment"
+        android:name="com.example.balance.ui.onboarding.PasscodeCreationFragment"
         android:label="PasscodeCreationFragment"
         tools:layout="@layout/fragment_passcode_creation">
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/creatingBalanceFragment"
-        android:name="com.example.balance.ui.auth.CreatingBalanceFragment"
+        android:name="com.example.balance.ui.onboarding.CreatingBalanceFragment"
         android:label="CreatingBalanceFragment"
         tools:layout="@layout/fragment_creating_balance">
         <action

@@ -1,11 +1,11 @@
-package com.example.balance
+package com.example.balance.ui.auth
 
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.balance.R
 
 class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
 
@@ -14,8 +14,8 @@ class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        findNavController().navigate(R.id.auth_nav_graph)
         findNavController().navigate(R.id.onboarding_nav_graph)
-//        findNavController().navigate(R.id.onboarding_nav_graph)
 //        Handler(Looper.getMainLooper()).postDelayed(
 //            {
 //                if (isNewUser)

@@ -7,11 +7,12 @@
 
     <fragment
         android:id="@+id/passcodeEntryFragment"
-        android:name="com.example.balance.PasscodeEntryFragment"
+        android:name="com.example.balance.ui.auth.PasscodeEntryFragment"
         android:label="PasscodeEntryFragment"
         tools:layout="@layout/fragment_passcode_entry">
         <action
             android:id="@+id/action_passcodeEntryFragment_to_bottomNavigationFragment"
             app:destination="@id/bottomNavigationFragment" />
     </fragment>
+
 </navigation>
