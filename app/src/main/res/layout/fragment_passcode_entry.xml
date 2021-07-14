@@ -9,16 +9,15 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/title_greeting_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
         android:gravity="center"
-        android:text="@string/greeting"
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/editTextNumberPassword"
+        android:id="@+id/edit_text_entry_passcode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -27,7 +26,6 @@
         android:gravity="center"
         android:inputType="numberPassword"
         android:maxLength="5"
-        android:text="@string/_12345"
         android:textSize="34sp"
         android:autofillHints="21212" />
 
@@ -166,7 +164,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:background="#EDCCCC"
-                android:text="0"
                 android:textColor="#504444"
                 android:textSize="24sp"
                 android:visibility="invisible"

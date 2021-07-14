@@ -15,7 +15,8 @@ class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 //        findNavController().navigate(R.id.auth_nav_graph)
-        findNavController().navigate(R.id.onboarding_nav_graph)
+        findNavController().navigate(R.id.auth_nav_graph)
+
 //        Handler(Looper.getMainLooper()).postDelayed(
 //            {
 //                if (isNewUser)
