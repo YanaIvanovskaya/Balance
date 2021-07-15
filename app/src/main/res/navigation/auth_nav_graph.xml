@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/auth_nav_graph"
     app:startDestination="@id/passcodeEntryFragment">
 
     <fragment
         android:id="@+id/passcodeEntryFragment"
-        android:name="com.example.balance.ui.auth.PasscodeEntryFragment"
+        android:name="com.example.balance.ui.onboarding.PasscodeEntryFragment"
         android:label="PasscodeEntryFragment"
-        tools:layout="@layout/fragment_passcode_entry">
+        tools:layout="@layout/fragment_passcode">
+
         <action
             android:id="@+id/action_passcodeEntryFragment_to_bottomNavigationFragment"
             app:destination="@id/bottomNavigationFragment" />
+
+        <argument
+            android:name="screenType"
+            app:argType="com.example.balance.presentation.PasscodeScreenType"
+            android:defaultValue="AUTH"/>
+
     </fragment>
 
 </navigation>

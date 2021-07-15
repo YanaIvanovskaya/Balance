@@ -29,7 +29,6 @@ class UserDataStore(
             preferences[KEY_PASSCODE] = newPasscode
         }
 
-        passcode.collect { value -> println("new${value}") }
         println("PASSCODE NEW _>${passcode}")
     }
 

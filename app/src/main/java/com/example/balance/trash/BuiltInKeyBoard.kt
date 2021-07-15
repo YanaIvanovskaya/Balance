@@ -1,4 +1,4 @@
-package com.example.balance
+package com.example.balance.trash
 
 import android.widget.Button
 import android.widget.EditText
@@ -22,4 +22,5 @@ interface BuiltInKeyBoard {
             button?.setOnClickListener { onClickNumber(number) }
         }
     }
+
 }

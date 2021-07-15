@@ -14,18 +14,26 @@
             android:id="@+id/action_greetingNewUserFragment_to_passcodeCreationFragment"
             app:destination="@id/passcodeCreationFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/passcodeCreationFragment"
-        android:name="com.example.balance.ui.onboarding.PasscodeCreationFragment"
+        android:name="com.example.balance.ui.onboarding.PasscodeEntryFragment"
         android:label="PasscodeCreationFragment"
-        tools:layout="@layout/fragment_passcode_creation">
+        tools:layout="@layout/fragment_passcode">
         <action
             android:id="@+id/action_passcodeCreationFragment_to_creatingBalanceFragment"
             app:destination="@id/creatingBalanceFragment" />
         <action
             android:id="@+id/action_passcodeCreationFragment_to_greetingNewUserFragment"
             app:destination="@id/greetingNewUserFragment" />
+
+        <argument
+            android:name="screenType"
+            app:argType="com.example.balance.presentation.PasscodeScreenType"
+            android:defaultValue="ONBOARDING" />
+
     </fragment>
+
     <fragment
         android:id="@+id/creatingBalanceFragment"
         android:name="com.example.balance.ui.onboarding.CreatingBalanceFragment"
