@@ -1,24 +1,23 @@
 package com.example.balance.presentation
 
+import android.text.InputType
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.balance.data.UserDataStore
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 data class PasscodeEntryState(
     val passcode: String,
-//    val passcodeVisible: Boolean,
     val canComplete: Boolean,
+    val passcodeMode: Int,
     val screenType: PasscodeScreenType
 ) {
 
     companion object {
         fun default() = PasscodeEntryState(
             passcode = "",
-//            passcodeVisible = false,
+            passcodeMode = PasscodeEntryViewModel.PASSCODE_INVISIBLE_MODE,
             canComplete = false,
             screenType = PasscodeScreenType.ONBOARDING
         )
@@ -27,37 +26,36 @@ data class PasscodeEntryState(
 }
 
 class PasscodeEntryViewModel(
-    private val dataStore: UserDataStore
+    private val dataStore: UserDataStore,
+    screenType: PasscodeScreenType
 ) : ViewModel() {
 
     val state = MutableLiveData(PasscodeEntryState.default())
 
     init {
-        dataStore.passcode
-            .onEach { println("new: $it") }
-            .launchIn(viewModelScope)
-        print("Init complete")
+        state.value = state.value?.copy(screenType = screenType)
     }
 
     companion object {
         private const val PASSCODE_LENGTH = 5
+        const val PASSCODE_VISIBLE_MODE =
+            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+        const val PASSCODE_INVISIBLE_MODE =
+            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
     }
 
-    private fun savePasscodeState (newPasscode: String) {
+    private fun savePasscodeState(newPasscode: String) {
         if (newPasscode.length <= PASSCODE_LENGTH) {
             state.value = state.value?.copy(
                 passcode = newPasscode,
-//                passcodeVisible = false,
                 canComplete = newPasscode.length == PASSCODE_LENGTH
             )
         }
     }
 
-    fun onChangePasscode(passcode: String) {
-        savePasscodeState(passcode)
-    }
+    fun onChangePasscode(passcode: String) = savePasscodeState(passcode)
 
-    fun onNumberClick(number: Int) {
+    fun onNumberClick(number: String) {
         val oldPasscode = state.value?.passcode ?: ""
         val newPasscode = oldPasscode + number
         savePasscodeState(newPasscode)
@@ -72,12 +70,22 @@ class PasscodeEntryViewModel(
 
     fun onClickClear() {
         val passcode = state.value?.passcode.orEmpty()
-        val newPasscode = when (passcode.isEmpty()) {
-            true -> passcode
-            false -> passcode.dropLast(1)
-        }
-//        val newPasscode = if (passcode.isEmpty()) passcode else passcode.dropLast(1)
+        val newPasscode = if (passcode.isEmpty())
+            passcode
+        else
+            passcode.dropLast(1)
         savePasscodeState(newPasscode)
+    }
+
+    fun onShowPasscode() {
+        val oldPasscodeMode = state.value?.passcodeMode
+        val newPasscodeMode = if (oldPasscodeMode == PASSCODE_INVISIBLE_MODE)
+            PASSCODE_VISIBLE_MODE
+        else
+            PASSCODE_INVISIBLE_MODE
+        state.value = state.value?.copy(
+            passcodeMode = newPasscodeMode
+        )
     }
 
 }

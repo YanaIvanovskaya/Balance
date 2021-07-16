@@ -1,8 +1,6 @@
 package com.example.balance.ui.onboarding
 
-import ViewModelFactory
 import android.os.Bundle
-import android.text.InputType
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -14,16 +12,20 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
+import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentPasscodeBinding
-import com.example.balance.presentation.PasscodeEntryState
-import com.example.balance.presentation.PasscodeEntryViewModel
-import com.example.balance.presentation.PasscodeScreenType
+import com.example.balance.presentation.*
 
 class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
 
     private var mBinding: FragmentPasscodeBinding? = null
-    private val mViewModel by viewModels<PasscodeEntryViewModel> { ViewModelFactory() }
+    private val mViewModel by getViewModel {
+        PasscodeEntryViewModel(
+            dataStore = BalanceApp.dataStore,
+            screenType = args.screenType
+        )
+    }
     private lateinit var navController: NavController
     private var mTextChangeListener: TextWatcher? = null
     private val args: PasscodeEntryFragmentArgs by navArgs()
@@ -40,11 +42,6 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
 
         initButtons()
 
-        mViewModel.state.value = mViewModel.state.value?.copy(
-            passcode = "",
-            canComplete = false,
-            screenType = args.screenType
-        )
         return binding.root
     }
 
@@ -60,6 +57,7 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
         mTextChangeListener = mBinding?.editTextCreationPasscode?.doAfterTextChanged {
             mViewModel.onChangePasscode(it.toString())
         }
+        mBinding?.editTextCreationPasscode?.inputType = state.passcodeMode
 
         when (state.screenType) {
             PasscodeScreenType.AUTH -> {
@@ -74,46 +72,35 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
             PasscodeScreenType.SETTINGS -> {
             }
         }
-
     }
 
     private fun onNextClick() {
         mViewModel.onSavePasscode()
-        navController.navigate(R.id.creatingBalanceFragment)
+        navController.navigate(R.id.balanceCreationFragment)
     }
 
     private fun initButtons() {
+        mBinding?.buttonShowPasscode?.setOnClickListener { mViewModel.onShowPasscode() }
+        mBinding?.buttonClearPasscode?.setOnClickListener { mViewModel.onClickClear() }
         mBinding?.buttonPrevious?.setOnClickListener {
             navController.navigate(R.id.greetingNewUserFragment)
         }
         mBinding?.buttonNext?.setOnClickListener { onNextClick() }
 
-        mBinding?.buttonClearPasscode?.setOnClickListener { mViewModel.onClickClear() }
-
-        mBinding?.button0?.setOnClickListener { mViewModel.onNumberClick(0) }
-        mBinding?.button1?.setOnClickListener { mViewModel.onNumberClick(1) }
-        mBinding?.button2?.setOnClickListener { mViewModel.onNumberClick(2) }
-        mBinding?.button3?.setOnClickListener { mViewModel.onNumberClick(3) }
-        mBinding?.button4?.setOnClickListener { mViewModel.onNumberClick(4) }
-        mBinding?.button5?.setOnClickListener { mViewModel.onNumberClick(5) }
-        mBinding?.button6?.setOnClickListener { mViewModel.onNumberClick(6) }
-        mBinding?.button7?.setOnClickListener { mViewModel.onNumberClick(7) }
-        mBinding?.button8?.setOnClickListener { mViewModel.onNumberClick(8) }
-        mBinding?.button9?.setOnClickListener { mViewModel.onNumberClick(9) }
-
-        mBinding?.buttonShowPasscode?.setOnClickListener { onShowPasscode() }
-    }
-
-    private fun onShowPasscode() {
-        val passcodeField = mBinding?.editTextCreationPasscode
-        val inputType = passcodeField?.inputType
-        val passcodeType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-        val normalType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
-
-        if (inputType == passcodeType)
-            passcodeField.inputType = normalType
-        else
-            passcodeField?.inputType = passcodeType
+        val buttonKeyBoard = listOf(
+            mBinding?.button0,
+            mBinding?.button1,
+            mBinding?.button2,
+            mBinding?.button3,
+            mBinding?.button4,
+            mBinding?.button5,
+            mBinding?.button6,
+            mBinding?.button7,
+            mBinding?.button8,
+            mBinding?.button9
+        )
+        for (button in buttonKeyBoard)
+            button?.setOnClickListener { mViewModel.onNumberClick(button.text as String) }
     }
 
 }

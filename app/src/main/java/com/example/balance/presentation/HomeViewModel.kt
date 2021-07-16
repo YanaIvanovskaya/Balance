@@ -1,27 +1,26 @@
 package com.example.balance.presentation
 
 import androidx.lifecycle.ViewModel
-import com.example.balance.BalanceRowType
-import com.example.balance.RecordRowType
-import com.example.balance.RowType
-
+import com.example.balance.Item
+import com.example.balance.ui.recycler_view_item.BalanceItem
+import com.example.balance.ui.recycler_view_item.RecordItem
 
 class HomeViewModel : ViewModel() {
 
-    private fun createBalanceRow() = BalanceRowType(balance = 1000, sumCash = 600, sumCards = 400)
+    private fun createBalanceRow() = BalanceItem(balance = 1000, sumCash = 600, sumCards = 400)
 
-    private fun getRecentRecords(): MutableList<RecordRowType> {
-        val listOfRecords = mutableListOf<RecordRowType>()
+    private fun getRecentRecords(): MutableList<RecordItem> {
+        val listOfRecords = mutableListOf<RecordItem>()
         for (i in 0..10) {
             listOfRecords.add(
-                RecordRowType("category", (15..500).random(), "$i июля 2021", (0..1).random() == 1)
+                RecordItem("category", (15..500).random(), "$i июля 2021", (0..1).random() == 1)
             )
         }
         return listOfRecords
     }
 
-    fun getHomeContent(): MutableList<RowType> {
-        val listOfContent = mutableListOf<RowType>()
+    fun getHomeContent(): MutableList<Item> {
+        val listOfContent = mutableListOf<Item>()
         listOfContent.add(createBalanceRow())
         for (record in getRecentRecords()) {
             listOfContent.add(record)

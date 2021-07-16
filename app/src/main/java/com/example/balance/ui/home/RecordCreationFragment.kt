@@ -2,25 +2,31 @@ package com.example.balance.ui.home
 
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.text.isDigitsOnly
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.balance.R
 import com.example.balance.databinding.FragmentRecordCreationBinding
-import com.example.balance.presentation.Record
+import com.example.balance.presentation.PasscodeEntryState
+import com.example.balance.presentation.RecordCreationState
 import com.example.balance.presentation.RecordCreationViewModel
 
 class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
 
     private var mBinding: FragmentRecordCreationBinding? = null
     private lateinit var mViewModel: RecordCreationViewModel
+    private lateinit var navController: NavController
+    private var mSumChangeListener: TextWatcher? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,11 +36,10 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         val binding = FragmentRecordCreationBinding.inflate(inflater, container, false)
         mBinding = binding
         mViewModel = ViewModelProvider(this).get(RecordCreationViewModel::class.java)
+        navController = findNavController()
+        mViewModel.state.observe(viewLifecycleOwner, ::render)
 
-        initBackButtons()
-        initWidgets()
-        binding.buttonCreateAndSaveNewRecord.setOnClickListener { onCreateRecord() }
-        binding.editTextSumOfOperation.addTextChangedListener { onChangeSum() }
+        initButtons()
         return binding.root
     }
 
@@ -43,44 +48,35 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         super.onDestroyView()
     }
 
-    private fun onCreateRecord() {
-//        val newRecord = Record()
+    private fun render(state: RecordCreationState) {
+        mBinding?.radioButtonCosts?.isChecked = state.isCosts
+        mBinding?.radioButtonCash?.isChecked = state.isCash
+        mBinding?.buttonCreateAndSaveNewRecord?.isVisible = state.canSave
+        mBinding?.errorMsgSumOfMoney?.isVisible = !state.canSave
 
-        findNavController().popBackStack()
-
+        mBinding?.editTextSumOfOperation?.removeTextChangedListener(mSumChangeListener)
+        mBinding?.editTextSumOfOperation?.setText(state.sumRecord)
+        mSumChangeListener = mBinding?.editTextSumOfOperation?.doAfterTextChanged {
+            mViewModel.onChangeSum(it.toString())
+        }
     }
 
-    private fun initBackButtons() {
+    private fun onCreateRecord() {
+        navController.popBackStack()
+    }
+
+    private fun initButtons() {
         mBinding?.toolbarNewRecord?.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            navController.popBackStack()
         }
+        mBinding?.buttonCreateAndSaveNewRecord?.setOnClickListener { onCreateRecord() }
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    findNavController().popBackStack()
+                    navController.popBackStack()
                 }
             }
         )
     }
-
-    private fun initWidgets() {
-//        println("WERTYUI${mViewModel.sumOfRecord.toString()}")
-        mBinding?.editTextSumOfOperation?.setText(mViewModel.sumOfRecord.toString())
-        mBinding?.radioButtonCosts?.isChecked = mViewModel.isCosts
-        mBinding?.radioButtonCash?.isChecked = mViewModel.isCash
-    }
-
-    private fun onChangeSum() {
-        val sumOfRecord: String = mBinding?.editTextSumOfOperation?.text.toString().trim()
-        if (sumOfRecord.isNotEmpty() && sumOfRecord.isDigitsOnly()) {
-            mViewModel.sumOfRecord = sumOfRecord.toInt()
-            mBinding?.errorMsgSumOfMoney?.visibility = View.INVISIBLE
-        } else
-            mBinding?.errorMsgSumOfMoney?.visibility = View.VISIBLE
-
-
-    }
-
-
 }

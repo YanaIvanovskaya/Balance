@@ -1,12 +1,25 @@
 package com.example.balance.presentation
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.balance.data.UserDataStore
-import java.time.LocalDate
-import java.util.*
+
+data class RecordCreationState(
+    val sumRecord: String,
+    val isCosts: Boolean,
+    val isCash: Boolean,
+    val canSave: Boolean
+) {
+
+    companion object {
+        fun default() = RecordCreationState(
+            sumRecord = "",
+            isCosts = true,
+            isCash = true,
+            canSave = false
+        )
+    }
+
+}
 
 class RecordCreationViewModel : ViewModel() {
 
@@ -14,18 +27,20 @@ class RecordCreationViewModel : ViewModel() {
     var isCosts: Boolean = true
     var isCash: Boolean = true
 
-    init {
-        Log.i("RecordCreationViewModel","View model created")
+    val state = MutableLiveData(RecordCreationState.default())
+
+    private fun saveSumRecordState(newSumRecord: String) {
+        state.value = state.value?.copy(
+            sumRecord  = newSumRecord,
+            canSave = newSumRecord.isNotEmpty()
+        )
     }
-}
 
+    fun onChangeSum(sumRecord: String) = saveSumRecordState(sumRecord)
 
+    fun onChangeKindOperation() {
 
-data class Record(val id: Int) {
-    val date: Date = Date()
-    var sumOfMoney: Int = 0
-    var isCosts: Boolean = true
-    var isCash: Boolean = true
+    }
 
 
 

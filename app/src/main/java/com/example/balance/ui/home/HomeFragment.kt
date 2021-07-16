@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
 import com.example.balance.databinding.FragmentHomeBinding
 import com.example.balance.presentation.HomeViewModel
-import com.example.balance.HomeAdapter
+import com.example.balance.presentation.RecyclerViewAdapter
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -40,7 +40,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun initRecyclerView() {
         homeRecyclerView.layoutManager = LinearLayoutManager(context)
-        homeRecyclerView.adapter = HomeAdapter(mViewModel.getHomeContent())
+        homeRecyclerView.adapter = RecyclerViewAdapter(mViewModel.getHomeContent())
     }
 
     private fun onAddRecordClick() {
@@ -53,6 +53,3 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
 }
-
-
-

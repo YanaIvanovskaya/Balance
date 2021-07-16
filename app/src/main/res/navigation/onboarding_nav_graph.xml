@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_passcode">
         <action
             android:id="@+id/action_passcodeCreationFragment_to_creatingBalanceFragment"
-            app:destination="@id/creatingBalanceFragment" />
+            app:destination="@id/balanceCreationFragment" />
         <action
             android:id="@+id/action_passcodeCreationFragment_to_greetingNewUserFragment"
             app:destination="@id/greetingNewUserFragment" />
@@ -35,10 +35,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/creatingBalanceFragment"
-        android:name="com.example.balance.ui.onboarding.CreatingBalanceFragment"
+        android:id="@+id/balanceCreationFragment"
+        android:name="com.example.balance.ui.onboarding.BalanceCreationFragment"
         android:label="CreatingBalanceFragment"
-        tools:layout="@layout/fragment_creating_balance">
+        tools:layout="@layout/fragment_balance_creation">
         <action
             android:id="@+id/action_creatingBalanceFragment_to_bottomNavigationFragment"
             app:destination="@id/bottomNavigationFragment" />
