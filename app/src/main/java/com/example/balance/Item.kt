@@ -6,7 +6,8 @@ interface Item {
 
     companion object {
         const val BALANCE_ROW_TYPE: Int = 0
-        const val RECORD_ROW_TYPE: Int = 1
+        const val RECENT_RECORD_ROW_TYPE: Int = 1
+        const val HISTORY_RECORD_ROW_TYPE: Int = 1
         const val DATE_ROW_TYPE: Int = 2
     }
 

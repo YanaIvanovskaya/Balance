@@ -5,22 +5,33 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentHomeBinding
 import com.example.balance.presentation.HomeViewModel
-import com.example.balance.presentation.RecyclerViewAdapter
+import com.example.balance.presentation.getViewModel
+import com.example.balance.ui.recycler_view.BalanceListAdapter
+import com.example.balance.ui.recycler_view.RecentRecordListAdapter
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var mBinding: FragmentHomeBinding? = null
-    private lateinit var mViewModel: HomeViewModel
-    private lateinit var navController: NavController
+    private lateinit var mNavController: NavController
+
     private lateinit var homeRecyclerView: RecyclerView
+    private lateinit var balanceAdapter: BalanceListAdapter
+    private lateinit var recordListAdapter: RecentRecordListAdapter
+
+    private val mViewModel by getViewModel {
+        HomeViewModel(
+            repository = BalanceApp.repository
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,21 +41,29 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         mBinding = binding
         homeRecyclerView = binding.homeRecyclerView
-        mViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
-        navController = findNavController(requireActivity(), R.id.nav_host_fragment)
+        mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
+
+        balanceAdapter = BalanceListAdapter()
+        recordListAdapter = RecentRecordListAdapter()
 
         binding.floatingButtonCreateNewRecord.setOnClickListener { onAddRecordClick() }
+
+        mViewModel.allRecords.observe(viewLifecycleOwner, { records ->
+            records?.let { recordListAdapter.submitList(it) }
+        })
+
         initRecyclerView()
         return binding.root
     }
 
     private fun initRecyclerView() {
+        val concatAdapter = ConcatAdapter(balanceAdapter, recordListAdapter)
         homeRecyclerView.layoutManager = LinearLayoutManager(context)
-        homeRecyclerView.adapter = RecyclerViewAdapter(mViewModel.getHomeContent())
+        homeRecyclerView.adapter = concatAdapter
     }
 
     private fun onAddRecordClick() {
-        navController.navigate(R.id.recordCreationFragment)
+        mNavController.navigate(R.id.recordCreationFragment)
     }
 
     override fun onDestroyView() {

@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.balance.data.UserDataStore
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 data class PasscodeEntryState(
     val passcode: String,
     val canComplete: Boolean,
     val passcodeMode: Int,
+    val isMatches: Boolean,
     val screenType: PasscodeScreenType
 ) {
 
@@ -19,6 +21,7 @@ data class PasscodeEntryState(
             passcode = "",
             passcodeMode = PasscodeEntryViewModel.PASSCODE_INVISIBLE_MODE,
             canComplete = false,
+            isMatches = false,
             screenType = PasscodeScreenType.ONBOARDING
         )
     }
@@ -31,13 +34,17 @@ class PasscodeEntryViewModel(
 ) : ViewModel() {
 
     val state = MutableLiveData(PasscodeEntryState.default())
+    private lateinit var savedPasscode: String
 
     init {
         state.value = state.value?.copy(screenType = screenType)
+        viewModelScope.launch {
+            savedPasscode = dataStore.passcode.first() ?: ""
+        }
     }
 
     companion object {
-        private const val PASSCODE_LENGTH = 5
+        const val PASSCODE_LENGTH = 5
         const val PASSCODE_VISIBLE_MODE =
             InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
         const val PASSCODE_INVISIBLE_MODE =
@@ -53,18 +60,27 @@ class PasscodeEntryViewModel(
         }
     }
 
-    fun onChangePasscode(passcode: String) = savePasscodeState(passcode)
-
     fun onNumberClick(number: String) {
         val oldPasscode = state.value?.passcode ?: ""
         val newPasscode = oldPasscode + number
         savePasscodeState(newPasscode)
+        checkPasscodeMatches(newPasscode)
+    }
+
+    private fun checkPasscodeMatches(passcode: String) {
+        val isPasscodeMatch = state.value?.screenType == PasscodeScreenType.AUTH
+                && state.value?.canComplete == true
+                && savedPasscode == passcode
+        if (isPasscodeMatch) {
+            state.value = state.value?.copy(
+                isMatches = true
+            )
+        }
     }
 
     fun onSavePasscode() {
         viewModelScope.launch {
             dataStore.savePasscode(state.value?.passcode.orEmpty())
-            println("PASSCODE SAVED SUCCESSFULLY -> ${dataStore.passcode}")
         }
     }
 

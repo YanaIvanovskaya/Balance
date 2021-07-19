@@ -20,14 +20,9 @@ class UserDataStore(
         }
 
     suspend fun savePasscode(newPasscode: String) {
-        println("SAVING...")
-        println("PASSCODE OLD _>${passcode}")
-
         mDataStore.edit { preferences ->
             preferences[KEY_PASSCODE] = newPasscode
         }
-
-        println("PASSCODE NEW _>${passcode}")
     }
 
     companion object {

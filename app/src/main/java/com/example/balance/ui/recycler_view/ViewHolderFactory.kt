@@ -1,4 +1,4 @@
-package com.example.balance.presentation
+package com.example.balance.ui.recycler_view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,21 +9,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
 import com.example.balance.Item
 
-// TODO: 16.07.2021 Перенести в UI
 object ViewHolderFactory {
 
     fun create(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            Item.BALANCE_ROW_TYPE -> {
-                val balanceTypeView: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.row_type_balance, parent, false)
-                BalanceViewHolder(balanceTypeView)
-            }
-            Item.RECORD_ROW_TYPE -> {
-                val recordTypeView: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.row_type_record, parent, false)
-                RecordViewHolder(recordTypeView)
-            }
+//            Item.BALANCE_ROW_TYPE -> {
+//                val balanceTypeView: View = LayoutInflater.from(parent.context)
+//                    .inflate(R.layout.row_type_balance, parent, false)
+//                BalanceViewHolder(balanceTypeView)
+//            }
+//            Item.RECORD_ROW_TYPE -> {
+//                val recordTypeView: View = LayoutInflater.from(parent.context)
+//                    .inflate(R.layout.row_type_record, parent, false)
+//                RecordViewHolder(recordTypeView)
+//            }
             else -> {
                 val dateTypeView: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.row_type_date, parent, false)

@@ -1,21 +1,21 @@
 package com.example.balance.ui.onboarding
 
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentPasscodeBinding
-import com.example.balance.presentation.*
+import com.example.balance.presentation.PasscodeEntryState
+import com.example.balance.presentation.PasscodeEntryViewModel
+import com.example.balance.presentation.PasscodeScreenType
+import com.example.balance.presentation.getViewModel
 
 class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
 
@@ -26,8 +26,7 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
             screenType = args.screenType
         )
     }
-    private lateinit var navController: NavController
-    private var mTextChangeListener: TextWatcher? = null
+    private lateinit var mNavController: NavController
     private val args: PasscodeEntryFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -37,9 +36,10 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
     ): View {
         val binding = FragmentPasscodeBinding.inflate(inflater, container, false)
         mBinding = binding
-        navController = NavHostFragment.findNavController(this)
+        mNavController = NavHostFragment.findNavController(this)
         mViewModel.state.observe(viewLifecycleOwner, ::render)
 
+        applyScreenType()
         initButtons()
 
         return binding.root
@@ -50,16 +50,8 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
         super.onDestroyView()
     }
 
-    private fun render(state: PasscodeEntryState) {
-        mBinding?.buttonNext?.isVisible = state.canComplete
-        mBinding?.editTextCreationPasscode?.removeTextChangedListener(mTextChangeListener)
-        mBinding?.editTextCreationPasscode?.setText(state.passcode)
-        mTextChangeListener = mBinding?.editTextCreationPasscode?.doAfterTextChanged {
-            mViewModel.onChangePasscode(it.toString())
-        }
-        mBinding?.editTextCreationPasscode?.inputType = state.passcodeMode
-
-        when (state.screenType) {
+    private fun applyScreenType() {
+        when (args.screenType) {
             PasscodeScreenType.AUTH -> {
                 mBinding?.buttonNext?.visibility = View.GONE
                 mBinding?.buttonPrevious?.visibility = View.GONE
@@ -74,16 +66,36 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
         }
     }
 
+    private fun render(state: PasscodeEntryState) {
+        mBinding?.editTextCreationPasscode?.setText(state.passcode)
+
+        when (args.screenType) {
+            PasscodeScreenType.ONBOARDING -> {
+                mBinding?.buttonNext?.isVisible = state.canComplete
+                mBinding?.editTextCreationPasscode?.inputType = state.passcodeMode
+            }
+            PasscodeScreenType.AUTH -> {
+                mBinding?.errorMsgPasscode?.isVisible = state.canComplete && !state.isMatches
+                if (state.canComplete and state.isMatches) {
+                    mNavController.navigate(R.id.bottomNavigationFragment)
+                }
+            }
+            else -> {
+            }
+        }
+
+    }
+
     private fun onNextClick() {
         mViewModel.onSavePasscode()
-        navController.navigate(R.id.balanceCreationFragment)
+        mNavController.navigate(R.id.balanceCreationFragment)
     }
 
     private fun initButtons() {
         mBinding?.buttonShowPasscode?.setOnClickListener { mViewModel.onShowPasscode() }
         mBinding?.buttonClearPasscode?.setOnClickListener { mViewModel.onClickClear() }
         mBinding?.buttonPrevious?.setOnClickListener {
-            navController.navigate(R.id.greetingNewUserFragment)
+            mNavController.navigate(R.id.greetingNewUserFragment)
         }
         mBinding?.buttonNext?.setOnClickListener { onNextClick() }
 

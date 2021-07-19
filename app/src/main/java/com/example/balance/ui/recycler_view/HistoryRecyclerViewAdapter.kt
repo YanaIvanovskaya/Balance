@@ -1,11 +1,10 @@
-package com.example.balance.presentation
+package com.example.balance.ui.recycler_view
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.Item
 
-// TODO: 16.07.2021 Перенести в UI
-class RecyclerViewAdapter(
+class HistoryRecyclerViewAdapter(
     private val dataSet: List<Item>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

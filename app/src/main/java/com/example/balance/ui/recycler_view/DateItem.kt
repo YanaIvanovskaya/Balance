@@ -1,10 +1,8 @@
-package com.example.balance.ui.recycler_view_item
+package com.example.balance.ui.recycler_view
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.Item
-import com.example.balance.presentation.ViewHolderFactory
 
-// TODO: 16.07.2021 Перенести в UI
 class DateItem(
     private val date: String,
 ) : Item {
