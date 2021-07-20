@@ -10,19 +10,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentBalanceCreationBinding
-import com.example.balance.presentation.BalanceCreationState
-import com.example.balance.presentation.BalanceCreationViewModel
-import com.example.balance.presentation.HomeViewModel
-import com.example.balance.presentation.PasscodeEntryState
+import com.example.balance.presentation.*
 
 class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
 
     private var mBinding: FragmentBalanceCreationBinding? = null
     private lateinit var navController: NavController
-    private lateinit var mViewModel: BalanceCreationViewModel
-
+    private val mViewModel by getViewModel {
+        BalanceCreationViewModel(
+            dataStore = BalanceApp.dataStore
+        )
+    }
     private var mSumCashChangeListener: TextWatcher? = null
     private var mSumCardsChangeListener: TextWatcher? = null
 
@@ -34,7 +35,6 @@ class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
         val binding = FragmentBalanceCreationBinding.inflate(inflater, container, false)
         mBinding = binding
         navController = findNavController()
-        mViewModel = ViewModelProvider(this).get(BalanceCreationViewModel::class.java)
         mViewModel.state.observe(viewLifecycleOwner, ::render)
         initWidgets()
         return binding.root
@@ -48,7 +48,6 @@ class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
         mSumCashChangeListener = mBinding?.sumCash?.doAfterTextChanged {
             mViewModel.onChangeSum(it.toString(), mBinding?.sumCards?.text.toString())
         }
-
         mBinding?.sumCards?.removeTextChangedListener(mSumCardsChangeListener)
         mBinding?.sumCards?.setText(state.sumCards)
         mSumCardsChangeListener = mBinding?.sumCards?.doAfterTextChanged {
@@ -57,13 +56,13 @@ class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
     }
 
     private fun onNextClick() {
+        mViewModel.onSaveBalance()
         navController.navigate(R.id.bottomNavigationFragment)
     }
 
     private fun initWidgets() {
         mBinding?.buttonStartUse?.setOnClickListener { onNextClick() }
     }
-
 
     override fun onDestroyView() {
         mBinding = null

@@ -60,6 +60,7 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
                     context?.resources?.getString(R.string.greeting)
             }
             PasscodeScreenType.ONBOARDING -> {
+                mBinding?.errorMsgPasscode?.isVisible = false
             }
             PasscodeScreenType.SETTINGS -> {
             }

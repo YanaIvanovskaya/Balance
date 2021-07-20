@@ -29,7 +29,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val mViewModel by getViewModel {
         HomeViewModel(
-            repository = BalanceApp.repository
+            recordRepository = BalanceApp.recordRepository,
+            datastore = BalanceApp.dataStore
         )
     }
 
@@ -52,14 +53,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             records?.let { recordListAdapter.submitList(it) }
         })
 
+        mViewModel.sumCash.observe(viewLifecycleOwner, {
+            balanceAdapter.updateSumCash(it ?: 0)
+            balanceAdapter.notifyItemChanged(0)
+        })
+
+        mViewModel.sumCards.observe(viewLifecycleOwner, {
+            balanceAdapter.updateSumCards(it ?: 0)
+        })
+
         initRecyclerView()
         return binding.root
     }
 
     private fun initRecyclerView() {
         val concatAdapter = ConcatAdapter(balanceAdapter, recordListAdapter)
-        homeRecyclerView.layoutManager = LinearLayoutManager(context)
         homeRecyclerView.adapter = concatAdapter
+        homeRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     private fun onAddRecordClick() {

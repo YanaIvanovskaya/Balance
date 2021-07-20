@@ -8,10 +8,12 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Record::class], version = 2, exportSchema = false)
+@Database(entities = [Record::class, Category::class], version = 5, exportSchema = false)
 abstract class RecordRoomDatabase : RoomDatabase() {
 
     abstract fun RecordDao(): RecordDao
+
+    abstract fun CategoryDao(): CategoryDao
 
     private class RecordDatabaseCallback(
         private val scope: CoroutineScope

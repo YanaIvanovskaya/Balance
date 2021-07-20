@@ -1,9 +1,11 @@
 package com.example.balance
 
 import android.app.Application
+import com.example.balance.data.CategoryRepository
 import com.example.balance.data.RecordRepository
 import com.example.balance.data.RecordRoomDatabase
 import com.example.balance.data.UserDataStore
+import com.jakewharton.threetenabp.AndroidThreeTen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 
@@ -13,7 +15,8 @@ class BalanceApp : Application() {
         lateinit var dataStore: UserDataStore
         lateinit var applicationScope: CoroutineScope
         lateinit var database: RecordRoomDatabase
-        lateinit var repository: RecordRepository
+        lateinit var recordRepository: RecordRepository
+        lateinit var categoryRepository: CategoryRepository
     }
 
     override fun onCreate() {
@@ -21,7 +24,9 @@ class BalanceApp : Application() {
         dataStore = UserDataStore(this)
         applicationScope = CoroutineScope(SupervisorJob())
         database = RecordRoomDatabase.getDatabase(this, applicationScope)
-        repository = RecordRepository(database.RecordDao())
+        recordRepository = RecordRepository(database.RecordDao())
+        categoryRepository = CategoryRepository(database.CategoryDao())
+        AndroidThreeTen.init(this)
     }
 
 }

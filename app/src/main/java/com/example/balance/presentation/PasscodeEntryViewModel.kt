@@ -20,8 +20,11 @@ data class PasscodeEntryState(
         fun default() = PasscodeEntryState(
             passcode = "",
             passcodeMode = PasscodeEntryViewModel.PASSCODE_INVISIBLE_MODE,
-            canComplete = false,
-            isMatches = false,
+
+            // для входа в приложение без ввода пароля
+            canComplete = true,
+            isMatches = true,
+
             screenType = PasscodeScreenType.ONBOARDING
         )
     }

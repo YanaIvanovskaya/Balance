@@ -1,7 +1,11 @@
 package com.example.balance.presentation
 
+import androidx.datastore.dataStore
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.balance.data.UserDataStore
+import kotlinx.coroutines.launch
 
 data class BalanceCreationState(
     val sumCash: String,
@@ -23,7 +27,9 @@ data class BalanceCreationState(
 
 }
 
-class BalanceCreationViewModel : ViewModel() {
+class BalanceCreationViewModel(
+    private val dataStore: UserDataStore
+) : ViewModel() {
 
     val state = MutableLiveData(BalanceCreationState.default())
 
@@ -45,8 +51,16 @@ class BalanceCreationViewModel : ViewModel() {
         }
     }
 
-    fun onChangeSum(sumCash: String, sumCards: String) {
+    fun onChangeSum(sumCash: String, sumCards: String) =
         saveSumStates(sumCash, sumCards)
+
+    fun onSaveBalance() {
+        println("onSaveBalance")
+        viewModelScope.launch {
+            dataStore.addSumCash(Integer.parseInt(state.value?.sumCash ?: "0"))
+
+            dataStore.addSumCards(Integer.parseInt(state.value?.sumCards ?: "0"))
+        }
     }
 
 }

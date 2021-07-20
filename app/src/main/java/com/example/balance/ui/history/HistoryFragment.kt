@@ -24,7 +24,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
 
     private val mViewModel by getViewModel {
         HistoryViewModel(
-            repository = BalanceApp.repository
+            repository = BalanceApp.recordRepository
         )
     }
 

@@ -36,4 +36,5 @@
     <string name="hint_kind_of_money">Средства</string>
     <string name="error_msg_sum_of_money">Введите целое число</string>
     <string name="balance_title">Баланс</string>
+    <string name="change">Изменить</string>
 </resources>

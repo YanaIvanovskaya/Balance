@@ -11,9 +11,13 @@ import com.example.balance.R
 class BalanceListAdapter :
     RecyclerView.Adapter<BalanceListAdapter.BalanceViewHolder>() {
 
-    private var balance: Int = 0
-    private var sumCash: Int = 0
-    private var sumCards: Int = 0
+    private var balance: String = "0"
+    private var sumCash: String = "0"
+    private var sumCards: String = "0"
+
+    init {
+
+    }
 
     class BalanceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -21,10 +25,10 @@ class BalanceListAdapter :
         private val cashSum: TextView = itemView.findViewById(R.id.balance_sum_cash)
         private val cardsSum: TextView = itemView.findViewById(R.id.balance_sum_cards)
 
-        fun bind(balance: Int, sumCash: Int, sumCards: Int) {
-            balanceSum.text = balance.toString()
-            cashSum.text = sumCash.toString()
-            cardsSum.text = sumCards.toString()
+        fun bind(balance: String, sumCash: String, sumCards: String) {
+            balanceSum.text = balance
+            cashSum.text = sumCash
+            cardsSum.text = sumCards
         }
     }
 
@@ -38,5 +42,19 @@ class BalanceListAdapter :
         holder.bind(balance, sumCash, sumCards)
 
     override fun getItemCount(): Int = 1
+
+    private fun updateBalance(sumMoney: Int) {
+        balance = (Integer.parseInt(balance) + sumMoney).toString()
+    }
+
+    fun updateSumCash(cash: Int) {
+        sumCash = (Integer.parseInt(sumCash) + cash).toString()
+        updateBalance(cash)
+    }
+
+    fun updateSumCards(cards: Int) {
+        sumCards = (Integer.parseInt(sumCards) + cards).toString()
+        updateBalance(cards)
+    }
 
 }

@@ -34,7 +34,7 @@ class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
                 navController.navigate(
                     when {
                         isNewUser -> R.id.onboarding_nav_graph
-                        else -> R.id.auth_nav_graph
+                        else -> R.id.onboarding_nav_graph
                     }
                 )
             }

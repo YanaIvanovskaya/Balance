@@ -59,6 +59,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/hint_kind_of_operation" />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="83dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="52dp"
+        android:layout_marginEnd="19dp"
+        android:layout_marginRight="19dp"
+        android:text="Категория"
+        app:layout_constraintEnd_toStartOf="@+id/chip5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hint_kind_of_money" />
+
     <EditText
         android:id="@+id/editText_sum_of_operation"
         android:layout_width="0dp"
@@ -157,12 +171,29 @@
         app:layout_constraintTop_toBottomOf="@+id/editText_sum_of_operation"
         app:layout_constraintVertical_bias="1.0" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="1dp"
+    <Button
+        android:id="@+id/button_change_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:text="@string/change"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/chip_category"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup_kind_of_money" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginRight="36dp"
+        app:layout_constraintEnd_toStartOf="@+id/button_change_category"
+        app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup_kind_of_money" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
