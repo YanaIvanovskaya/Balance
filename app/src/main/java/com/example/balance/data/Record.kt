@@ -20,8 +20,8 @@ data class Record(
     var month: String = months[localDate.month.value] ?: "",
     var year: Int = localDate.year,
     var weekDay: String = weekDays[localDate.dayOfWeek.value] ?: "",
-    val isVisible: Boolean = true,
-    val isImportant: Boolean = true,
+    var isVisible: Boolean = true,
+    var isImportant: Boolean = false,
     val date: String = "$weekDay $day $month $year",
 
     var sumOfMoney: Int,

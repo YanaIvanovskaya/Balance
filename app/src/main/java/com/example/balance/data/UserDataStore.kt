@@ -36,7 +36,6 @@ class UserDataStore(
         mDataStore.edit { preferences ->
             preferences[KEY_CASH] = preferences[KEY_CASH]?.plus(cash) ?: 0
         }
-
     }
 
     val sumCards: Flow<Int>

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -15,8 +16,8 @@ import com.example.balance.data.MoneyType
 import com.example.balance.data.Record
 import com.example.balance.data.RecordType
 
-class RecentRecordListAdapter :
-    ListAdapter<Record, RecentRecordListAdapter.RecordViewHolder>(RecordsComparator()) {
+class ImportantRecordListAdapter :
+    ListAdapter<Record, ImportantRecordListAdapter.RecordViewHolder>(RecordsComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordViewHolder {
         return RecordViewHolder.create(parent)
@@ -29,7 +30,8 @@ class RecentRecordListAdapter :
             sumMoney = current.sumOfMoney,
             recordType = current.recordType,
             moneyType = current.moneyType,
-            category = current.category
+            category = current.category,
+            comment = current.comment
         )
     }
 
@@ -38,8 +40,10 @@ class RecentRecordListAdapter :
         private val categoryText: TextView = itemView.findViewById(R.id.category)
         private val sumText: TextView = itemView.findViewById(R.id.sum)
         private val dateText: TextView = itemView.findViewById(R.id.date)
-        private val moneyTypeText: ImageView = itemView.findViewById(R.id.image_moneyType)
-        val layout: ConstraintLayout = itemView.findViewById(R.id.record_layout)
+        private val moneyTypeImage: ImageView = itemView.findViewById(R.id.image_moneyType)
+        private val importantImage: ImageView = itemView.findViewById(R.id.image_important)
+        private val commentText: TextView = itemView.findViewById(R.id.textView_comment)
+        val layout: ConstraintLayout = itemView.findViewById(R.id.constraint)
 
         fun bind(
             date: String,
@@ -47,6 +51,7 @@ class RecentRecordListAdapter :
             recordType: RecordType,
             moneyType: MoneyType,
             category: String,
+            comment: String
         ) {
             categoryText.text = category
             sumText.text = sumMoney.toString()
@@ -63,14 +68,21 @@ class RecentRecordListAdapter :
             val profitsColor = ResourcesCompat.getDrawable(resources, R.color.teal_700, null)
 
             when (moneyType) {
-                MoneyType.CASH -> moneyTypeText.setImageDrawable(imageCash)
-                MoneyType.CARDS -> moneyTypeText.setImageDrawable(imageCards)
+                MoneyType.CASH -> moneyTypeImage.setImageDrawable(imageCash)
+                MoneyType.CARDS -> moneyTypeImage.setImageDrawable(imageCards)
             }
 
             when (recordType) {
                 RecordType.COSTS -> layout.background = costsColor
                 RecordType.PROFITS -> layout.background = profitsColor
             }
+
+            importantImage.isVisible = true
+            if (comment.isNotEmpty()) {
+                commentText.isVisible = true
+                commentText.text = comment
+            }
+
 
         }
 

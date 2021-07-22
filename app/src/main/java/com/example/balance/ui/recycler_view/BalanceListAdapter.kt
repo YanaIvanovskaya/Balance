@@ -15,10 +15,6 @@ class BalanceListAdapter :
     private var sumCash: String = "0"
     private var sumCards: String = "0"
 
-    init {
-
-    }
-
     class BalanceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val balanceSum: TextView = itemView.findViewById(R.id.balance_sum_balance)

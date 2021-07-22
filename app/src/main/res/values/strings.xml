@@ -37,4 +37,9 @@
     <string name="error_msg_sum_of_money">Введите целое число</string>
     <string name="balance_title">Баланс</string>
     <string name="change">Изменить</string>
+    <string name="use_template">По шаблону</string>
+    <string name="category">Категория</string>
+    <string name="mark_as_important">Отметить как важную</string>
+    <string name="save_as_template">Сохранить как шаблон</string>
+    <string name="comment">comment</string>
 </resources>

@@ -161,9 +161,7 @@
                         android:id="@+id/edit_text_sum_money"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:digits="0987654321"
-                        android:hint="@string/hint_sum_of_operation"
-                        android:inputType="numberSigned|number" />
+                        android:hint="@string/hint_sum_of_operation" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RadioGroup
@@ -244,15 +242,13 @@
 
                 <MultiAutoCompleteTextView
                     android:id="@+id/edit_text_comment"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="58dp"
                     android:layout_marginBottom="24dp"
                     android:hint="@string/comment"
+                    android:text="MultiAutoCompleteTextView566666666666666666666666666666666666666666666666666666666666666666666666666"
                     app:layout_constraintBottom_toTopOf="@+id/button_create_and_save_new_record"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/switch_is_template" />
+                    tools:layout_editor_absoluteX="0dp" />
 
                 <EditText
                     android:id="@+id/edit_text_name_template"
@@ -267,125 +263,9 @@
                     android:inputType="textPersonName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/switch_is_template"
-                    app:layout_constraintTop_toBottomOf="@+id/button_change_category"
-                    android:autofillHints="nameTemplate" />
+                    app:layout_constraintTop_toBottomOf="@+id/button_change_category" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
-
-
-
-
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-
-<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:background="#D68686">-->
-
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:id="@+id/ccc"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:background="#EFE1B3">-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/radioButton_cash"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/cash" />-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/radioButton_cards"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/card" />-->
-
-<!--        <androidx.appcompat.widget.Toolbar-->
-<!--            android:id="@+id/toolbar_new_record"-->
-<!--            app:navigationIcon="?attr/actionModeCloseDrawable"-->
-<!--            app:title="@string/new_record"-->
-<!--            app:titleTextColor="#EADDDD"-->
-<!--            tools:layout_editor_absoluteX="103dp"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="#D8B4B4"-->
-<!--            android:minHeight="?attr/actionBarSize"-->
-<!--            android:theme="?attr/actionBarTheme" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/hint_sum_of_operation"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/hint_sum_of_operation" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/hint_kind_of_operation"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/hint_kind_of_operation" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/hint_kind_of_money"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/hint_kind_of_money" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/textView"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Категория" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/editText_sum_of_operation"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:inputType="numberSigned"-->
-<!--            android:maxLength="9" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/button_create_and_save_new_record"-->
-<!--            tools:layout_editor_absoluteX="158dp"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/create_record" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/error_msg_sum_of_money"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/error_msg_sum_of_money"-->
-<!--            android:textColor="#EA8181"-->
-<!--            android:visibility="invisible" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/button_change_category"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/change" />-->
-
-<!--        <com.google.android.material.chip.Chip-->
-<!--            android:id="@+id/chip_category"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content" />-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/radioButton_profits"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/profits" />-->
-
-<!--        <RadioButton-->
-<!--            android:id="@+id/radioButton_costs"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/costs" />-->
-
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
-<!--</ScrollView>-->
-
-<!--&lt;!&ndash;</FrameLayout>&ndash;&gt;-->

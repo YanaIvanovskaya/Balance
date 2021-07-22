@@ -16,7 +16,7 @@ import com.example.balance.databinding.FragmentHomeBinding
 import com.example.balance.presentation.HomeViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.BalanceListAdapter
-import com.example.balance.ui.recycler_view.RecentRecordListAdapter
+import com.example.balance.ui.recycler_view.ImportantRecordListAdapter
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -25,7 +25,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var homeRecyclerView: RecyclerView
     private lateinit var balanceAdapter: BalanceListAdapter
-    private lateinit var recordListAdapter: RecentRecordListAdapter
+    private lateinit var recordListAdapter: ImportantRecordListAdapter
 
     private val mViewModel by getViewModel {
         HomeViewModel(
@@ -45,7 +45,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
 
         balanceAdapter = BalanceListAdapter()
-        recordListAdapter = RecentRecordListAdapter()
+        recordListAdapter = ImportantRecordListAdapter()
 
         binding.floatingButtonCreateNewRecord.setOnClickListener { onAddRecordClick() }
 
@@ -60,6 +60,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         mViewModel.sumCards.observe(viewLifecycleOwner, {
             balanceAdapter.updateSumCards(it ?: 0)
+            balanceAdapter.notifyItemChanged(0)
         })
 
         initRecyclerView()

@@ -34,7 +34,7 @@ class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
                 navController.navigate(
                     when {
                         isNewUser -> R.id.onboarding_nav_graph
-                        else -> R.id.onboarding_nav_graph
+                        else -> R.id.auth_nav_graph
                     }
                 )
             }
@@ -51,7 +51,7 @@ class StartingAppViewModel(
 
     init {
         viewModelScope.launch {
-            dataStore.savePasscode("00000")
+//            dataStore.savePasscode("00000")
             val passcode = dataStore.passcode.first()
             val isNewUser = passcode.isNullOrEmpty()
             events.value = Event(isNewUser)
