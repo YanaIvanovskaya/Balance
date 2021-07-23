@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(entities = [Record::class, Category::class, Template::class], version = 6, exportSchema = false)
-abstract class RecordRoomDatabase : RoomDatabase() {
+abstract class BalanceDatabase : RoomDatabase() {
 
     abstract fun RecordDao(): RecordDao
 
@@ -17,7 +17,7 @@ abstract class RecordRoomDatabase : RoomDatabase() {
 
     abstract fun TemplateDao(): TemplateDao
 
-    private class RecordDatabaseCallback(
+    private class BalanceDatabaseCallback(
         private val scope: CoroutineScope
     ) : RoomDatabase.Callback() {
 
@@ -37,19 +37,19 @@ abstract class RecordRoomDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var INSTANCE: RecordRoomDatabase? = null
+        private var INSTANCE: BalanceDatabase? = null
 
         fun getDatabase(
             context: Context,
             scope: CoroutineScope
-        ): RecordRoomDatabase {
+        ): BalanceDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    RecordRoomDatabase::class.java,
-                    "record_database"
+                    BalanceDatabase::class.java,
+                    "balance_database"
                 )
-                    .addCallback(RecordDatabaseCallback(scope))
+                    .addCallback(BalanceDatabaseCallback(scope))
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

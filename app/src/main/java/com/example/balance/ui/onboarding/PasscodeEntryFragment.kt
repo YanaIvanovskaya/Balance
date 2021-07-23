@@ -38,10 +38,8 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
         mBinding = binding
         mNavController = NavHostFragment.findNavController(this)
         mViewModel.state.observe(viewLifecycleOwner, ::render)
-
         applyScreenType()
         initButtons()
-
         return binding.root
     }
 
@@ -53,14 +51,12 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
     private fun applyScreenType() {
         when (args.screenType) {
             PasscodeScreenType.AUTH -> {
-                mBinding?.buttonNext?.visibility = View.GONE
-                mBinding?.buttonPrevious?.visibility = View.GONE
+                mBinding?.buttonNext?.visibility = View.INVISIBLE
                 mBinding?.buttonShowPasscode?.visibility = View.GONE
                 mBinding?.titlePasscodeEntry?.text =
                     context?.resources?.getString(R.string.greeting)
             }
             PasscodeScreenType.ONBOARDING -> {
-                mBinding?.errorMsgPasscode?.isVisible = false
             }
             PasscodeScreenType.SETTINGS -> {
             }
@@ -84,7 +80,6 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
             else -> {
             }
         }
-
     }
 
     private fun onNextClick() {
@@ -95,9 +90,6 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
     private fun initButtons() {
         mBinding?.buttonShowPasscode?.setOnClickListener { mViewModel.onShowPasscode() }
         mBinding?.buttonClearPasscode?.setOnClickListener { mViewModel.onClickClear() }
-        mBinding?.buttonPrevious?.setOnClickListener {
-            mNavController.navigate(R.id.greetingNewUserFragment)
-        }
         mBinding?.buttonNext?.setOnClickListener { onNextClick() }
 
         val buttonKeyBoard = listOf(

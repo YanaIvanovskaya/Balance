@@ -1,6 +1,5 @@
 package com.example.balance.presentation
 
-import androidx.datastore.dataStore
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -55,10 +54,8 @@ class BalanceCreationViewModel(
         saveSumStates(sumCash, sumCards)
 
     fun onSaveBalance() {
-        println("onSaveBalance")
         viewModelScope.launch {
             dataStore.addSumCash(Integer.parseInt(state.value?.sumCash ?: "0"))
-
             dataStore.addSumCards(Integer.parseInt(state.value?.sumCards ?: "0"))
         }
     }

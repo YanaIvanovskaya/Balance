@@ -22,6 +22,18 @@
                 android:layout_height="718dp"
                 android:background="#F4EEEE">
 
+                <TextView
+                    android:id="@+id/error_msg_template_name"
+                    android:layout_width="173dp"
+                    android:layout_height="23dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="Пустое имя!"
+                    android:textColor="#EA8181"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_name_template" />
+
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar_new_record"
                     android:layout_width="0dp"
@@ -163,7 +175,8 @@
                         android:layout_height="wrap_content"
                         android:digits="0987654321"
                         android:hint="@string/hint_sum_of_operation"
-                        android:inputType="numberSigned|number" />
+                        android:inputType="numberSigned|number"
+                        android:maxLength="9" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <RadioGroup
@@ -256,19 +269,21 @@
 
                 <EditText
                     android:id="@+id/edit_text_name_template"
-                    android:layout_width="174dp"
-                    android:layout_height="47dp"
+                    android:layout_width="181dp"
+                    android:layout_height="43dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginTop="70dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
+                    android:autofillHints="nameTemplate"
                     android:ems="10"
+                    android:hint="Имя шаблона"
                     android:inputType="textPersonName"
+                    android:maxLength="15"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/switch_is_template"
-                    app:layout_constraintTop_toBottomOf="@+id/button_change_category"
-                    android:autofillHints="nameTemplate" />
+                    app:layout_constraintTop_toBottomOf="@+id/button_change_category" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

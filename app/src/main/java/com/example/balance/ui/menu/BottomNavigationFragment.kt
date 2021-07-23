@@ -20,7 +20,6 @@ class BottomNavigationFragment : Fragment(R.layout.fragment_bottom_navigation) {
     ): View {
         val binding = FragmentBottomNavigationBinding.inflate(inflater, container, false)
         mBinding = binding
-
         return binding.root
     }
 
@@ -41,22 +40,10 @@ class BottomNavigationFragment : Fragment(R.layout.fragment_bottom_navigation) {
 
         mBinding?.bottomNavigation?.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.action_home -> {
-                    navController.navigate(R.id.homeFragment)
-                    println("HOME")
-                }
-                R.id.action_history -> {
-                    navController.navigate(R.id.historyFragment)
-                    println("HISTORY")
-                }
-                R.id.action_statistics -> {
-                    navController.navigate(R.id.statisticsFragment)
-                    println("STATISTICS")
-                }
-                R.id.action_settings -> {
-                    navController.navigate(R.id.settingsFragment)
-                    println("SETTINGS")
-                }
+                R.id.action_home -> navController.navigate(R.id.homeFragment)
+                R.id.action_history -> navController.navigate(R.id.historyFragment)
+                R.id.action_statistics -> navController.navigate(R.id.statisticsFragment)
+                R.id.action_settings -> navController.navigate(R.id.settingsFragment)
             }
             return@setOnItemSelectedListener true
         }

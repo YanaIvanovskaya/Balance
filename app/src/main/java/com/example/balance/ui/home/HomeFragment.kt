@@ -22,11 +22,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var mBinding: FragmentHomeBinding? = null
     private lateinit var mNavController: NavController
-
     private lateinit var homeRecyclerView: RecyclerView
     private lateinit var balanceAdapter: BalanceListAdapter
     private lateinit var recordListAdapter: ImportantRecordListAdapter
-
     private val mViewModel by getViewModel {
         HomeViewModel(
             recordRepository = BalanceApp.recordRepository,
@@ -47,23 +45,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         balanceAdapter = BalanceListAdapter()
         recordListAdapter = ImportantRecordListAdapter()
 
-        binding.floatingButtonCreateNewRecord.setOnClickListener { onAddRecordClick() }
-
         mViewModel.allRecords.observe(viewLifecycleOwner, { records ->
             records?.let { recordListAdapter.submitList(it) }
         })
 
         mViewModel.sumCash.observe(viewLifecycleOwner, {
             balanceAdapter.updateSumCash(it ?: 0)
-            balanceAdapter.notifyItemChanged(0)
         })
 
         mViewModel.sumCards.observe(viewLifecycleOwner, {
             balanceAdapter.updateSumCards(it ?: 0)
-            balanceAdapter.notifyItemChanged(0)
         })
 
         initRecyclerView()
+        binding.floatingButtonCreateNewRecord.setOnClickListener { onAddRecordClick() }
         return binding.root
     }
 

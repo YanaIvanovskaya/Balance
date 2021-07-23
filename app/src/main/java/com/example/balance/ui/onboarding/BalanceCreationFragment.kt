@@ -5,15 +5,17 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentBalanceCreationBinding
-import com.example.balance.presentation.*
+import com.example.balance.presentation.BalanceCreationState
+import com.example.balance.presentation.BalanceCreationViewModel
+import com.example.balance.presentation.getViewModel
 
 class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
 
@@ -26,6 +28,9 @@ class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
     }
     private var mSumCashChangeListener: TextWatcher? = null
     private var mSumCardsChangeListener: TextWatcher? = null
+
+    private var mSumCards: EditText? = null
+    private var mSumCash: EditText? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,15 +48,18 @@ class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
     private fun render(state: BalanceCreationState) {
         mBinding?.buttonStartUse?.isEnabled = state.canComplete
 
-        mBinding?.sumCash?.removeTextChangedListener(mSumCashChangeListener)
-        mBinding?.sumCash?.setText(state.sumCash)
-        mSumCashChangeListener = mBinding?.sumCash?.doAfterTextChanged {
-            mViewModel.onChangeSum(it.toString(), mBinding?.sumCards?.text.toString())
+        mSumCash?.removeTextChangedListener(mSumCashChangeListener)
+        mSumCash?.setText(state.sumCash)
+        mSumCashChangeListener = mSumCash?.doAfterTextChanged {
+            mViewModel.onChangeSum(it.toString(), mSumCards?.text.toString())
+            mSumCash?.setSelection(it.toString().length)
         }
-        mBinding?.sumCards?.removeTextChangedListener(mSumCardsChangeListener)
-        mBinding?.sumCards?.setText(state.sumCards)
-        mSumCardsChangeListener = mBinding?.sumCards?.doAfterTextChanged {
-            mViewModel.onChangeSum(mBinding?.sumCash?.text.toString(), it.toString())
+
+        mSumCards?.removeTextChangedListener(mSumCardsChangeListener)
+        mSumCards?.setText(state.sumCards)
+        mSumCardsChangeListener = mSumCards?.doAfterTextChanged {
+            mViewModel.onChangeSum(mSumCash?.text.toString(), it.toString())
+            mSumCards?.setSelection(it.toString().length)
         }
     }
 
@@ -61,6 +69,8 @@ class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
     }
 
     private fun initWidgets() {
+        mSumCards = mBinding?.sumCards
+        mSumCash = mBinding?.sumCash
         mBinding?.buttonStartUse?.setOnClickListener { onNextClick() }
     }
 

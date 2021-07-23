@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Spinner
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
@@ -18,6 +19,7 @@ import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.data.MoneyType
 import com.example.balance.data.RecordType
+import com.example.balance.data.Template
 import com.example.balance.databinding.FragmentRecordCreationBinding
 import com.example.balance.presentation.RecordCreationState
 import com.example.balance.presentation.RecordCreationViewModel
@@ -36,10 +38,17 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         )
     }
     private lateinit var mNavController: NavController
+    private lateinit var mTemplatesSpinnerAdapter: ArrayAdapter<String>
+
+    private var mEditTextSumMoney: EditText? = null
+    private var mEditTextComment: EditText? = null
+    private var mEditTextNameTemplate: EditText? = null
+    private var mTemplatesSpinner: Spinner? = null
+
     private var mSumChangeListener: TextWatcher? = null
     private var mCommentChangeListener: TextWatcher? = null
-    private lateinit var mTemplatesSpinnerAdapter: ArrayAdapter<String>
-    private var mTemplatesSpinner: Spinner? = null
+    private var mTemplateNameChangeListener: TextWatcher? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,26 +59,24 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mBinding = binding
         mNavController = findNavController()
 
-        mViewModel.state.observe(viewLifecycleOwner, ::render)
+        mViewModel.costsCategories.observe(viewLifecycleOwner, {
+            mViewModel.updateCostsCategory()
+        })
 
         mViewModel.profitCategories.observe(viewLifecycleOwner, {
             mViewModel.updateProfitCategory()
         })
 
-        mViewModel.costsCategories.observe(viewLifecycleOwner, {
-            mViewModel.updateCostsCategory()
-        })
+        mViewModel.state.observe(viewLifecycleOwner, ::render)
 
-        mViewModel.templates.observe(viewLifecycleOwner, {
-            mViewModel.updateTemplates()
-            initTemplateSpinner()
-        })
+        mViewModel.onCreateComplete = {
+            mNavController.popBackStack()
+        }
 
-        initTemplateSpinner()
+        initTextEdits()
         initButtons()
         initRadioButtons()
         initSwitches()
-
         return binding.root
     }
 
@@ -78,23 +85,33 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         super.onDestroyView()
     }
 
-    private fun render(state: RecordCreationState) {
-
-        mBinding?.spinnerTemplates?.setSelection(state.selectedTemplatePosition)
-
-        mBinding?.editTextSumMoney?.removeTextChangedListener(mSumChangeListener)
-        mBinding?.editTextSumMoney?.setText(state.sumRecord)
-        mSumChangeListener = mBinding?.editTextSumMoney?.doAfterTextChanged {
+    private fun renderEditText(state: RecordCreationState) {
+        mEditTextSumMoney?.removeTextChangedListener(mSumChangeListener)
+        mEditTextSumMoney?.setText(state.sumRecord)
+        mSumChangeListener = mEditTextSumMoney?.doAfterTextChanged {
             mViewModel.onChangeSum(it.toString())
+            mEditTextSumMoney?.setSelection(it.toString().length)
         }
 
-        mBinding?.editTextComment?.removeTextChangedListener(mCommentChangeListener)
-        mBinding?.editTextComment?.setText(state.comment)
-        mCommentChangeListener = mBinding?.editTextComment?.doAfterTextChanged {
+        mEditTextComment?.removeTextChangedListener(mCommentChangeListener)
+        mEditTextComment?.setText(state.comment)
+        mCommentChangeListener = mEditTextComment?.doAfterTextChanged {
             mViewModel.onChangeComment(it.toString())
+            mEditTextComment?.setSelection(it.toString().length)
         }
 
-        mBinding?.errorMsgSumOfMoney?.isVisible = !state.canSave
+        mEditTextNameTemplate?.removeTextChangedListener(mTemplateNameChangeListener)
+        mEditTextNameTemplate?.setText(state.templateName)
+        mTemplateNameChangeListener = mEditTextNameTemplate?.doAfterTextChanged {
+            mViewModel.onChangeTemplateName(it.toString())
+            mEditTextNameTemplate?.setSelection(it.toString().length)
+        }
+    }
+
+    private fun render(state: RecordCreationState) {
+        renderEditText(state)
+        mBinding?.spinnerTemplates?.setSelection(state.selectedTemplatePosition)
+        mBinding?.errorMsgSumOfMoney?.isVisible = state.sumRecord.isEmpty()
 
         when (state.recordType) {
             RecordType.COSTS -> mBinding?.radioButtonCosts?.isChecked = true
@@ -106,51 +123,51 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         }
 
         mBinding?.chipCategory?.text = state.selectedCategory
-        println(state.selectedCategory)
-
         mBinding?.switchIsImportantRecord?.isChecked = state.isImportant
-
         mBinding?.switchIsTemplate?.isChecked = state.isTemplate
-
         mBinding?.editTextNameTemplate?.isVisible = state.isTemplate
-
-
+        mBinding?.errorMsgTemplateName?.isVisible = state.isTemplate && !state.isValidTemplateName
         mBinding?.buttonCreateAndSaveNewRecord?.isEnabled = state.canSave
 
+        renderTemplates(state.templates)
     }
 
-    private fun initTemplateSpinner() {
-        mTemplatesSpinner = mBinding?.spinnerTemplates
-        mTemplatesSpinnerAdapter = ArrayAdapter<String>(
-            requireContext(),
-            android.R.layout.simple_spinner_item, mViewModel.getTemplates()
-        )
-        mTemplatesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+    private fun renderTemplates(templates: List<Template>) {
+//        mTemplatesSpinner = mBinding?.spinnerTemplates
+//        mTemplatesSpinnerAdapter = ArrayAdapter<String>(
+//            requireContext(),
+//            android.R.layout.simple_spinner_item,
+//            templates.map { it.name }
+//                .toMutableList()
+//                .apply { add(0, "Без шаблона") }
+//        )
+//        mTemplatesSpinnerAdapter
+//            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        mTemplatesSpinner?.adapter = mTemplatesSpinnerAdapter
+//        mTemplatesSpinner?.onItemSelectedListener = TemplateSelectedListener(mViewModel)
+    }
 
-        mTemplatesSpinner?.adapter = mTemplatesSpinnerAdapter
-
-        mTemplatesSpinner?.onItemSelectedListener = SpinnerItemSelectedListener()
-
+    private fun initTextEdits() {
+        mEditTextSumMoney = mBinding?.editTextSumMoney
+        mEditTextNameTemplate = mBinding?.editTextNameTemplate
+        mEditTextComment = mBinding?.editTextComment
     }
 
     private fun initRadioButtons() {
-        mBinding?.radioButtonCash?.setOnCheckedChangeListener { compoundButton, isChecked ->
-            if (compoundButton.isShown && isChecked)
-                mViewModel.onCashSelected()
-        }
-        mBinding?.radioButtonCards?.setOnCheckedChangeListener { compoundButton, isChecked ->
-            if (compoundButton.isShown && isChecked)
-                mViewModel.onCardsSelected()
+        mBinding?.radioButtonCash?.setOnCheckedChangeListener { btn, isChecked ->
+            if (btn.isShown && isChecked) mViewModel.onCashSelected()
         }
 
-        mBinding?.radioButtonCosts?.setOnCheckedChangeListener { compoundButton, isChecked ->
-            if (compoundButton.isShown && isChecked)
-                mViewModel.onCostsSelected()
+        mBinding?.radioButtonCards?.setOnCheckedChangeListener { btn, isChecked ->
+            if (btn.isShown && isChecked) mViewModel.onCardsSelected()
         }
 
-        mBinding?.radioButtonProfits?.setOnCheckedChangeListener { compoundButton, isChecked ->
-            if (compoundButton.isShown && isChecked)
-                mViewModel.onProfitSelected()
+        mBinding?.radioButtonCosts?.setOnCheckedChangeListener { btn, isChecked ->
+            if (btn.isShown && isChecked) mViewModel.onCostsSelected()
+        }
+
+        mBinding?.radioButtonProfits?.setOnCheckedChangeListener { btn, isChecked ->
+            if (btn.isShown && isChecked) mViewModel.onProfitSelected()
         }
     }
 
@@ -158,9 +175,9 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mBinding?.buttonChangeCategory?.setOnClickListener {
             mViewModel.showCategoryDialog(requireContext())
         }
+
         mBinding?.buttonCreateAndSaveNewRecord?.setOnClickListener {
             mViewModel.onSaveRecord()
-            mNavController.popBackStack()
         }
 
         mBinding?.toolbarNewRecord?.setNavigationOnClickListener {
@@ -189,16 +206,18 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         }
     }
 
-
-    class SpinnerItemSelectedListener : AdapterView.OnItemSelectedListener {
+    private class TemplateSelectedListener(
+        private val viewModel: RecordCreationViewModel
+    ) : AdapterView.OnItemSelectedListener {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            println("onItemSelected $position")
+            if (position != 0)
+                viewModel.onApplyTemplate(position)
+            else
+                viewModel.onRevertToDefault()
         }
 
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-            println("onNothingSelected")
-        }
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
 
     }
 

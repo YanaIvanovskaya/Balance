@@ -23,7 +23,7 @@ interface CategoryDao {
     fun getAll(type: CategoryType): Flow<List<Category>>
 
     @Query("SELECT id FROM category_table WHERE name = :name")
-    fun getId(name: String): Flow<Int>
+    fun getId(name: String): Int
 
     @Query("SELECT name FROM category_table WHERE id = :id")
     fun getNameById(id: Int): Flow<String>

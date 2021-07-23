@@ -14,7 +14,6 @@ class DateItem(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
         val dateViewHolder: ViewHolderFactory.DateViewHolder =
             viewHolder as ViewHolderFactory.DateViewHolder
-
         dateViewHolder.date.text = date
     }
 

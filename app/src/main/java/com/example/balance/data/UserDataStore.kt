@@ -32,7 +32,6 @@ class UserDataStore(
         }
 
     suspend fun addSumCash(cash: Int) {
-        println("addSumCash $sumCash")
         mDataStore.edit { preferences ->
             preferences[KEY_CASH] = preferences[KEY_CASH]?.plus(cash) ?: 0
         }
@@ -48,6 +47,20 @@ class UserDataStore(
             preferences[KEY_CARDS] = preferences[KEY_CARDS]?.plus(cards) ?: 0
         }
     }
+
+    suspend fun clearBalance() {
+        mDataStore.edit { preferences ->
+            preferences[KEY_CARDS] =  0
+            println(preferences[KEY_CARDS])
+        }
+
+        mDataStore.edit { preferences ->
+            preferences[KEY_CASH] =  0
+            println(preferences[KEY_CASH])
+        }
+    }
+
+
 
     companion object {
         val KEY_PASSCODE = stringPreferencesKey("key_passcode")

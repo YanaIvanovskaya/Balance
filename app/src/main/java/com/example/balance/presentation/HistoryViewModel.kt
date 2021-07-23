@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.example.balance.Item
 import com.example.balance.data.Record
-import com.example.balance.data.RecordRepository
+import com.example.balance.data.record.RecordRepository
 import com.example.balance.ui.recycler_view.DateItem
 import com.example.balance.ui.recycler_view.RecordItem
 import kotlinx.coroutines.flow.first
@@ -27,7 +27,7 @@ class HistoryViewModel(
 
         recordList.forEach { record ->
             if (currentDate.isEmpty() || currentDate != record.date) {
-                val dateItem = DateItem(date = record.date)
+                val dateItem = DateItem(date = record.date.drop(3).dropLast(5))
                 allHistoryRecords.add(dateItem)
             }
             allHistoryRecords.add(

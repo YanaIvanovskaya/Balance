@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
 
-// TODO: 19.07.2021 Sticky header
 class BalanceListAdapter :
     RecyclerView.Adapter<BalanceListAdapter.BalanceViewHolder>() {
 

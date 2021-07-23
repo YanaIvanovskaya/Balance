@@ -1,5 +1,8 @@
-package com.example.balance.data
+package com.example.balance.data.category
 
+import com.example.balance.data.Category
+import com.example.balance.data.CategoryDao
+import com.example.balance.data.CategoryType
 import kotlinx.coroutines.flow.Flow
 
 class CategoryRepository(private val categoryDao: CategoryDao) {
@@ -10,8 +13,8 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
 
     suspend fun insert(category: Category) = categoryDao.insert(category)
 
-    fun getId(name: String) = categoryDao.getId(name)
+    suspend fun deleteAll() = categoryDao.deleteAll()
 
-    fun getName(id: Int) = categoryDao.getNameById(id)
+    fun getId(name: String) = categoryDao.getId(name)
 
 }

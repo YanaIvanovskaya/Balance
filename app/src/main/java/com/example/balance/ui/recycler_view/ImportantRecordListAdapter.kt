@@ -82,8 +82,6 @@ class ImportantRecordListAdapter :
                 commentText.isVisible = true
                 commentText.text = comment
             }
-
-
         }
 
         companion object {
@@ -93,7 +91,6 @@ class ImportantRecordListAdapter :
                 return RecordViewHolder(view)
             }
         }
-
     }
 
     class RecordsComparator : DiffUtil.ItemCallback<Record>() {

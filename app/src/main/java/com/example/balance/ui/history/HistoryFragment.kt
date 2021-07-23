@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SimpleAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
@@ -15,13 +17,14 @@ import com.example.balance.databinding.FragmentHistoryBinding
 import com.example.balance.presentation.HistoryViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.HistoryRecyclerViewAdapter
+import com.example.balance.ui.recycler_view.SwipeToDeleteCallback
 
 class HistoryFragment : Fragment(R.layout.fragment_history) {
+
     private var mBinding: FragmentHistoryBinding? = null
     private lateinit var mNavController: NavController
     private lateinit var historyRecyclerView: RecyclerView
     private lateinit var historyAdapter: HistoryRecyclerViewAdapter
-
     private val mViewModel by getViewModel {
         HistoryViewModel(
             repository = BalanceApp.recordRepository
@@ -53,6 +56,17 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     private fun initRecyclerView() {
         historyRecyclerView.layoutManager = LinearLayoutManager(context)
         historyRecyclerView.adapter = historyAdapter
+
+        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                historyAdapter.removeAt(viewHolder.bindingAdapterPosition)
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(historyRecyclerView)
+
+
+
 //        historyRecyclerView.addItemDecoration(HeaderItemDecoration(historyRecyclerView,isHeader = 0))
     }
 

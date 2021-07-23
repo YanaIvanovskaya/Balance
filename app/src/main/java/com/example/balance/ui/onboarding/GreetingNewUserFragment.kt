@@ -5,13 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.example.balance.R
 import com.example.balance.databinding.FragmentGreetingNewUserBinding
 
 class GreetingNewUserFragment : Fragment(R.layout.fragment_greeting_new_user) {
 
     private var mBinding: FragmentGreetingNewUserBinding? = null
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,7 +24,7 @@ class GreetingNewUserFragment : Fragment(R.layout.fragment_greeting_new_user) {
         val binding = FragmentGreetingNewUserBinding.inflate(inflater, container, false)
         mBinding = binding
 
-        val navController = NavHostFragment.findNavController(this)
+        navController = findNavController() //NavHostFragment.findNavController(this)
 
         binding.buttonStartNext.setOnClickListener {
             navController.navigate(R.id.passcodeCreationFragment)

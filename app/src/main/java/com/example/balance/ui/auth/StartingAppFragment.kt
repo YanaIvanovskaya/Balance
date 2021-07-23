@@ -52,6 +52,8 @@ class StartingAppViewModel(
     init {
         viewModelScope.launch {
 //            dataStore.savePasscode("00000")
+//            dataStore.clearBalance()
+
             val passcode = dataStore.passcode.first()
             val isNewUser = passcode.isNullOrEmpty()
             events.value = Event(isNewUser)

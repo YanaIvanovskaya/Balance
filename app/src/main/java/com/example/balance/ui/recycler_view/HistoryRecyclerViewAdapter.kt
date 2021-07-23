@@ -25,6 +25,11 @@ class HistoryRecyclerViewAdapter(
 
     override fun getItemCount(): Int = dataSet.size
 
+    fun removeAt(position: Int) {
+        dataSet.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
     fun updateData(newDataSet: MutableList<Item>) {
         dataSet = newDataSet
     }

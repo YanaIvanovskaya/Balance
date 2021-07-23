@@ -27,7 +27,8 @@ data class Record(
     var sumOfMoney: Int,
     var recordType: RecordType,
     var moneyType: MoneyType,
-    @ColumnInfo(name = "category_id") var categoryId: Int,
+    @ColumnInfo(name = "category_id")
+    var categoryId: Int,
     var category: String,
     var comment: String
 ) {
@@ -69,8 +70,13 @@ interface RecordDao {
 //    @Query("SELECT * FROM record_table WHERE ")
 //    fun getRecords(type: RecordType): Flow<List<Record>>
 
-    @Insert
-    suspend fun insert(record: Record)
+    @Query("SELECT * FROM record_table WHERE id = :recordId")
+    fun getRecordById(recordId: Int): Flow<Record>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(record: Record) : Long
+
+
 
     @Query("DELETE FROM record_table")
     suspend fun deleteAll()
