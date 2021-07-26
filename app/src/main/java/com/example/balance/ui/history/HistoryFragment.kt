@@ -4,10 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SimpleAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.navigation.Navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,8 +15,10 @@ import com.example.balance.R
 import com.example.balance.databinding.FragmentHistoryBinding
 import com.example.balance.presentation.HistoryViewModel
 import com.example.balance.presentation.getViewModel
+import com.example.balance.ui.menu.BottomNavigationFragmentDirections
 import com.example.balance.ui.recycler_view.HistoryRecyclerViewAdapter
 import com.example.balance.ui.recycler_view.SwipeToDeleteCallback
+
 
 class HistoryFragment : Fragment(R.layout.fragment_history) {
 
@@ -39,8 +40,13 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         val binding = FragmentHistoryBinding.inflate(inflater, container, false)
         mBinding = binding
         historyRecyclerView = binding.historyRecyclerView
-        mNavController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        historyAdapter = HistoryRecyclerViewAdapter(mViewModel.getItems())
+        mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
+        historyAdapter = HistoryRecyclerViewAdapter(mViewModel.getItems()) { recordId ->
+            val action = BottomNavigationFragmentDirections.actionBottomNavigationFragmentToRecordEditingFragment(
+                recordId
+            )
+            mNavController.navigate(action)
+        }
         initRecyclerView()
         return binding.root
     }
@@ -53,9 +59,11 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
     }
 
+
     private fun initRecyclerView() {
         historyRecyclerView.layoutManager = LinearLayoutManager(context)
         historyRecyclerView.adapter = historyAdapter
+
 
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -64,9 +72,6 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(historyRecyclerView)
-
-
-
 //        historyRecyclerView.addItemDecoration(HeaderItemDecoration(historyRecyclerView,isHeader = 0))
     }
 

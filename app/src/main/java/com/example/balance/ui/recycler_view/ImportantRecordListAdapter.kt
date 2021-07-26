@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
-import com.example.balance.data.MoneyType
-import com.example.balance.data.Record
-import com.example.balance.data.RecordType
+import com.example.balance.data.record.MoneyType
+import com.example.balance.data.record.Record
+import com.example.balance.data.record.RecordType
+
 
 class ImportantRecordListAdapter :
     ListAdapter<Record, ImportantRecordListAdapter.RecordViewHolder>(RecordsComparator()) {

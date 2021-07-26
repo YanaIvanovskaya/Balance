@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.example.balance.Item
-import com.example.balance.data.Record
+import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.ui.recycler_view.DateItem
 import com.example.balance.ui.recycler_view.RecordItem
@@ -32,6 +32,7 @@ class HistoryViewModel(
             }
             allHistoryRecords.add(
                 RecordItem(
+                    id = record.id,
                     date = record.date,
                     sumMoney = record.sumOfMoney,
                     recordType = record.recordType,
@@ -41,7 +42,6 @@ class HistoryViewModel(
             )
             currentDate = record.date
         }
-        println(allHistoryRecords)
         return allHistoryRecords
     }
 }

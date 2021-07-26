@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
-import com.example.balance.data.Record
+import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.UserDataStore
 

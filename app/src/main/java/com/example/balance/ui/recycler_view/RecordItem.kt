@@ -4,10 +4,11 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.Item
 import com.example.balance.R
-import com.example.balance.data.MoneyType
-import com.example.balance.data.RecordType
+import com.example.balance.data.record.MoneyType
+import com.example.balance.data.record.RecordType
 
 class RecordItem(
+    val id: Int,
     private val date: String,
     private val sumMoney: Int,
     private val recordType: RecordType,
@@ -45,6 +46,7 @@ class RecordItem(
             RecordType.COSTS -> recordViewHolder.layout.background = costsColor
             RecordType.PROFITS -> recordViewHolder.layout.background = profitsColor
         }
+
     }
 
 }

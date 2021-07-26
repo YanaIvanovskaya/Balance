@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_bottomNavigationFragment_to_recordCreationFragment"
             app:destination="@id/recordCreationFragment" />
+        <action
+            android:id="@+id/action_bottomNavigationFragment_to_recordEditingFragment"
+            app:destination="@id/recordEditingFragment" />
     </fragment>
     <fragment
         android:id="@+id/recordCreationFragment"
@@ -37,6 +40,27 @@
         <action
             android:id="@+id/action_recordCreationFragment_to_bottomNavigationFragment"
             app:destination="@id/bottomNavigationFragment" />
+
+        <argument
+            android:name="currentRecord"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/recordEditingFragment"
+        android:name="com.example.balance.ui.home.RecordCreationFragment"
+        android:label="RecordCreationFragment"
+        tools:layout="@layout/fragment_record_creation">
+        <action
+            android:id="@+id/action_recordEditingFragment_to_bottomNavigationFragment"
+            app:destination="@id/bottomNavigationFragment" />
+
+        <argument
+            android:name="currentRecord"
+            app:argType="integer"
+            android:defaultValue="-1"/>
+
     </fragment>
 
     <include app:graph="@navigation/onboarding_nav_graph" />

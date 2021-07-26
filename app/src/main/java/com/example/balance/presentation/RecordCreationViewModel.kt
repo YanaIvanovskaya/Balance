@@ -2,13 +2,14 @@ package com.example.balance.presentation
 
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.balance.data.*
 import com.example.balance.data.category.CategoryRepository
+import com.example.balance.data.record.MoneyType
+import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
+import com.example.balance.data.record.RecordType
+import com.example.balance.data.template.Template
 import com.example.balance.data.template.TemplateRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
@@ -18,11 +19,12 @@ import kotlinx.coroutines.flow.onEach
 data class RecordCreationState(
     val selectedTemplatePosition: Int,
     val templates: List<Template>,
+    val costsCategories: List<Category>,
+    val profitCategories: List<Category>,
     val sumRecord: String,
     val recordType: RecordType,
     val moneyType: MoneyType,
     val selectedCategory: String,
-    val categories: List<Category>,
     val isImportant: Boolean,
     val isTemplate: Boolean,
     val templateName: String,
@@ -35,11 +37,12 @@ data class RecordCreationState(
         fun default() = RecordCreationState(
             selectedTemplatePosition = 0,
             templates = listOf(),
+            costsCategories = listOf(),
+            profitCategories = listOf(),
             sumRecord = "",
             recordType = RecordType.COSTS,
             moneyType = MoneyType.CASH,
             selectedCategory = "",
-            categories = listOf(),
             isImportant = false,
             isTemplate = false,
             templateName = "",
@@ -55,39 +58,61 @@ class RecordCreationViewModel(
     private val recordRepository: RecordRepository,
     private val categoryRepository: CategoryRepository,
     private val templateRepository: TemplateRepository,
-    private val dataStore: UserDataStore
+    private val dataStore: UserDataStore,
+    private val recordId: Int?
 ) : ViewModel() {
 
     val state = MutableLiveData(RecordCreationState.default())
 
     var onCreateComplete: () -> Unit = {}
 
-    val costsCategories = categoryRepository.allCostsCategory.asLiveData()
-
-    val profitCategories = categoryRepository.allProfitCategory.asLiveData()
-
     init {
-        onRevertToDefault()
-
         templateRepository.allTemplates
             .onEach { newTemplates: List<Template> ->
-                // TODO: 23.07.2021 Modify state
                 state.value = state.value?.copy(
                     templates = newTemplates
                 )
             }
-            .launchIn(viewModelScope)
+            .launchIn(scope = viewModelScope)
 
+        categoryRepository.allCostsCategory
+            .onEach { newCostsCategories: List<Category> ->
+                state.value = state.value?.copy(
+                    costsCategories = newCostsCategories,
+                    selectedCategory = newCostsCategories[0].name
+                )
+            }
+            .launchIn(scope = viewModelScope)
+
+        categoryRepository.allProfitCategory
+            .onEach { newProfitCategories: List<Category> ->
+                state.value = state.value?.copy(
+                    profitCategories = newProfitCategories
+                )
+            }
+            .launchIn(scope = viewModelScope)
+
+
+        if (recordId != -1 && recordId != null) {
+            val record = runBlocking { recordRepository.getRecordById(recordId).first() }
+            state.value = state.value?.copy(
+                selectedTemplatePosition = 0,
+                sumRecord = record.sumOfMoney.toString(),
+                recordType = record.recordType,
+                moneyType = record.moneyType,
+                selectedCategory = record.category,
+                isImportant = record.isImportant,
+                comment = record.comment,
+                canSave = true
+            )
+        }
     }
 
     private fun saveSumRecordState(newSumRecord: String) {
-        val canSave = if (state.value?.isTemplate == true)
-            state.value?.templateName?.isNotEmpty() == true
-        else newSumRecord.isNotEmpty()
         state.value = state.value?.copy(
-            sumRecord = newSumRecord,
-            canSave = canSave
+            sumRecord = newSumRecord
         )
+        checkAndSaveValid()
     }
 
     private fun saveCommentState(newComment: String) {
@@ -97,20 +122,31 @@ class RecordCreationViewModel(
     }
 
     private fun saveTemplateNameState(newName: String) {
-        val canSave =
-            if (state.value?.isTemplate == true) newName.isNotEmpty()
-            else state.value?.sumRecord?.isNotEmpty() == true
-        if (newName.length <= MAX_TEMPLATE_NAME_LENGTH) {
-            state.value = state.value?.copy(
-                templateName = newName,
-                isValidTemplateName = newName.isNotEmpty(),
-                canSave = canSave
-            )
-        }
+        state.value = state.value?.copy(
+            templateName = newName,
+            isValidTemplateName =
+            newName.length in MIN_TEMPLATE_NAME_LENGTH..MAX_TEMPLATE_NAME_LENGTH
+        )
+        checkAndSaveValid()
+    }
+
+    private fun checkAndSaveValid() {
+        val isSumValid = state.value?.sumRecord?.isNotEmpty() == true
+        val isAllValid = if (state.value?.isTemplate == true) {
+            isSumValid && state.value?.isValidTemplateName == true
+        } else isSumValid
+        state.value = state.value?.copy(
+            canSave = isAllValid
+        )
     }
 
     private fun getCategories(): Array<String> {
-        return state.value?.categories?.map { category -> category.name }?.toTypedArray()
+        val actualList: List<Category>? =
+            when (state.value?.recordType) {
+                RecordType.COSTS -> state.value?.costsCategories
+                else -> state.value?.profitCategories
+            }
+        return actualList?.map { category -> category.name }?.toTypedArray()
             ?: arrayOf("")
     }
 
@@ -134,31 +170,6 @@ class RecordCreationViewModel(
         dialog.show()
     }
 
-    fun updateCostsCategory() {
-        val listCostsCategories = runBlocking {
-            categoryRepository.allCostsCategory.first()
-        }
-        if (listCostsCategories.isNotEmpty() && state.value?.recordType == RecordType.COSTS) {
-            state.value = state.value?.copy(
-                categories = listCostsCategories,
-                selectedCategory = listCostsCategories[0].name
-            )
-        }
-    }
-
-    fun updateProfitCategory() {
-        val listProfitCategories = runBlocking {
-            categoryRepository.allProfitCategory.first()
-        }
-        if (listProfitCategories.isNotEmpty() && state.value?.recordType == RecordType.PROFITS) {
-            state.value = state.value?.copy(
-                categories = listProfitCategories,
-                selectedCategory = listProfitCategories[0].name
-            )
-        }
-    }
-
-
     fun onChangeComment(newComment: String) = saveCommentState(newComment)
 
     fun onChangeSum(sumRecord: String) = saveSumRecordState(sumRecord)
@@ -178,19 +189,20 @@ class RecordCreationViewModel(
         saveTemplateNameState(state.value?.templateName ?: "")
     }
 
-
     fun onCostsSelected() {
+        val categories = state.value?.costsCategories
         state.value = state.value?.copy(
-            recordType = RecordType.COSTS
+            recordType = RecordType.COSTS,
+            selectedCategory = if (categories?.isNotEmpty() == true) categories[0].name else ""
         )
-        updateCostsCategory()
     }
 
     fun onProfitSelected() {
+        val categories = state.value?.profitCategories
         state.value = state.value?.copy(
-            recordType = RecordType.PROFITS
+            recordType = RecordType.PROFITS,
+            selectedCategory = if (categories?.isNotEmpty() == true) categories[0].name else ""
         )
-        updateProfitCategory()
     }
 
     fun onCashSelected() {
@@ -204,7 +216,6 @@ class RecordCreationViewModel(
             moneyType = MoneyType.CARDS
         )
     }
-
 
     fun onApplyTemplate(templatePosition: Int) {
         state.value = state.value?.copy(
@@ -234,8 +245,16 @@ class RecordCreationViewModel(
     fun onRevertToDefault() {
         state.value = state.value?.copy(
             selectedTemplatePosition = 0,
+            sumRecord = "",
+            recordType = RecordType.COSTS,
+            moneyType = MoneyType.CASH,
+            selectedCategory = state.value?.costsCategories?.get(0)?.name ?: "",
+            isImportant = false,
+            isTemplate = false,
+            templateName = "",
+            isValidTemplateName = false,
+            canSave = false
         )
-        updateCostsCategory()
     }
 
     fun onSaveRecord() {
@@ -286,6 +305,7 @@ class RecordCreationViewModel(
 
     companion object {
         private const val MAX_TEMPLATE_NAME_LENGTH = 15
+        private const val MIN_TEMPLATE_NAME_LENGTH = 3
     }
 
 }

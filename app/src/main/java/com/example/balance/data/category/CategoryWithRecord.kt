@@ -2,6 +2,7 @@ package com.example.balance.data
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.example.balance.data.record.Record
 
 class CategoryWithRecords {
 

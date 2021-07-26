@@ -1,4 +1,4 @@
-package com.example.balance.data
+package com.example.balance.data.template
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow

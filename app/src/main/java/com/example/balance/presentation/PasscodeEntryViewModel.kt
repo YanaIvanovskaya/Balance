@@ -22,8 +22,8 @@ data class PasscodeEntryState(
             passcodeMode = PasscodeEntryViewModel.PASSCODE_INVISIBLE_MODE,
 
             // для входа в приложение без ввода пароля
-            canComplete = false,
-            isMatches = false,
+            canComplete = true,
+            isMatches = true,
 
             screenType = PasscodeScreenType.ONBOARDING
         )

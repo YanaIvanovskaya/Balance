@@ -3,6 +3,8 @@ package com.example.balance.ui.recycler_view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -12,7 +14,10 @@ import com.example.balance.Item
 
 object ViewHolderFactory {
 
-    fun create(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    fun create(
+        parent: ViewGroup,
+        viewType: Int
+    ): RecyclerView.ViewHolder {
         return when (viewType) {
             Item.RECORD_ROW_TYPE -> {
                 val recordTypeView: View = LayoutInflater.from(parent.context)
@@ -33,6 +38,7 @@ object ViewHolderFactory {
         val dateText: TextView = itemView.findViewById(R.id.date)
         val moneyTypeText: ImageView = itemView.findViewById(R.id.image_moneyType)
         val layout: ConstraintLayout = itemView.findViewById(R.id.record_layout)
+        val buttonEdit: ImageButton = itemView.findViewById(R.id.button_edit_record)
     }
 
     class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

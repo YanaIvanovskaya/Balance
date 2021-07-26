@@ -15,11 +15,12 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.balance.BalanceApp
 import com.example.balance.R
-import com.example.balance.data.MoneyType
-import com.example.balance.data.RecordType
-import com.example.balance.data.Template
+import com.example.balance.data.record.MoneyType
+import com.example.balance.data.record.RecordType
+import com.example.balance.data.template.Template
 import com.example.balance.databinding.FragmentRecordCreationBinding
 import com.example.balance.presentation.RecordCreationState
 import com.example.balance.presentation.RecordCreationViewModel
@@ -34,10 +35,13 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             recordRepository = BalanceApp.recordRepository,
             categoryRepository = BalanceApp.categoryRepository,
             templateRepository = BalanceApp.templateRepository,
-            dataStore = BalanceApp.dataStore
+            dataStore = BalanceApp.dataStore,
+            recordId = args.currentRecord
         )
     }
     private lateinit var mNavController: NavController
+    private val args: RecordCreationFragmentArgs by navArgs()
+
     private lateinit var mTemplatesSpinnerAdapter: ArrayAdapter<String>
 
     private var mEditTextSumMoney: EditText? = null
@@ -59,14 +63,6 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mBinding = binding
         mNavController = findNavController()
 
-        mViewModel.costsCategories.observe(viewLifecycleOwner, {
-            mViewModel.updateCostsCategory()
-        })
-
-        mViewModel.profitCategories.observe(viewLifecycleOwner, {
-            mViewModel.updateProfitCategory()
-        })
-
         mViewModel.state.observe(viewLifecycleOwner, ::render)
 
         mViewModel.onCreateComplete = {
@@ -77,8 +73,18 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         initButtons()
         initRadioButtons()
         initSwitches()
+        applyChangesByArgs()
         return binding.root
     }
+
+    private fun applyChangesByArgs() {
+        if (args.currentRecord != -1) {
+            mBinding?.toolbarNewRecord?.title = "Редактирование записи"
+
+        }
+    }
+
+
 
     override fun onDestroyView() {
         mBinding = null
@@ -92,19 +98,17 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             mViewModel.onChangeSum(it.toString())
             mEditTextSumMoney?.setSelection(it.toString().length)
         }
-
-        mEditTextComment?.removeTextChangedListener(mCommentChangeListener)
-        mEditTextComment?.setText(state.comment)
-        mCommentChangeListener = mEditTextComment?.doAfterTextChanged {
-            mViewModel.onChangeComment(it.toString())
-            mEditTextComment?.setSelection(it.toString().length)
-        }
-
         mEditTextNameTemplate?.removeTextChangedListener(mTemplateNameChangeListener)
         mEditTextNameTemplate?.setText(state.templateName)
         mTemplateNameChangeListener = mEditTextNameTemplate?.doAfterTextChanged {
             mViewModel.onChangeTemplateName(it.toString())
             mEditTextNameTemplate?.setSelection(it.toString().length)
+        }
+        mEditTextComment?.removeTextChangedListener(mCommentChangeListener)
+        mEditTextComment?.setText(state.comment)
+        mCommentChangeListener = mEditTextComment?.doAfterTextChanged {
+            mViewModel.onChangeComment(it.toString())
+            mEditTextComment?.setSelection(it.toString().length)
         }
     }
 
@@ -127,24 +131,25 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mBinding?.switchIsTemplate?.isChecked = state.isTemplate
         mBinding?.editTextNameTemplate?.isVisible = state.isTemplate
         mBinding?.errorMsgTemplateName?.isVisible = state.isTemplate && !state.isValidTemplateName
-        mBinding?.buttonCreateAndSaveNewRecord?.isEnabled = state.canSave
 
+        mBinding?.buttonCreateAndSaveNewRecord?.isEnabled = state.canSave
         renderTemplates(state.templates)
     }
 
     private fun renderTemplates(templates: List<Template>) {
-//        mTemplatesSpinner = mBinding?.spinnerTemplates
-//        mTemplatesSpinnerAdapter = ArrayAdapter<String>(
-//            requireContext(),
-//            android.R.layout.simple_spinner_item,
-//            templates.map { it.name }
-//                .toMutableList()
-//                .apply { add(0, "Без шаблона") }
-//        )
-//        mTemplatesSpinnerAdapter
-//            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//        mTemplatesSpinner?.adapter = mTemplatesSpinnerAdapter
-//        mTemplatesSpinner?.onItemSelectedListener = TemplateSelectedListener(mViewModel)
+        mTemplatesSpinner = mBinding?.spinnerTemplates
+        mTemplatesSpinnerAdapter = ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            templates.map { it.name }
+                .toMutableList()
+                .apply { add(0, "Без шаблона") }
+        )
+        mTemplatesSpinnerAdapter
+            .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        mTemplatesSpinner?.adapter = mTemplatesSpinnerAdapter
+        mTemplatesSpinner?.onItemSelectedListener = TemplateSelectedListener(mViewModel)
+
     }
 
     private fun initTextEdits() {
@@ -213,8 +218,6 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             if (position != 0)
                 viewModel.onApplyTemplate(position)
-            else
-                viewModel.onRevertToDefault()
         }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {}
