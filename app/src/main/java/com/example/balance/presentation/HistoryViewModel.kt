@@ -1,31 +1,78 @@
 package com.example.balance.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import android.content.Context
+import android.content.DialogInterface
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.*
 import com.example.balance.Item
 import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
+import com.example.balance.data.template.TemplateRepository
 import com.example.balance.ui.recycler_view.DateItem
 import com.example.balance.ui.recycler_view.RecordItem
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class HistoryViewModel(
-    val repository: RecordRepository
+    val recordRepository: RecordRepository,
+    val templateRepository: TemplateRepository
 ) : ViewModel() {
 
-    val allRecords: LiveData<List<Record>> = repository.allRecords.asLiveData()
+    val allRecords = MutableLiveData<List<Item>>(listOf())
 
-    var recordList: List<Record> = runBlocking {
-        repository.allRecords.first().reversed()
+    init {
+        recordRepository.allRecords
+            .map { newRecordList -> mapItems(newRecordList.reversed()) }
+            .onEach(allRecords::setValue)
+            .launchIn(viewModelScope)
+    }
+
+    fun removeRecord(context: Context, recordId: Int) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Удалить запись?")
+        builder.setPositiveButton("Удалить") { _: DialogInterface, _: Int ->
+            viewModelScope.launch {
+                recordRepository.deleteRecordById(recordId)
+                templateRepository.deleteTemplateByRecordId(recordId)
+            }
+        }
+        builder.setNegativeButton("Закрыть", null)
+        val dialog = builder.create()
+        dialog.show()
     }
 
     fun getItems(): MutableList<Item> {
         val allHistoryRecords: MutableList<Item> = mutableListOf()
         var currentDate = ""
 
-        recordList.forEach { record ->
+//        recordList.forEach { record ->
+//            if (currentDate.isEmpty() || currentDate != record.date) {
+//                val dateItem = DateItem(date = record.date.drop(3).dropLast(5))
+//                allHistoryRecords.add(dateItem)
+//            }
+//            allHistoryRecords.add(
+//                RecordItem(
+//                    id = record.id,
+//                    date = record.date,
+//                    sumMoney = record.sumOfMoney,
+//                    recordType = record.recordType,
+//                    moneyType = record.moneyType,
+//                    category = record.category,
+//                    comment = record.comment
+//                )
+//            )
+//            currentDate = record.date
+//        }
+        return allHistoryRecords
+    }
+
+    fun mapItems(items: List<Record>): MutableList<Item> {
+        val allHistoryRecords: MutableList<Item> = mutableListOf()
+        var currentDate = ""
+
+        items.forEach { record ->
             if (currentDate.isEmpty() || currentDate != record.date) {
                 val dateItem = DateItem(date = record.date.drop(3).dropLast(5))
                 allHistoryRecords.add(dateItem)
@@ -37,11 +84,13 @@ class HistoryViewModel(
                     sumMoney = record.sumOfMoney,
                     recordType = record.recordType,
                     moneyType = record.moneyType,
-                    category = record.category
+                    category = record.category,
+                    comment = record.comment
                 )
             )
             currentDate = record.date
         }
         return allHistoryRecords
     }
+
 }

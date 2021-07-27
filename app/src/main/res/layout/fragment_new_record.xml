@@ -48,7 +48,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
                 <TextView
-                    android:id="@+id/hint_sum_of_operation2"
+                    android:id="@+id/hint_template"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -141,7 +141,7 @@
                     android:layout_marginRight="16dp"
                     android:background="#DCEACB"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/hint_sum_of_operation2"
+                    app:layout_constraintStart_toEndOf="@+id/hint_template"
                     app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record" />
 
                 <com.google.android.material.textfield.TextInputLayout

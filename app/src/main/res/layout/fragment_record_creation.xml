@@ -28,7 +28,7 @@
                     android:layout_height="23dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
-                    android:text="Пустое имя!"
+                    android:text="Короткое имя"
                     android:textColor="#EA8181"
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -60,15 +60,21 @@
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
                 <TextView
-                    android:id="@+id/hint_sum_of_operation2"
+                    android:id="@+id/hint_template"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginRight="32dp"
+                    android:layout_marginBottom="30dp"
                     android:text="@string/use_template"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.066"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record" />
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record"
+                    app:layout_constraintVertical_bias="1.0" />
 
                 <TextView
                     android:id="@+id/hint_kind_of_money"
@@ -146,14 +152,12 @@
                     android:id="@+id/spinner_templates"
                     android:layout_width="270dp"
                     android:layout_height="33dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginLeft="30dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:background="#DCEACB"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/hint_sum_of_operation2"
                     app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -162,12 +166,12 @@
                     android:layout_height="55dp"
                     android:layout_marginStart="32dp"
                     android:layout_marginLeft="32dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="65dp"
                     android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/spinner_templates">
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_sum_money"

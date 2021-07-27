@@ -8,4 +8,6 @@ class TemplateRepository(private val templateDao: TemplateDao) {
 
     suspend fun insert(template: Template) = templateDao.insert(template)
 
+    suspend fun deleteTemplateByRecordId(recordId: Int) = templateDao.deleteTemplateByRecordId(recordId)
+
 }

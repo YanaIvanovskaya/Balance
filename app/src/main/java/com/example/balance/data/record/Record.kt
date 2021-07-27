@@ -8,6 +8,7 @@ enum class RecordType {
     COSTS,
     PROFITS
 }
+
 enum class MoneyType {
     CASH,
     CARDS
@@ -74,10 +75,27 @@ interface RecordDao {
     fun getRecordById(recordId: Int): Flow<Record>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(record: Record) : Long
+    suspend fun insert(record: Record): Long
 
+
+    @Query("UPDATE record_table SET sumOfMoney=:sumOfMoney,recordType= :recordType,moneyType=:moneyType,category_id=:categoryId,category=:category,comment=:comment WHERE id = :recordId")
+    suspend fun update(
+        recordId: Int,
+        sumOfMoney: Int,
+        recordType: RecordType,
+        moneyType: MoneyType,
+        categoryId: Int,
+        category: String,
+        comment: String
+    )
+
+    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType AND moneyType =:moneyType")
+    fun getSum(recordType: RecordType, moneyType: MoneyType) : Flow<Int?>
 
 
     @Query("DELETE FROM record_table")
     suspend fun deleteAll()
+
+    @Query("DELETE FROM record_table WHERE id=:recordId")
+    suspend fun deleteRecordById(recordId:Int)
 }

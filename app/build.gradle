@@ -15,6 +15,7 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -59,13 +60,18 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0-alpha02'
 
-    implementation "androidx.datastore:datastore-preferences:1.0.0-rc01"
-    implementation "androidx.datastore:datastore-core:1.0.0-rc01"
+    implementation "androidx.datastore:datastore-preferences:1.0.0-rc02"
+    implementation "androidx.datastore:datastore-core:1.0.0-rc02"
 
     implementation "androidx.recyclerview:recyclerview:1.2.1"
 
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
-    
+
+    // MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    implementation 'androidx.multidex:multidex:2.0.1'
+
     // Room components
     implementation "androidx.room:room-ktx:$rootProject.roomVersion"
     kapt "androidx.room:room-compiler:$rootProject.roomVersion"

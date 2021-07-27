@@ -13,6 +13,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -34,9 +36,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         RecordCreationViewModel(
             recordRepository = BalanceApp.recordRepository,
             categoryRepository = BalanceApp.categoryRepository,
-            templateRepository = BalanceApp.templateRepository,
-            dataStore = BalanceApp.dataStore,
-            recordId = args.currentRecord
+            templateRepository = BalanceApp.templateRepository
         )
     }
     private lateinit var mNavController: NavController
@@ -53,7 +53,6 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
     private var mCommentChangeListener: TextWatcher? = null
     private var mTemplateNameChangeListener: TextWatcher? = null
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,11 +63,6 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mNavController = findNavController()
 
         mViewModel.state.observe(viewLifecycleOwner, ::render)
-
-        mViewModel.onCreateComplete = {
-            mNavController.popBackStack()
-        }
-
         initTextEdits()
         initButtons()
         initRadioButtons()
@@ -78,13 +72,17 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
     }
 
     private fun applyChangesByArgs() {
-        if (args.currentRecord != -1) {
+        val currentRecord = args.currentRecord
+        if (currentRecord != -1) {
             mBinding?.toolbarNewRecord?.title = "Редактирование записи"
-
+            mBinding?.spinnerTemplates?.visibility = View.GONE
+            mBinding?.buttonCreateAndSaveNewRecord?.text = "Сохранить изменения"
+            mBinding?.switchIsTemplate?.isVisible = false
+            mBinding?.switchIsImportantRecord?.isVisible = false
+            mBinding?.hintTemplate?.visibility = View.GONE
+            mViewModel.applyValues(currentRecord)
         }
     }
-
-
 
     override fun onDestroyView() {
         mBinding = null
@@ -113,9 +111,13 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
     }
 
     private fun render(state: RecordCreationState) {
+        println(state)
         renderEditText(state)
         mBinding?.spinnerTemplates?.setSelection(state.selectedTemplatePosition)
         mBinding?.errorMsgSumOfMoney?.isVisible = state.sumRecord.isEmpty()
+
+        mBinding?.chipCategory?.text = state.selectedCategory
+        println( "render ${state.selectedCategory})")
 
         when (state.recordType) {
             RecordType.COSTS -> mBinding?.radioButtonCosts?.isChecked = true
@@ -126,7 +128,6 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             MoneyType.CARDS -> mBinding?.radioButtonCards?.isChecked = true
         }
 
-        mBinding?.chipCategory?.text = state.selectedCategory
         mBinding?.switchIsImportantRecord?.isChecked = state.isImportant
         mBinding?.switchIsTemplate?.isChecked = state.isTemplate
         mBinding?.editTextNameTemplate?.isVisible = state.isTemplate
@@ -151,6 +152,8 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mTemplatesSpinner?.onItemSelectedListener = TemplateSelectedListener(mViewModel)
 
     }
+
+
 
     private fun initTextEdits() {
         mEditTextSumMoney = mBinding?.editTextSumMoney
@@ -181,12 +184,13 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             mViewModel.showCategoryDialog(requireContext())
         }
 
-        mBinding?.buttonCreateAndSaveNewRecord?.setOnClickListener {
-            mViewModel.onSaveRecord()
-        }
-
         mBinding?.toolbarNewRecord?.setNavigationOnClickListener {
             mNavController.popBackStack()
+        }
+        mBinding?.buttonCreateAndSaveNewRecord?.setOnClickListener {
+            mViewModel.onSaveOrEditRecord(editingRecordId = args.currentRecord) {
+                mNavController.popBackStack()
+            }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(

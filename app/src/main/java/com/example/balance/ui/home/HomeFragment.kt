@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentHomeBinding
+import com.example.balance.presentation.HomeState
 import com.example.balance.presentation.HomeViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.BalanceListAdapter
@@ -48,18 +49,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         mViewModel.allRecords.observe(viewLifecycleOwner, { records ->
             records?.let { recordListAdapter.submitList(it) }
         })
-
-        mViewModel.sumCash.observe(viewLifecycleOwner, {
-            balanceAdapter.updateSumCash(it ?: 0)
-        })
-
-        mViewModel.sumCards.observe(viewLifecycleOwner, {
-            balanceAdapter.updateSumCards(it ?: 0)
-        })
-
         initRecyclerView()
         binding.floatingButtonCreateNewRecord.setOnClickListener { onAddRecordClick() }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mViewModel.state.observe(viewLifecycleOwner,::render)
+    }
+
+    private fun render(state: HomeState) {
+        balanceAdapter.updateValues(mViewModel.getCurrentCash(),mViewModel.getCurrentCards())
+        balanceAdapter.notifyItemChanged(0)
     }
 
     private fun initRecyclerView() {

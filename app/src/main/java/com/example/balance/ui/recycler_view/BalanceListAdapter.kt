@@ -10,9 +10,13 @@ import com.example.balance.R
 class BalanceListAdapter :
     RecyclerView.Adapter<BalanceListAdapter.BalanceViewHolder>() {
 
-    private var balance: String = "0"
     private var sumCash: String = "0"
     private var sumCards: String = "0"
+
+    private val balance: String
+        get() {
+            return (Integer.parseInt(sumCash) + Integer.parseInt(sumCards)).toString()
+        }
 
     class BalanceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
@@ -38,18 +42,9 @@ class BalanceListAdapter :
 
     override fun getItemCount(): Int = 1
 
-    private fun updateBalance(sumMoney: Int) {
-        balance = (Integer.parseInt(balance) + sumMoney).toString()
-    }
-
-    fun updateSumCash(cash: Int) {
-        sumCash = (Integer.parseInt(sumCash) + cash).toString()
-        updateBalance(cash)
-    }
-
-    fun updateSumCards(cards: Int) {
-        sumCards = (Integer.parseInt(sumCards) + cards).toString()
-        updateBalance(cards)
+    fun updateValues(cash: String,cards: String) {
+        sumCash = cash
+        sumCards = cards
     }
 
 }

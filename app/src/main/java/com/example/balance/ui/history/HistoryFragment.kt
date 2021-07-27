@@ -28,7 +28,8 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     private lateinit var historyAdapter: HistoryRecyclerViewAdapter
     private val mViewModel by getViewModel {
         HistoryViewModel(
-            repository = BalanceApp.recordRepository
+            recordRepository = BalanceApp.recordRepository,
+            templateRepository = BalanceApp.templateRepository
         )
     }
 
@@ -41,20 +42,25 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         mBinding = binding
         historyRecyclerView = binding.historyRecyclerView
         mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
-        historyAdapter = HistoryRecyclerViewAdapter(mViewModel.getItems()) { recordId ->
-            val action = BottomNavigationFragmentDirections.actionBottomNavigationFragmentToRecordEditingFragment(
-                recordId
-            )
-            mNavController.navigate(action)
-        }
+        historyAdapter = HistoryRecyclerViewAdapter(
+            onEditClickListener = { recordId, position ->
+                val action = BottomNavigationFragmentDirections
+                    .actionBottomNavigationFragmentToRecordEditingFragment(recordId)
+                // historyAdapter.notifyItemChanged(position)
+                mNavController.navigate(action)
+            },
+            onDeleteClickListener = { recordId, position ->
+                mViewModel.removeRecord(requireContext(), recordId)
+//                historyAdapter.
+            })
         initRecyclerView()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.allRecords.observe(viewLifecycleOwner) {
-            historyAdapter.updateData(mViewModel.getItems())
+        mViewModel.allRecords.observe(viewLifecycleOwner) { list ->
+            historyAdapter.updateData(list.toMutableList())
             historyAdapter.notifyDataSetChanged()
         }
     }

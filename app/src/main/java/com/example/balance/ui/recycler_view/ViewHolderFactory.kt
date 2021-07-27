@@ -3,10 +3,7 @@ package com.example.balance.ui.recycler_view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
@@ -39,6 +36,9 @@ object ViewHolderFactory {
         val moneyTypeText: ImageView = itemView.findViewById(R.id.image_moneyType)
         val layout: ConstraintLayout = itemView.findViewById(R.id.record_layout)
         val buttonEdit: ImageButton = itemView.findViewById(R.id.button_edit_record)
+        val buttonShowComment: Button = itemView.findViewById(R.id.button_show_comment)
+        val comment: MultiAutoCompleteTextView = itemView.findViewById(R.id.comment)
+        val buttonDelete: ImageButton = itemView.findViewById(R.id.button_delete)
     }
 
     class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

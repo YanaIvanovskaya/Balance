@@ -7,9 +7,11 @@ import com.example.balance.Item
 import com.example.balance.R
 
 class HistoryRecyclerViewAdapter(
-    private var dataSet: MutableList<Item>,
-    private val onItemClickListener: (recordId: Int) -> Unit
+    private var dataSet: MutableList<Item> = mutableListOf(),
+    private val onEditClickListener: (recordId: Int, position: Int) -> Unit,
+    private val onDeleteClickListener: (recordId: Int, position: Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+
     StickHeaderItemDecoration.StickyHeaderInterface {
 
 
@@ -23,13 +25,18 @@ class HistoryRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = dataSet[position]
-        val cond = item::class == RecordItem::class
-        if (cond) {
+        if (item::class == RecordItem::class) {
             val recordItem: RecordItem = item as RecordItem
-            val recordViewHolder: ViewHolderFactory.RecordViewHolder = holder as ViewHolderFactory.RecordViewHolder
-            recordViewHolder.buttonEdit.setOnClickListener { onItemClickListener(recordItem.id) }
+            val recordViewHolder: ViewHolderFactory.RecordViewHolder =
+                holder as ViewHolderFactory.RecordViewHolder
+            recordViewHolder.buttonEdit.setOnClickListener {
+                onEditClickListener(recordItem.id, position)
+            }
+            recordViewHolder.buttonDelete.setOnClickListener {
+                onDeleteClickListener(recordItem.id, position)
+            }
         }
-        dataSet[position].onBindViewHolder(holder)
+        item.onBindViewHolder(holder)
     }
 
     override fun getItemCount(): Int = dataSet.size

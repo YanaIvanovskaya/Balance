@@ -26,6 +26,9 @@ interface TemplateDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(template: Template)
 
-    @Query("DELETE FROM category_table")
-    suspend fun deleteAll()
+//    @Query("DELETE FROM category_table")
+//    suspend fun deleteAll()
+
+    @Query("DELETE FROM template_table WHERE recordId=:recordId")
+    suspend fun deleteTemplateByRecordId(recordId: Int)
 }

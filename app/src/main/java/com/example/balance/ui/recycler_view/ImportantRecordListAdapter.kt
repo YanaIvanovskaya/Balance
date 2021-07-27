@@ -43,8 +43,8 @@ class ImportantRecordListAdapter :
         private val dateText: TextView = itemView.findViewById(R.id.date)
         private val moneyTypeImage: ImageView = itemView.findViewById(R.id.image_moneyType)
         private val importantImage: ImageView = itemView.findViewById(R.id.image_important)
-        private val commentText: TextView = itemView.findViewById(R.id.textView_comment)
-        val layout: ConstraintLayout = itemView.findViewById(R.id.constraint)
+        private val commentText: TextView = itemView.findViewById(R.id.comment)
+        val layout: ConstraintLayout = itemView.findViewById(R.id.record_layout)
 
         fun bind(
             date: String,
