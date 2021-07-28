@@ -1,15 +1,13 @@
 package com.example.balance.presentation
 
-import android.content.Context
-import android.content.DialogInterface
-import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.*
-import com.example.balance.Item
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.template.TemplateRepository
-import com.example.balance.ui.recycler_view.DateItem
-import com.example.balance.ui.recycler_view.RecordItem
+import com.example.balance.ui.recycler_view.Item
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -20,72 +18,48 @@ class HistoryViewModel(
     val templateRepository: TemplateRepository
 ) : ViewModel() {
 
-    val allRecords = MutableLiveData<List<Item>>(listOf())
+    val allHistoryRecords = MutableLiveData<List<Item>>(listOf())
 
     init {
         recordRepository.allRecords
             .map { newRecordList -> mapItems(newRecordList.reversed()) }
-            .onEach(allRecords::setValue)
+            .onEach(allHistoryRecords::setValue)
             .launchIn(viewModelScope)
     }
 
-    fun removeRecord(context: Context, recordId: Int) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Удалить запись?")
-        builder.setPositiveButton("Удалить") { _: DialogInterface, _: Int ->
-            viewModelScope.launch {
-                recordRepository.deleteRecordById(recordId)
-                templateRepository.deleteTemplateByRecordId(recordId)
-            }
+    fun removeRecord(recordId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            recordRepository.deleteRecordById(recordId)
+            templateRepository.deleteTemplateByRecordId(recordId)
         }
-        builder.setNegativeButton("Закрыть", null)
-        val dialog = builder.create()
-        dialog.show()
     }
 
-    fun getItems(): MutableList<Item> {
-        val allHistoryRecords: MutableList<Item> = mutableListOf()
-        var currentDate = ""
-
-//        recordList.forEach { record ->
-//            if (currentDate.isEmpty() || currentDate != record.date) {
-//                val dateItem = DateItem(date = record.date.drop(3).dropLast(5))
-//                allHistoryRecords.add(dateItem)
-//            }
-//            allHistoryRecords.add(
-//                RecordItem(
-//                    id = record.id,
-//                    date = record.date,
-//                    sumMoney = record.sumOfMoney,
-//                    recordType = record.recordType,
-//                    moneyType = record.moneyType,
-//                    category = record.category,
-//                    comment = record.comment
-//                )
-//            )
-//            currentDate = record.date
-//        }
-        return allHistoryRecords
+    fun onPinClick( recordId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            recordRepository.setImportance(recordId,isImportant = true)
+        }
     }
 
-    fun mapItems(items: List<Record>): MutableList<Item> {
+
+    private fun mapItems(items: List<Record>): MutableList<Item> {
         val allHistoryRecords: MutableList<Item> = mutableListOf()
         var currentDate = ""
 
         items.forEach { record ->
             if (currentDate.isEmpty() || currentDate != record.date) {
-                val dateItem = DateItem(date = record.date.drop(3).dropLast(5))
+                val dateItem = Item.DateItem(date = record.date.drop(3).dropLast(5))
                 allHistoryRecords.add(dateItem)
             }
             allHistoryRecords.add(
-                RecordItem(
+                Item.RecordItem(
                     id = record.id,
                     date = record.date,
                     sumMoney = record.sumOfMoney,
                     recordType = record.recordType,
                     moneyType = record.moneyType,
                     category = record.category,
-                    comment = record.comment
+                    comment = record.comment,
+                    isImportant = record.isImportant
                 )
             )
             currentDate = record.date

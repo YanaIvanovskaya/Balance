@@ -77,8 +77,7 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
                     mNavController.navigate(R.id.bottomNavigationFragment)
                 }
             }
-            else -> {
-            }
+            else -> Unit
         }
     }
 

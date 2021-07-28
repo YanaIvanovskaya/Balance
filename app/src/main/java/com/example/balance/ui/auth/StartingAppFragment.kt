@@ -13,8 +13,10 @@ import com.example.balance.Event
 import com.example.balance.R
 import com.example.balance.data.UserDataStore
 import com.example.balance.presentation.getViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
 
@@ -23,15 +25,15 @@ class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
             dataStore = BalanceApp.dataStore
         )
     }
-    private lateinit var navController: NavController
+    private lateinit var mNavController: NavController
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navController = findNavController()
+        mNavController = findNavController()
 
         mViewModel.events.observe(viewLifecycleOwner) { event ->
             event.consume { isNewUser ->
-                navController.navigate(
+                mNavController.navigate(
                     when {
                         isNewUser -> R.id.onboarding_nav_graph
                         else -> R.id.auth_nav_graph
@@ -54,7 +56,7 @@ class StartingAppViewModel(
 //            dataStore.savePasscode("00000")
 //            dataStore.clearBalance()
 
-            val passcode = dataStore.passcode.first()
+            val passcode = withContext(Dispatchers.IO) {dataStore.passcode.first()}
             val isNewUser = passcode.isNullOrEmpty()
             events.value = Event(isNewUser)
         }

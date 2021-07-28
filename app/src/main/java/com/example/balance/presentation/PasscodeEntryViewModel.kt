@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.balance.data.UserDataStore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -82,7 +83,7 @@ class PasscodeEntryViewModel(
     }
 
     fun onSavePasscode() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             dataStore.savePasscode(state.value?.passcode.orEmpty())
         }
     }

@@ -89,9 +89,11 @@ interface RecordDao {
         comment: String
     )
 
+    @Query("UPDATE record_table SET isImportant=:isImportant WHERE id = :recordId")
+    suspend fun setImportance(recordId: Int,isImportant: Boolean)
+
     @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType AND moneyType =:moneyType")
     fun getSum(recordType: RecordType, moneyType: MoneyType) : Flow<Int?>
-
 
     @Query("DELETE FROM record_table")
     suspend fun deleteAll()

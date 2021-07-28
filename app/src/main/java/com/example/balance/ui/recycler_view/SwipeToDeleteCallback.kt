@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.balance.Item
 import com.example.balance.R
 
 
@@ -30,7 +29,7 @@ abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleC
          * if (viewHolder?.itemViewType == YourAdapter.SOME_TYPE) return 0
          * if (viewHolder?.adapterPosition == 0) return 0
          */
-        if (viewHolder.itemViewType == Item.DATE_ROW_TYPE) return 0
+        if (viewHolder.itemViewType == Item.DATE_ITEM_TYPE) return 0
         return super.getMovementFlags(recyclerView, viewHolder)
     }
 

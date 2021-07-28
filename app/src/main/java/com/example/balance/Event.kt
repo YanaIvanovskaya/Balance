@@ -14,3 +14,17 @@ class Event<T>(
     }
 
 }
+
+class EventComplete<T>(
+    private val isComplete: Boolean
+) {
+    private var mIsConsumed = false
+
+    fun consume(action: (Boolean) -> Unit) {
+        if (!mIsConsumed) {
+            action(isComplete)
+            mIsConsumed = true
+        }
+    }
+
+}

@@ -31,9 +31,9 @@ class UserDataStore(
             preferences[KEY_CASH] ?: 0
         }
 
-    suspend fun addSumCash(cash: Int) {
+    suspend fun saveSumCash(cash: Int) {
         mDataStore.edit { preferences ->
-            preferences[KEY_CASH] = preferences[KEY_CASH]?.plus(cash) ?: 0
+            preferences[KEY_CASH] = cash
         }
     }
 
@@ -42,9 +42,9 @@ class UserDataStore(
             preferences[KEY_CARDS] ?: 0
         }
 
-    suspend fun addSumCards(cards: Int) {
+    suspend fun saveSumCards(cards: Int) {
         mDataStore.edit { preferences ->
-            preferences[KEY_CARDS] = preferences[KEY_CARDS]?.plus(cards) ?: 0
+            preferences[KEY_CARDS] = cards
         }
     }
 
