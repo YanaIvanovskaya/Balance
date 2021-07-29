@@ -12,7 +12,7 @@ import com.example.balance.data.template.TemplateDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Record::class, Category::class, Template::class], version = 6, exportSchema = false)
+@Database(entities = [Record::class, Category::class, Template::class], version = 7, exportSchema = false)
 abstract class BalanceDatabase : RoomDatabase() {
 
     abstract fun RecordDao(): RecordDao

@@ -18,7 +18,6 @@ class RecordRepository(private val recordDao: RecordDao) {
         recordType: RecordType,
         moneyType: MoneyType,
         categoryId: Int,
-        category: String,
         comment: String
     ) = recordDao.update(
         recordId = recordId,
@@ -26,7 +25,6 @@ class RecordRepository(private val recordDao: RecordDao) {
         recordType = recordType,
         moneyType = moneyType,
         categoryId = categoryId,
-        category = category,
         comment = comment
     )
 

@@ -3,7 +3,6 @@ package com.example.balance.presentation
 import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.*
-import com.example.balance.Event
 import com.example.balance.EventComplete
 import com.example.balance.R
 import com.example.balance.data.*
@@ -96,17 +95,28 @@ class RecordCreationViewModel(
     private fun applyValues() {
         if (recordId != -1) {
             viewModelScope.launch {
+
                 val record =
                     withContext(Dispatchers.IO) { recordRepository.getRecordById(recordId).first() }
+
+                val recordCategory =
+                    try {
+                        withContext(Dispatchers.IO) {
+                            categoryRepository.getNameById(record.categoryId).first()
+                        }
+                    } catch (e: NoSuchElementException) {
+                        "Deleted"
+                    }
+
                 state.value = state.value?.copy(
                     sumRecord = record.sumOfMoney.toString(),
                     recordType = record.recordType,
                     moneyType = record.moneyType,
-                    selectedCategory = record.category,
+                    selectedCategory = recordCategory,
                     comment = record.comment,
                     canSave = true
                 )
-                onCategorySelected(record.category)
+                onCategorySelected(recordCategory)
             }
         }
     }
@@ -183,7 +193,6 @@ class RecordCreationViewModel(
     }
 
 
-
     fun onChangeComment(newComment: String) = saveCommentState(newComment)
 
     fun onChangeSum(sumRecord: String) = saveSumRecordState(sumRecord)
@@ -231,6 +240,12 @@ class RecordCreationViewModel(
                 val record = withContext(Dispatchers.IO) {
                     recordRepository.getRecordById(currentTemplate.recordId).first()
                 }
+                val recordCategory =
+                    withContext(Dispatchers.IO) {
+                        categoryRepository.getNameById(record.categoryId).first()
+                    }
+
+
                 if (record.recordType == RecordType.COSTS)
                     onCostsSelected()
                 else
@@ -239,7 +254,7 @@ class RecordCreationViewModel(
                     sumRecord = record.sumOfMoney.toString(),
                     recordType = record.recordType,
                     moneyType = record.moneyType,
-                    selectedCategory = record.category,
+                    selectedCategory = recordCategory,
                     canSave = true
                 )
             }
@@ -258,14 +273,12 @@ class RecordCreationViewModel(
                 val categoryName = state.value?.selectedCategory ?: ""
                 categoryRepository.getId(categoryName)
             }
-            val category = state.value?.selectedCategory ?: ""
             val comment = state.value?.comment ?: ""
 
             if (recordId == -1) {
                 val newRecord = Record(
                     sumOfMoney = sumMoney,
                     categoryId = categoryId,
-                    category = category,
                     recordType = recordType,
                     moneyType = moneyType,
                     isImportant = state.value?.isImportant ?: false,
@@ -291,7 +304,6 @@ class RecordCreationViewModel(
                         recordType = recordType,
                         moneyType = moneyType,
                         categoryId = categoryId,
-                        category = category,
                         comment = comment
                     )
                 }

@@ -3,15 +3,18 @@ package com.example.balance.presentation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.balance.BalanceApp
 import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.ui.recycler_view.Item
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HistoryViewModel(
     val recordRepository: RecordRepository,
@@ -44,25 +47,30 @@ class HistoryViewModel(
     private fun mapItems(items: List<Record>): MutableList<Item> {
         val allHistoryRecords: MutableList<Item> = mutableListOf()
         var currentDate = ""
-
-        items.forEach { record ->
-            if (currentDate.isEmpty() || currentDate != record.date) {
-                val dateItem = Item.DateItem(date = record.date.drop(3).dropLast(5))
-                allHistoryRecords.add(dateItem)
-            }
-            allHistoryRecords.add(
-                Item.RecordItem(
-                    id = record.id,
-                    date = record.date,
-                    sumMoney = record.sumOfMoney,
-                    recordType = record.recordType,
-                    moneyType = record.moneyType,
-                    category = record.category,
-                    comment = record.comment,
-                    isImportant = record.isImportant
+        viewModelScope.launch {
+            items.forEach { record ->
+                if (currentDate.isEmpty() || currentDate != record.dateText) {
+                    val dateItem = Item.DateItem(date = record.dateText.drop(3).dropLast(5))
+                    allHistoryRecords.add(dateItem)
+                }
+                val recordCategory =
+                    withContext(Dispatchers.IO) {
+                        BalanceApp.categoryRepository.getNameById(record.categoryId).first()
+                    }
+                allHistoryRecords.add(
+                    Item.RecordItem(
+                        id = record.id,
+                        date = record.dateText,
+                        sumMoney = record.sumOfMoney,
+                        recordType = record.recordType,
+                        moneyType = record.moneyType,
+                        category = recordCategory,
+                        comment = record.comment,
+                        isImportant = record.isImportant
+                    )
                 )
-            )
-            currentDate = record.date
+                currentDate = record.dateText
+            }
         }
         return allHistoryRecords
     }

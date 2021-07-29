@@ -11,12 +11,18 @@ import androidx.navigation.fragment.findNavController
 import com.example.balance.BalanceApp
 import com.example.balance.Event
 import com.example.balance.R
+import com.example.balance.data.Category
+import com.example.balance.data.CategoryType
 import com.example.balance.data.UserDataStore
+import com.example.balance.data.record.MoneyType
+import com.example.balance.data.record.Record
+import com.example.balance.data.record.RecordType
 import com.example.balance.presentation.getViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.threeten.bp.LocalDate
 
 class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
 
@@ -51,12 +57,72 @@ class StartingAppViewModel(
 
     val events = MutableLiveData<Event<Boolean>>()
 
+
+    private fun fillDatabase() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val months = mapOf(
+                1 to "января",
+                2 to "февраля",
+                3 to "марта",
+                4 to "апреля",
+                5 to "мая",
+                6 to "июня",
+                7 to "июля",
+                8 to "августа",
+                9 to "сентября",
+                10 to "октября",
+                11 to "ноября",
+                12 to "декабря"
+            )
+            val weekDays = mapOf(
+                1 to "пн",
+                2 to "вт",
+                3 to "ср",
+                4 to "чт",
+                5 to "пт",
+                6 to "сб",
+                7 to "вс",
+            )
+            var date = LocalDate.of(2021, 1, 1)
+            for (i in 1..10) {
+                val newDate = date.plusDays((1..3).random().toLong())
+                date = newDate
+                val recordType = if ((0..1).random() == 1) RecordType.PROFITS else RecordType.COSTS
+                val record = Record(
+                    day = newDate.dayOfMonth,
+                    month = months[newDate.month.value] ?: "",
+                    year = newDate.year,
+                    weekDay = weekDays[newDate.dayOfWeek.value] ?: "",
+                    isImportant = (0..1).random() == 1,
+                    sumOfMoney = (1..100).random(),
+                    recordType = recordType,
+                    moneyType = if ((0..1).random() == 1) MoneyType.CASH else MoneyType.CARDS,
+                    categoryId = if (recordType == RecordType.PROFITS) (25..26).random() else (27..28).random(),
+                    comment = ""
+                )
+
+                BalanceApp.recordRepository.insert(record)
+            }
+        }
+    }
+
     init {
         viewModelScope.launch {
 //            dataStore.savePasscode("00000")
 //            dataStore.clearBalance()
 
-            val passcode = withContext(Dispatchers.IO) {dataStore.passcode.first()}
+//            withContext(Dispatchers.IO) {
+//                BalanceApp.categoryRepository.deleteAll()
+//                BalanceApp.categoryRepository.insert(Category(name = "Стипендия",type = CategoryType.CATEGORY_PROFIT))
+//                BalanceApp.categoryRepository.insert(Category(name = "Зарплата",type = CategoryType.CATEGORY_PROFIT))
+//
+//                BalanceApp.categoryRepository.insert(Category(name = "Тралик",type = CategoryType.CATEGORY_COSTS))
+//                BalanceApp.categoryRepository.insert(Category(name = "Еда",type = CategoryType.CATEGORY_COSTS))
+//            }
+
+//            fillDatabase()
+
+            val passcode = withContext(Dispatchers.IO) { dataStore.passcode.first() }
             val isNewUser = passcode.isNullOrEmpty()
             events.value = Event(isNewUser)
         }

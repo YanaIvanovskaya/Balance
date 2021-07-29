@@ -124,11 +124,11 @@ class HomeViewModel(
                 allHomeRecords.add(
                     Item.RecordItem(
                         id = record.id,
-                        date = record.date,
+                        date = record.dateText,
                         sumMoney = record.sumOfMoney,
                         recordType = record.recordType,
                         moneyType = record.moneyType,
-                        category = record.category,
+                        category = "",
                         comment = record.comment,
                         isImportant = record.isImportant
                     )

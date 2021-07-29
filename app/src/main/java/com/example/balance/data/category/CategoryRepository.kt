@@ -17,4 +17,6 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
 
     fun getId(name: String) = categoryDao.getId(name)
 
+    fun getNameById(id: Int) = categoryDao.getNameById(id)
+
 }
