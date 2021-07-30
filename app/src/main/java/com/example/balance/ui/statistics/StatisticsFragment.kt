@@ -2,16 +2,26 @@ package com.example.balance.ui.statistics
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.example.balance.BalanceApp
 import com.example.balance.R
+import com.example.balance.data.record.Record
+import com.example.balance.data.record.RecordRepository
+import com.example.balance.data.record.RecordType
 import com.example.balance.databinding.FragmentStatisticsBinding
+import com.example.balance.presentation.AppBarEntry
+import com.example.balance.presentation.StatisticsState
+import com.example.balance.presentation.StatisticsViewModel
+import com.example.balance.presentation.getViewModel
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.*
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
@@ -22,63 +32,26 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.*
 import kotlin.math.abs
-
-data class StatisticsState(
-    val descCommon: String,
-    val sumCostsCards: Int,
-    val sumProfitCash: Int,
-    val sumProfitCards: Int
-) {
-
-//    companion object {
-//        fun default() = StatisticsState(
-//            sumCostsCash = 0,
-//            sumCostsCards = 0,
-//            sumProfitCash = 0,
-//            sumProfitCards = 0
-//        )
-//    }
-
-}
-
-
-class StatisticsViewModel : ViewModel() {
-
-//    val state = MutableLiveData(StatisticsState.default())
-
-
-}
-
 
 class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
     private var mBinding: FragmentStatisticsBinding? = null
     private lateinit var mNavController: NavController
 
-    //    private val mViewModel by getViewModel {
-//        HomeViewModel(
-//            recordRepository = BalanceApp.recordRepository,
-//            templateRepository = BalanceApp.templateRepository,
-//            datastore = BalanceApp.dataStore
-//        )
-//    }
+    private val mViewModel by getViewModel {
+        StatisticsViewModel(
+            recordRepository = BalanceApp.recordRepository
+        )
+    }
     private lateinit var mCommonBarChart: BarChart
     private lateinit var mRestBarChart: BarChart
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val binding = FragmentStatisticsBinding.inflate(inflater, container, false)
-        mBinding = binding
-        mCommonBarChart = binding.commonChart
-        mRestBarChart = binding.restChart
-        mNavController = findNavController()
-        return binding.root
-    }
 
     private val onCommonChartValueSelectedListener = object : OnChartValueSelectedListener {
         override fun onValueSelected(e: Entry?, h: Highlight?) {
@@ -112,15 +85,47 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
     private val xAxisFormatter: ValueFormatter = object : ValueFormatter() {
 
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            return if (value == value.toInt().toFloat()) {
-                getListMonths().getOrNull(value.toInt()) ?: " "
-            } else " "
+            val v = value - 1
+            return if (v == v.toInt().toFloat()) {
+                getListMonths().getOrNull(v.toInt()) ?: "5"
+            } else "5"
         }
 
     }
 
+    private val yAxisFormatter: ValueFormatter = object : ValueFormatter() {
 
+        override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+            return if (abs(value) < 1000f) {
+                "${value.toInt()}"
+            } else "${(value / 1000).toInt()}K"
+        }
 
+        override fun getFormattedValue(value: Float): String {
+            return getAxisLabel(value, null)
+        }
+
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding = FragmentStatisticsBinding.inflate(inflater, container, false)
+        mBinding = binding
+        mNavController = findNavController()
+        mCommonBarChart = binding.commonChart
+        mRestBarChart = binding.restChart
+        mViewModel.state.observe(viewLifecycleOwner, ::render)
+        createCommonChart()
+//        createRestChart()
+        return binding.root
+    }
+
+    private fun render(state: StatisticsState) {
+        updateCommonChart(state.entriesCommonChart)
+    }
 
     fun getListMonths(): Array<String> {
         return arrayOf(
@@ -137,12 +142,6 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             "Ноя",
             "Дек"
         )
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        createCommonChart()
-        createRestChart()
     }
 
     override fun onDestroyView() {
@@ -165,30 +164,16 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         mCommonBarChart.axisLeft.setLabelCount(7, false)
         mCommonBarChart.axisLeft.textSize = 12f
 
+        mCommonBarChart.width
+
         val xAxis = mCommonBarChart.xAxis
         xAxis.position = XAxisPosition.TOP_INSIDE
         xAxis.setDrawGridLines(false)
         xAxis.setDrawAxisLine(false)
         xAxis.textSize = 12f
-        xAxis.setCenterAxisLabels(true)
-        xAxis.labelCount = 12
         xAxis.granularity = 1f
         xAxis.valueFormatter = xAxisFormatter
-
-        val yAxisFormatter: ValueFormatter = object : ValueFormatter() {
-
-            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                return if (abs(value) < 1000f) {
-                    "${value.toInt()}"
-                } else "${(value / 1000).toInt()}K"
-            }
-
-            override fun getFormattedValue(value: Float): String {
-                return getAxisLabel(value, null)
-            }
-
-        }
-        mCommonBarChart.axisLeft.valueFormatter = yAxisFormatter
+//        mCommonBarChart.axisLeft.valueFormatter = yAxisFormatter
 
         val l: Legend = mCommonBarChart.legend
         l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
@@ -199,31 +184,52 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         l.formToTextSpace = 4f
         l.xEntrySpace = 6f
 
-        val values = mutableListOf<BarEntry>()
-        for (i in 1..12) {
-            values.add(
-                BarEntry(
-                    i.toFloat(),
-                    floatArrayOf(-(0..99000).random().toFloat(), (0..99000).random().toFloat())
-                )
-            )
+    }
+
+    private fun updateCommonChart(barEntries: List<AppBarEntry>) {
+        if (barEntries.isNullOrEmpty()) {
+            println("!barEntries.isNullOrEmpty() $barEntries")
+            return
         }
 
+//        val values = mutableListOf<BarEntry>()
+//        for (i in 1..12) {
+//            values.add(
+//                BarEntry(
+//                    i.toFloat(),
+//                    floatArrayOf(
+//                        -(1000..10000).random().toFloat(),
+//                        (1000..10000).random().toFloat()
+//                    )
+//                )
+//            )
+//        }
+
+        val values = barEntries.map {
+            BarEntry(
+                it.x,
+                it.yVals
+            )
+        }
+        Timber.d("Log bars: ${values.joinToString()}")
         val set = BarDataSet(values, "")
         set.setDrawIcons(false)
         set.valueTextSize = 11f
         set.valueFormatter = yAxisFormatter
-        set.setColors(Color.rgb(255, 100, 100), Color.rgb(100, 255, 100))
+        set.setColors(
+            Color.rgb(255, 100, 100),
+            Color.rgb(100, 255, 100)
+        )
         set.stackLabels = arrayOf(
             "Расходы", "Доходы"
         )
 
         val data = BarData(set)
         mCommonBarChart.data = data
+        println(data.dataSets)
+        mCommonBarChart.setVisibleXRangeMaximum(6f)
         mCommonBarChart.invalidate()
-
     }
-
 
     private fun createRestChart() {
         mRestBarChart.setDrawValueAboveBar(true)
@@ -231,19 +237,15 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         mRestBarChart.setDrawGridBackground(false)
 
         val xAxis: XAxis = mRestBarChart.xAxis
-        xAxis.position = XAxisPosition.BOTTOM
+        xAxis.position = XAxisPosition.BOTH_SIDED
         xAxis.setDrawGridLines(false)
         xAxis.setDrawAxisLine(false)
         xAxis.textSize = 13f
-        xAxis.labelCount = 5
-        xAxis.setCenterAxisLabels(true)
         xAxis.granularity = 1f
         xAxis.valueFormatter = xAxisFormatter
 
         val left: YAxis = mRestBarChart.axisLeft
         left.setDrawLabels(false)
-        left.spaceTop = 25f
-        left.spaceBottom = 25f
         left.setDrawAxisLine(false)
         left.setDrawGridLines(false)
         left.setDrawZeroLine(true)
@@ -272,7 +274,6 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
         val data = BarData(set)
         data.setValueTextSize(13f)
-        data.barWidth = 0.8f
 
         mRestBarChart.data = data
         mRestBarChart.invalidate()

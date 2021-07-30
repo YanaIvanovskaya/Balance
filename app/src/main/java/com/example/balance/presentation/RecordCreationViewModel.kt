@@ -1,18 +1,25 @@
 package com.example.balance.presentation
 
 import android.content.Context
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.*
 import com.example.balance.EventComplete
 import com.example.balance.R
-import com.example.balance.data.*
+import com.example.balance.data.category.Category
 import com.example.balance.data.category.CategoryRepository
+import com.example.balance.data.category.CategoryType
 import com.example.balance.data.record.MoneyType
 import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.Template
 import com.example.balance.data.template.TemplateRepository
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -166,7 +173,6 @@ class RecordCreationViewModel(
     fun showCategorySelectionDialog(context: Context) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Выберите категорию")
-        builder.setView(R.layout.fragment_bottom_sheet)
         val categories = getCategories()
         val checkedItem = 0
         builder.setSingleChoiceItems(categories, checkedItem) { dialog, which ->
@@ -181,15 +187,69 @@ class RecordCreationViewModel(
 
 
     fun showCategoryCreationDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Выберите категорию")
-        builder.setView(R.layout.fragment_dialog_category_creation)
+        val profitCategoryNames =
+            state.value?.profitCategories?.map {
+                it.name
+            } ?: listOf()
+        val costsCategoryNames =
+            state.value?.costsCategories?.map {
+                it.name
+            } ?: listOf()
 
-        builder.setNegativeButton("Закрыть", null)
-        builder.setPositiveButton("Сохранить", null)
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Новая категория")
+       builder.setView( R.layout.fragment_dialog_category_creation)
+
         val dialog = builder.create()
-//        val categoryName = dialog.findViewById<>()
+        dialog.setContentView(R.layout.fragment_dialog_category_creation)
+        val categoryCosts = dialog.findViewById<RadioButton>(R.id.radioButton_category_costs)
+        val categoryProfit = dialog.findViewById<RadioButton>(R.id.radioButton_category_profit)
+        val categoryName = dialog.findViewById<TextInputEditText>(R.id.text_category_name)
+        val errorText = dialog.findViewById<TextView>(R.id.error_category_creation)
+        val buttonSave = dialog.findViewById<Button>(R.id.button_save_category)
+        val buttonClose = dialog.findViewById<Button>(R.id.button_close_dialog)
         dialog.show()
+        categoryCosts?.isSelected = true
+
+        categoryName?.doAfterTextChanged {
+            println(it.toString())
+            if ((categoryCosts?.isChecked == true && it.toString() in costsCategoryNames) ||
+                (categoryProfit?.isChecked == true && it.toString() in profitCategoryNames)
+            ) {
+                errorText?.isVisible = true
+                buttonSave?.isEnabled = false
+
+            } else if (categoryName.text?.isEmpty() == true) {
+                errorText?.isVisible = false
+                buttonSave?.isEnabled = false
+            } else {
+                errorText?.isVisible = false
+                buttonSave?.isEnabled = true
+            }
+        }
+
+        buttonClose?.setOnClickListener {
+            println("buttonClose")
+            dialog.cancel()
+        }
+
+        buttonSave?.setOnClickListener {
+            viewModelScope.launch(Dispatchers.IO) {
+                categoryRepository.insert(
+                    Category(
+                        name = categoryName?.text.toString(),
+                        type = when (categoryCosts?.isChecked) {
+                            true -> CategoryType.CATEGORY_COSTS
+                            else -> CategoryType.CATEGORY_PROFIT
+                        },
+                        isDeleted = false
+                    )
+                )
+            }
+            dialog.cancel()
+        }
+
+
     }
 
 

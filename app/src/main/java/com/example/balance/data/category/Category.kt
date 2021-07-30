@@ -1,4 +1,4 @@
-package com.example.balance.data
+package com.example.balance.data.category
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +13,8 @@ data class Category(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     var name: String,
-    var type: CategoryType
+    var type: CategoryType,
+    var isDeleted: Boolean?
 )
 
 @Dao
@@ -30,6 +31,9 @@ interface CategoryDao {
 
     @Query("SELECT id, name from category_table")
     fun getCategoryWith(): List<CategoryWithRecords?>?
+
+    @Query("SELECT name from category_table WHERE type=:categoryType")
+    fun getCategoryNames(categoryType: CategoryType): List<String>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(category: Category)

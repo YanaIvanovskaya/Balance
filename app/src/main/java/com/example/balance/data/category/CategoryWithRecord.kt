@@ -1,7 +1,8 @@
-package com.example.balance.data
+package com.example.balance.data.category
 
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.example.balance.data.category.Category
 import com.example.balance.data.record.Record
 
 class CategoryWithRecords {

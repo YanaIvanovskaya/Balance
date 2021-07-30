@@ -3,6 +3,7 @@ package com.example.balance.ui.recycler_view
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import timber.log.Timber
 
 class HomeAdapter(
     var dataSet: MutableList<Item> = mutableListOf(),
@@ -33,6 +34,7 @@ class HomeAdapter(
     override fun getItemCount(): Int = dataSet.size
 
     fun updateBalance(cash: String, cards: String) {
+        Timber.d("Cash: $cash, Cards: $cards")
         if (dataSet.isNotEmpty()) {
             val item = dataSet[0]
             if (item is Item.BalanceItem) {
@@ -40,6 +42,7 @@ class HomeAdapter(
                 balanceItem.update(cash, cards)
             }
         }
+        notifyItemChanged(0)
     }
 
 }

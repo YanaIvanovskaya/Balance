@@ -6,6 +6,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Month
+import org.threeten.bp.format.TextStyle
+import java.util.*
 
 enum class RecordType {
     COSTS,
@@ -39,7 +42,7 @@ data class Record(
 
     companion object {
         private var date: LocalDate = LocalDate.now()
-        private val months = mapOf(
+        val months = mapOf(
             1 to "января",
             2 to "февраля",
             3 to "марта",
@@ -53,6 +56,7 @@ data class Record(
             11 to "ноября",
             12 to "декабря"
         )
+
         private val weekDays = mapOf(
             1 to "пн",
             2 to "вт",
@@ -94,6 +98,12 @@ interface RecordDao {
 
     @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType AND moneyType =:moneyType")
     fun getSum(recordType: RecordType, moneyType: MoneyType): Flow<Int?>
+
+    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType AND month =:monthName AND year=:year")
+    fun getMonthlyAmount(recordType: RecordType, monthName: String, year: Int): Flow<Int?>
+
+    @Query("SELECT DISTINCT year FROM record_table")
+    fun getYears(): Flow<List<Int>>
 
     @Query("DELETE FROM record_table")
     suspend fun deleteAll()

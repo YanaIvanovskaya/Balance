@@ -21,19 +21,49 @@
             android:id="@+id/radioButton_category_costs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="Расходы" />
     </RadioGroup>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/text_template_name"
+            android:id="@+id/text_category_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Название"
             android:maxLength="15" />
+
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/error_category_creation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Такая категория уже существует"
+        android:textColor="#F46A6A"
+        android:visibility="invisible" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="clip_horizontal|center|end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_close_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Закрыть" />
+
+        <Button
+            android:id="@+id/button_save_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Сохранить" />
+    </LinearLayout>
 
 </LinearLayout>

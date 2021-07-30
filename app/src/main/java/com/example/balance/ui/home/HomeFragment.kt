@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TimePicker
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
@@ -22,6 +23,7 @@ import com.example.balance.ui.recycler_view.HomeAdapter
 import com.example.balance.ui.recycler_view.Item
 import com.example.balance.ui.recycler_view.ItemDiffUtilCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import timber.log.Timber
 
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -32,8 +34,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var homeAdapter: HomeAdapter
     private val mViewModel by getViewModel {
         HomeViewModel(
+            balanceRepository = BalanceApp.balanceRepository,
             recordRepository = BalanceApp.recordRepository,
             templateRepository = BalanceApp.templateRepository,
+            categoryRepository = BalanceApp.categoryRepository,
             datastore = BalanceApp.dataStore
         )
     }
@@ -77,7 +81,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun showBottomSheetDialog(recordId: Int, position: Int) {
-        val bottomSheetDialog  = BottomSheetDialog(requireContext())
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
         bottomSheetDialog.setContentView(R.layout.fragment_bottom_sheet)
         val unpin = bottomSheetDialog.findViewById<LinearLayout>(R.id.pin_unpin_record)
         val edit = bottomSheetDialog.findViewById<LinearLayout>(R.id.edit_record)
@@ -101,7 +105,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun render(state: HomeState) {
-        homeAdapter.updateBalance(mViewModel.getCurrentCash(), mViewModel.getCurrentCards())
+        Timber.d("Render state")
+        Timber.d(state.toString())
+        homeAdapter.updateBalance(state.cash.toString(), state.cards.toString())
     }
 
     private fun initRecyclerView() {

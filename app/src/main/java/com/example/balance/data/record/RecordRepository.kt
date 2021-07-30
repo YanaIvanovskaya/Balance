@@ -1,12 +1,16 @@
 package com.example.balance.data.record
 
-import com.example.balance.data.Category
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import timber.log.Timber
 
 
 class RecordRepository(private val recordDao: RecordDao) {
 
     val allRecords: Flow<List<Record>> = recordDao.getAllRecords()
+
+    fun getYearsOfUse(): Flow<List<Int>> = recordDao.getYears()
 
     suspend fun insert(record: Record) = recordDao.insert(record)
 
@@ -28,12 +32,21 @@ class RecordRepository(private val recordDao: RecordDao) {
         comment = comment
     )
 
-    fun getSum(recordType: RecordType, moneyType: MoneyType): Flow<Int?> =
+    fun getSum(recordType: RecordType, moneyType: MoneyType): Flow<Int> =
         recordDao.getSum(recordType, moneyType)
+            .map {
+                Timber.d("Map sum. $recordType $moneyType")
+                Timber.d("Map sum: $it")
+                it ?: 0
+            }
 
-    suspend fun deleteRecordById(recordId:Int) = recordDao.deleteRecordById(recordId)
+    fun getMonthlyAmount(recordType: RecordType, monthName: String, year: Int): Flow<Int?> =
+        recordDao.getMonthlyAmount(recordType, monthName, year)
 
-    suspend fun setImportance(recordId: Int,isImportant: Boolean) = recordDao.setImportance(recordId,isImportant)
+    suspend fun deleteRecordById(recordId: Int) = recordDao.deleteRecordById(recordId)
+
+    suspend fun setImportance(recordId: Int, isImportant: Boolean) =
+        recordDao.setImportance(recordId, isImportant)
 
 
 }

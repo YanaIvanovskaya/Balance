@@ -11,9 +11,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.balance.BalanceApp
 import com.example.balance.Event
 import com.example.balance.R
-import com.example.balance.data.Category
-import com.example.balance.data.CategoryType
+import com.example.balance.data.BalanceRepository
 import com.example.balance.data.UserDataStore
+import com.example.balance.data.category.Category
+import com.example.balance.data.category.CategoryType
 import com.example.balance.data.record.MoneyType
 import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordType
@@ -28,7 +29,8 @@ class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
 
     private val mViewModel by getViewModel {
         StartingAppViewModel(
-            dataStore = BalanceApp.dataStore
+            dataStore = BalanceApp.dataStore,
+            balanceRepository = BalanceApp.balanceRepository
         )
     }
     private lateinit var mNavController: NavController
@@ -52,11 +54,11 @@ class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
 }
 
 class StartingAppViewModel(
-    private val dataStore: UserDataStore
+    private val dataStore: UserDataStore,
+    private val balanceRepository: BalanceRepository
 ) : ViewModel() {
 
     val events = MutableLiveData<Event<Boolean>>()
-
 
     private fun fillDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -97,7 +99,7 @@ class StartingAppViewModel(
                     sumOfMoney = (1..100).random(),
                     recordType = recordType,
                     moneyType = if ((0..1).random() == 1) MoneyType.CASH else MoneyType.CARDS,
-                    categoryId = if (recordType == RecordType.PROFITS) (25..26).random() else (27..28).random(),
+                    categoryId = if (recordType == RecordType.PROFITS) (1..2).random() else (3..4).random(),
                     comment = ""
                 )
 
@@ -122,8 +124,15 @@ class StartingAppViewModel(
 
 //            fillDatabase()
 
-            val passcode = withContext(Dispatchers.IO) { dataStore.passcode.first() }
+            val passcode = withContext(Dispatchers.IO) {
+                dataStore.passcode.first()
+            }
             val isNewUser = passcode.isNullOrEmpty()
+
+            if (!isNewUser) {
+                balanceRepository.loadBalance()
+            }
+
             events.value = Event(isNewUser)
         }
     }

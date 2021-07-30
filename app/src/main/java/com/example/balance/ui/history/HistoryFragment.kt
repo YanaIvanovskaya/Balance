@@ -32,7 +32,8 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     private val mViewModel by getViewModel {
         HistoryViewModel(
             recordRepository = BalanceApp.recordRepository,
-            templateRepository = BalanceApp.templateRepository
+            templateRepository = BalanceApp.templateRepository,
+            categoryRepository = BalanceApp.categoryRepository
         )
     }
 
