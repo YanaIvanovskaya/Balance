@@ -3,20 +3,21 @@ package com.example.balance.presentation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.balance.BalanceApp
 import com.example.balance.data.BalanceRepository
-import com.example.balance.data.UserDataStore
 import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.record.MoneyType
 import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.TemplateRepository
+import com.example.balance.getTime
 import com.example.balance.ui.recycler_view.Item
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import timber.log.Timber
-import kotlin.properties.Delegates
 
 data class HomeState(
     val sumCostsCash: Int,
@@ -44,8 +45,7 @@ class HomeViewModel(
     balanceRepository: BalanceRepository,
     val recordRepository: RecordRepository,
     val templateRepository: TemplateRepository,
-    val categoryRepository: CategoryRepository,
-    val datastore: UserDataStore
+    val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
     val state = MutableLiveData(HomeState.default())
@@ -56,33 +56,49 @@ class HomeViewModel(
     private var sumCards: Int = balanceRepository.sumCards
 
     init {
-        recordRepository.getSum(RecordType.COSTS, MoneyType.CASH)
-            .onEach { newSum ->
-                state.value = state.value?.copy(sumCostsCash = newSum)
-                measureBalance()
-            }
-            .launchIn(scope = viewModelScope)
+        recordRepository.getCommonSum()
+            .distinctUntilChanged()
+            .onEach {
+                Timber.w("onEach start ${System.currentTimeMillis()}")
 
-        recordRepository.getSum(RecordType.COSTS, MoneyType.CARDS)
-            .onEach { newSum ->
-                state.value = state.value?.copy(sumCostsCards = newSum)
-                measureBalance()
-            }
-            .launchIn(scope = viewModelScope)
+                val sumCostsCash = withContext(Dispatchers.IO) {
+                    recordRepository.getSum(
+                        RecordType.COSTS,
+                        MoneyType.CASH
+                    ).first()
+                }
 
-        recordRepository.getSum(RecordType.PROFITS, MoneyType.CASH)
-            .onEach { newSum ->
-                state.value = state.value?.copy(sumProfitCash = newSum)
-                measureBalance()
-            }
-            .launchIn(scope = viewModelScope)
+                val sumProfitCash = withContext(Dispatchers.IO) {
+                    recordRepository.getSum(
+                        RecordType.PROFITS,
+                        MoneyType.CASH
+                    ).first()
+                }
 
-        recordRepository.getSum(RecordType.PROFITS, MoneyType.CARDS)
-            .onEach { newSum ->
-                state.value = state.value?.copy(sumProfitCards = newSum)
+                val sumCostsCards = withContext(Dispatchers.IO) {
+                    recordRepository.getSum(
+                        RecordType.COSTS,
+                        MoneyType.CASH
+                    ).first()
+                }
+
+                val sumProfitCards = withContext(Dispatchers.IO) {
+                    recordRepository.getSum(
+                        RecordType.PROFITS,
+                        MoneyType.CARDS
+                    ).first()
+                }
+
+                state.value = state.value?.copy(
+                    sumCostsCash = sumCostsCash,
+                    sumCostsCards = sumCostsCards,
+                    sumProfitCash = sumProfitCash,
+                    sumProfitCards = sumProfitCards,
+                )
+
                 measureBalance()
-            }
-            .launchIn(scope = viewModelScope)
+                Timber.w("onEach end ${System.currentTimeMillis()}")
+            }.launchIn(viewModelScope)
 
         recordRepository.allRecords
             .map { newRecordList -> mapItems(newRecordList.reversed()) }
@@ -118,7 +134,7 @@ class HomeViewModel(
                 allHomeRecords.add(
                     Item.RecordItem(
                         id = record.id,
-                        date = record.dateText,
+                        date = getTime(record.time),
                         sumMoney = record.sumOfMoney,
                         recordType = record.recordType,
                         moneyType = record.moneyType,
@@ -134,18 +150,7 @@ class HomeViewModel(
         return allHomeRecords
     }
 
-//    fun getCurrentCash(): String {
-//        val cash = sumCash + (state.value?.sumProfitCash ?: 0) - (state.value?.sumCostsCash ?: 0)
-//        return cash.toString()
-//    }
-//
-//    fun getCurrentCards(): String {
-//        val cards =
-//            sumCards + (state.value?.sumProfitCards ?: 0) - (state.value?.sumCostsCards ?: 0)
-//        return cards.toString()
-//    }
-
-    fun measureBalance() {
+    private fun measureBalance() {
         Timber.d("Measure: cash: $sumCash cars: $sumCards")
         val cash = sumCash +
                 (state.value?.sumProfitCash ?: 0) -

@@ -1,15 +1,9 @@
 package com.example.balance.presentation
 
-import android.content.Context
-import android.widget.Button
-import android.widget.RadioButton
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.balance.EventComplete
-import com.example.balance.R
 import com.example.balance.data.category.Category
 import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.category.CategoryType
@@ -19,9 +13,11 @@ import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.Template
 import com.example.balance.data.template.TemplateRepository
-import com.google.android.material.textfield.TextInputEditText
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 data class RecordCreationState(
     val selectedTemplatePosition: Int,
@@ -73,11 +69,17 @@ class RecordCreationViewModel(
     val events = MutableLiveData<EventComplete<Boolean>>()
 
     init {
-        updateLists()
+        viewModelScope.launch {
+            updateLists().join()
+            if (recordId != -1)
+                applyValues()
+            else
+                onCostsSelected()
+        }
     }
 
-    private fun updateLists() {
-        viewModelScope.launch {
+    private fun updateLists(): Job {
+        return viewModelScope.launch {
             val templates =
                 withContext(Dispatchers.IO) { templateRepository.allTemplates.first() }
             val costsCategories =
@@ -90,42 +92,34 @@ class RecordCreationViewModel(
                 costsCategories = costsCategories,
                 profitCategories = profitCategories
             )
-
-            if (recordId != -1)
-                applyValues()
-            else
-                onCostsSelected()
-
         }
     }
 
     private fun applyValues() {
-        if (recordId != -1) {
-            viewModelScope.launch {
+        viewModelScope.launch {
+            val record =
+                withContext(Dispatchers.IO) { recordRepository.getRecordById(recordId).first() }
 
-                val record =
-                    withContext(Dispatchers.IO) { recordRepository.getRecordById(recordId).first() }
-
-                val recordCategory =
-                    try {
-                        withContext(Dispatchers.IO) {
-                            categoryRepository.getNameById(record.categoryId).first()
-                        }
-                    } catch (e: NoSuchElementException) {
-                        "Deleted"
+            val recordCategory =
+                try {
+                    withContext(Dispatchers.IO) {
+                        categoryRepository.getNameById(record.categoryId).first()
                     }
+                } catch (e: NoSuchElementException) {
+                    "Deleted"
+                }
 
-                state.value = state.value?.copy(
-                    sumRecord = record.sumOfMoney.toString(),
-                    recordType = record.recordType,
-                    moneyType = record.moneyType,
-                    selectedCategory = recordCategory,
-                    comment = record.comment,
-                    canSave = true
-                )
-                onCategorySelected(recordCategory)
-            }
+            state.value = state.value?.copy(
+                sumRecord = record.sumOfMoney.toString(),
+                recordType = record.recordType,
+                moneyType = record.moneyType,
+                selectedCategory = recordCategory,
+                comment = record.comment,
+                canSave = true
+            )
+            onCategorySelected(recordCategory)
         }
+
     }
 
     private fun saveSumRecordState(newSumRecord: String) {
@@ -156,7 +150,7 @@ class RecordCreationViewModel(
         )
     }
 
-    private fun getCategories(): Array<String> {
+    fun getCategories(): Array<String> {
         val actualList: List<Category>? =
             when (state.value?.recordType) {
                 RecordType.COSTS -> state.value?.costsCategories
@@ -166,92 +160,9 @@ class RecordCreationViewModel(
             ?: arrayOf("")
     }
 
-    private fun onCategorySelected(category: String) {
+    fun onCategorySelected(category: String) {
         state.value = state.value?.copy(selectedCategory = category)
     }
-
-    fun showCategorySelectionDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Выберите категорию")
-        val categories = getCategories()
-        val checkedItem = 0
-        builder.setSingleChoiceItems(categories, checkedItem) { dialog, which ->
-            onCategorySelected(categories[which])
-            dialog.cancel()
-        }
-        builder.setNegativeButton("Закрыть", null)
-
-        val dialog = builder.create()
-        dialog.show()
-    }
-
-
-    fun showCategoryCreationDialog(context: Context) {
-        val profitCategoryNames =
-            state.value?.profitCategories?.map {
-                it.name
-            } ?: listOf()
-        val costsCategoryNames =
-            state.value?.costsCategories?.map {
-                it.name
-            } ?: listOf()
-
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Новая категория")
-       builder.setView( R.layout.fragment_dialog_category_creation)
-
-        val dialog = builder.create()
-        dialog.setContentView(R.layout.fragment_dialog_category_creation)
-        val categoryCosts = dialog.findViewById<RadioButton>(R.id.radioButton_category_costs)
-        val categoryProfit = dialog.findViewById<RadioButton>(R.id.radioButton_category_profit)
-        val categoryName = dialog.findViewById<TextInputEditText>(R.id.text_category_name)
-        val errorText = dialog.findViewById<TextView>(R.id.error_category_creation)
-        val buttonSave = dialog.findViewById<Button>(R.id.button_save_category)
-        val buttonClose = dialog.findViewById<Button>(R.id.button_close_dialog)
-        dialog.show()
-        categoryCosts?.isSelected = true
-
-        categoryName?.doAfterTextChanged {
-            println(it.toString())
-            if ((categoryCosts?.isChecked == true && it.toString() in costsCategoryNames) ||
-                (categoryProfit?.isChecked == true && it.toString() in profitCategoryNames)
-            ) {
-                errorText?.isVisible = true
-                buttonSave?.isEnabled = false
-
-            } else if (categoryName.text?.isEmpty() == true) {
-                errorText?.isVisible = false
-                buttonSave?.isEnabled = false
-            } else {
-                errorText?.isVisible = false
-                buttonSave?.isEnabled = true
-            }
-        }
-
-        buttonClose?.setOnClickListener {
-            println("buttonClose")
-            dialog.cancel()
-        }
-
-        buttonSave?.setOnClickListener {
-            viewModelScope.launch(Dispatchers.IO) {
-                categoryRepository.insert(
-                    Category(
-                        name = categoryName?.text.toString(),
-                        type = when (categoryCosts?.isChecked) {
-                            true -> CategoryType.CATEGORY_COSTS
-                            else -> CategoryType.CATEGORY_PROFIT
-                        },
-                        isDeleted = false
-                    )
-                )
-            }
-            dialog.cancel()
-        }
-
-
-    }
-
 
     fun onChangeComment(newComment: String) = saveCommentState(newComment)
 
@@ -322,9 +233,6 @@ class RecordCreationViewModel(
     }
 
     fun onSaveOrEditRecord() {
-
-//        runBlocking { categoryRepository.deleteAll() }
-
         viewModelScope.launch {
             val sumMoney = Integer.parseInt(state.value?.sumRecord ?: "0")
             val recordType = state.value?.recordType ?: RecordType.COSTS
@@ -371,6 +279,35 @@ class RecordCreationViewModel(
             }
         }
 
+    }
+
+    fun onSaveNewCategory(categoryName: String, categoryType: CategoryType) {
+        viewModelScope.launch(Dispatchers.IO) {
+            categoryRepository.insert(
+                Category(
+                    name = categoryName,
+                    type = categoryType,
+                    isDeleted = false
+                )
+            )
+        }
+        updateLists()
+        if (categoryType == CategoryType.CATEGORY_PROFIT && state.value?.recordType == RecordType.PROFITS ||
+            categoryType == CategoryType.CATEGORY_COSTS && state.value?.recordType == RecordType.COSTS
+        )
+            onCategorySelected(categoryName)
+    }
+
+    fun getProfitCategoryNames(): List<String> {
+        return state.value?.profitCategories?.map {
+            it.name
+        } ?: listOf()
+    }
+
+    fun getCostsCategoryNames(): List<String> {
+        return state.value?.costsCategories?.map {
+            it.name
+        } ?: listOf()
     }
 
     companion object {

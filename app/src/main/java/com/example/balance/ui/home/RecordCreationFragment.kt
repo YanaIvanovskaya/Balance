@@ -1,5 +1,6 @@
 package com.example.balance.ui.home
 
+import android.content.Context
 import android.os.Bundle
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -10,11 +11,14 @@ import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.balance.BalanceApp
 import com.example.balance.R
+import com.example.balance.data.category.Category
+import com.example.balance.data.category.CategoryType
 import com.example.balance.data.record.MoneyType
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.Template
@@ -22,6 +26,10 @@ import com.example.balance.databinding.FragmentRecordCreationBinding
 import com.example.balance.presentation.RecordCreationState
 import com.example.balance.presentation.RecordCreationViewModel
 import com.example.balance.presentation.getViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.textfield.TextInputEditText
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
@@ -63,7 +71,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             event.consume { isSavingCompleted ->
                 if (isSavingCompleted) {
                     mNavController.popBackStack()
-                    Toast.makeText(requireContext(),"Сохранено",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Сохранено", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -180,18 +188,19 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
 
     private fun initButtons() {
         mBinding?.buttonChangeCategory?.setOnClickListener {
-            mViewModel.showCategorySelectionDialog(requireContext())
+            showChangeCategoryBottomSheet()
         }
 
         mBinding?.buttonAddCategory?.setOnClickListener {
-            mViewModel.showCategoryCreationDialog(requireContext())
+            showAddCategoryBottomSheet()
+        }
+
+        mBinding?.buttonCreateAndSaveNewRecord?.setOnClickListener {
+            mViewModel.onSaveOrEditRecord()
         }
 
         mBinding?.toolbarNewRecord?.setNavigationOnClickListener {
             mNavController.popBackStack()
-        }
-        mBinding?.buttonCreateAndSaveNewRecord?.setOnClickListener {
-            mViewModel.onSaveOrEditRecord()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -215,6 +224,89 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
                 mViewModel.onChangeTemplateSwitch(isChecked)
         }
     }
+
+    private fun showChangeCategoryBottomSheet() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_selection)
+        val listView = bottomSheetDialog.findViewById<ListView>(R.id.list_view)
+
+        val categories = mViewModel.getCategories()
+
+        if (categories.isEmpty()) {
+            bottomSheetDialog.setContentView(R.layout.bottom_sheet_no_categories)
+            val buttonAddCategory =
+                bottomSheetDialog.findViewById<Button>(R.id.button_add_first_category)
+            buttonAddCategory?.setOnClickListener {
+                bottomSheetDialog.dismiss()
+                showAddCategoryBottomSheet()
+            }
+        } else {
+            val adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_list_item_1, categories
+            )
+            val onItemClickListener =
+                AdapterView.OnItemClickListener { parent, view, position, id ->
+                    mViewModel.onCategorySelected(categories[position])
+                    bottomSheetDialog.dismiss()
+                }
+
+            listView?.onItemClickListener = onItemClickListener
+            listView?.adapter = adapter
+        }
+        bottomSheetDialog.show()
+    }
+
+    private fun showAddCategoryBottomSheet() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
+
+        val profitCategoryNames = mViewModel.getProfitCategoryNames()
+        val costsCategoryNames = mViewModel.getCostsCategoryNames()
+
+        val categoryCosts =
+            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_costs)
+        val categoryProfit =
+            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_profit)
+        val categoryName =
+            bottomSheetDialog.findViewById<TextInputEditText>(R.id.text_category_name)
+        val errorText = bottomSheetDialog.findViewById<TextView>(R.id.error_category_creation)
+        val buttonSave = bottomSheetDialog.findViewById<Button>(R.id.button_save_category)
+
+        when (mViewModel.state.value?.recordType) {
+            RecordType.PROFITS -> categoryProfit?.isChecked = true
+            RecordType.COSTS -> categoryCosts?.isChecked = true
+        }
+
+        var currentCategoryName = ""
+        categoryName?.doAfterTextChanged {
+            currentCategoryName = it.toString().trim()
+            if ((categoryCosts?.isChecked == true && it.toString().trim() in costsCategoryNames) ||
+                (categoryProfit?.isChecked == true && it.toString().trim() in profitCategoryNames)
+            ) {
+                errorText?.isVisible = true
+                buttonSave?.isEnabled = false
+
+            } else if (categoryName.text?.trim()?.isEmpty() == true) {
+                errorText?.isVisible = false
+                buttonSave?.isEnabled = false
+            } else {
+                errorText?.isVisible = false
+                buttonSave?.isEnabled = true
+            }
+        }
+
+        buttonSave?.setOnClickListener {
+            val type = when (categoryCosts?.isChecked ?: false) {
+                true -> CategoryType.CATEGORY_COSTS
+                false -> CategoryType.CATEGORY_PROFIT
+            }
+            mViewModel.onSaveNewCategory(currentCategoryName,type)
+            bottomSheetDialog.dismiss()
+        }
+        bottomSheetDialog.show()
+    }
+
 
     private class TemplateSelectedListener(
         private val viewModel: RecordCreationViewModel

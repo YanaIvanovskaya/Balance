@@ -2,29 +2,24 @@ package com.example.balance.ui.statistics
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.balance.BalanceApp
 import com.example.balance.R
-import com.example.balance.data.record.Record
-import com.example.balance.data.record.RecordRepository
-import com.example.balance.data.record.RecordType
 import com.example.balance.databinding.FragmentStatisticsBinding
-import com.example.balance.presentation.AppBarEntry
 import com.example.balance.presentation.StatisticsState
 import com.example.balance.presentation.StatisticsViewModel
 import com.example.balance.presentation.getViewModel
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.components.*
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -32,11 +27,6 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 import java.util.*
 import kotlin.math.abs
 
@@ -186,32 +176,17 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
     }
 
-    private fun updateCommonChart(barEntries: List<AppBarEntry>) {
+    private fun updateCommonChart(barEntries: List<BarEntry>) {
         if (barEntries.isNullOrEmpty()) {
             println("!barEntries.isNullOrEmpty() $barEntries")
             return
         }
-
-//        val values = mutableListOf<BarEntry>()
-//        for (i in 1..12) {
-//            values.add(
-//                BarEntry(
-//                    i.toFloat(),
-//                    floatArrayOf(
-//                        -(1000..10000).random().toFloat(),
-//                        (1000..10000).random().toFloat()
-//                    )
-//                )
-//            )
-//        }
-
         val values = barEntries.map {
             BarEntry(
                 it.x,
                 it.yVals
             )
         }
-        Timber.d("Log bars: ${values.joinToString()}")
         val set = BarDataSet(values, "")
         set.setDrawIcons(false)
         set.valueTextSize = 11f

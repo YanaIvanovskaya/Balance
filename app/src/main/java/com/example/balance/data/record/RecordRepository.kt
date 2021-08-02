@@ -16,6 +16,8 @@ class RecordRepository(private val recordDao: RecordDao) {
 
     fun getRecordById(recordId: Int): Flow<Record> = recordDao.getRecordById(recordId)
 
+    fun getLastRecord(): Flow<Record> = recordDao.getLastRecord()
+
     suspend fun update(
         recordId: Int,
         sumOfMoney: Int,
@@ -34,14 +36,15 @@ class RecordRepository(private val recordDao: RecordDao) {
 
     fun getSum(recordType: RecordType, moneyType: MoneyType): Flow<Int> =
         recordDao.getSum(recordType, moneyType)
-            .map {
-                Timber.d("Map sum. $recordType $moneyType")
-                Timber.d("Map sum: $it")
-                it ?: 0
-            }
+            .map { it ?: 0 }
+
+    fun getSumByMoneyType(moneyType: MoneyType): Flow<Int> =
+        recordDao.getSumByMoneyType(moneyType).map { it ?: 0 }
+
+    fun getCommonSum(): Flow<Int> = recordDao.getCommonSum().map { it ?: 0 }
 
     fun getMonthlyAmount(recordType: RecordType, monthName: String, year: Int): Flow<Int?> =
-        recordDao.getMonthlyAmount(recordType, monthName, year)
+        recordDao.getMonthlyAmount(recordType, monthName, year).map { it ?: 0 }
 
     suspend fun deleteRecordById(recordId: Int) = recordDao.deleteRecordById(recordId)
 

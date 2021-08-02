@@ -14,6 +14,7 @@ sealed interface Item {
         const val BALANCE_ITEM_TYPE: Int = 0
         const val RECORD_ITEM_TYPE: Int = 1
         const val DATE_ITEM_TYPE: Int = 2
+        const val TEMPLATE_ITEM_TYPE = 3
     }
 
     fun getItemViewType(): Int
@@ -29,8 +30,7 @@ sealed interface Item {
         }
 
         override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
-            val dateViewHolder: ViewHolderFactory.DateViewHolder =
-                viewHolder as ViewHolderFactory.DateViewHolder
+            val dateViewHolder = viewHolder as ViewHolderFactory.DateViewHolder
             dateViewHolder.date.text = date
         }
 
@@ -122,6 +122,53 @@ sealed interface Item {
         fun update(cash: String, cards: String) {
             sumCash = cash
             sumCards = cards
+        }
+
+    }
+
+    class TemplateItem(
+        val id: Int,
+        val name: String,
+        val usage: Int,
+        val sumMoney: Int,
+        val recordType: RecordType,
+        val moneyType: MoneyType,
+        val category: String
+    ) : Item {
+
+        override fun getItemViewType(): Int {
+            return TEMPLATE_ITEM_TYPE
+        }
+
+        override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
+            val templateViewHolder = viewHolder as ViewHolderFactory.TemplateViewHolder
+
+            templateViewHolder.nameTemplateText.text = name
+            templateViewHolder.usageText.text = usage.toString()
+            templateViewHolder.sumText.text = sumMoney.toString()
+            templateViewHolder.categoryText.text = category
+
+            val resources = viewHolder.itemView.resources
+
+            val imageCash =
+                ResourcesCompat.getDrawable(resources, R.drawable.coins, null)
+            val imageCards =
+                ResourcesCompat.getDrawable(resources, R.drawable.credit_card, null)
+
+            val costsColor =
+                ResourcesCompat.getDrawable(resources, android.R.color.holo_red_light, null)
+            val profitsColor = ResourcesCompat.getDrawable(resources, R.color.teal_700, null)
+
+            when (moneyType) {
+                MoneyType.CASH -> templateViewHolder.moneyTypeText.setImageDrawable(imageCash)
+                MoneyType.CARDS -> templateViewHolder.moneyTypeText.setImageDrawable(imageCards)
+            }
+
+            when (recordType) {
+                RecordType.COSTS -> templateViewHolder.layout.background = costsColor
+                RecordType.PROFITS -> templateViewHolder.layout.background = profitsColor
+            }
+
         }
 
     }

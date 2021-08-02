@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_bottomNavigationFragment_to_recordEditingFragment"
             app:destination="@id/recordEditingFragment" />
+        <action
+            android:id="@+id/action_bottomNavigationFragment_to_templatesFragment"
+            app:destination="@id/templatesFragment" />
     </fragment>
     <fragment
         android:id="@+id/recordCreationFragment"
@@ -61,6 +64,16 @@
             app:argType="integer"
             android:defaultValue="-1"/>
 
+    </fragment>
+
+    <fragment
+        android:id="@+id/templatesFragment"
+        android:name="com.example.balance.ui.settings.TemplatesFragment"
+        android:label="TemplatesFragment"
+        tools:layout="@layout/fragment_my_templates">
+        <action
+            android:id="@+id/action_templatesFragment_to_bottomNavigationFragment"
+            app:destination="@id/bottomNavigationFragment" />
     </fragment>
 
     <include app:graph="@navigation/onboarding_nav_graph" />

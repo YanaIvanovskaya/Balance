@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
@@ -19,8 +18,6 @@ import com.example.balance.presentation.HistoryViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
 import com.example.balance.ui.recycler_view.HistoryAdapter
-import com.example.balance.ui.recycler_view.Item
-import com.example.balance.ui.recycler_view.ItemDiffUtilCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class HistoryFragment : Fragment(R.layout.fragment_history) {
@@ -47,8 +44,8 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         historyRecyclerView = binding.historyRecyclerView
         mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
         historyAdapter = HistoryAdapter(
-            onLongItemClickListener = { recordId, position ->
-                showBottomSheetDialog(recordId,position)
+            onLongItemClickListener = { recordId, isImportant ->
+                showRecordMenu(recordId,isImportant)
                 true
             })
         initRecyclerView()
@@ -63,25 +60,26 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
     }
 
-    private fun updateAdapter(productList: MutableList<Item>) {
-        val itemDiffUtilCallback = ItemDiffUtilCallback(historyAdapter.dataSet, productList)
-        val itemDiffResult = DiffUtil.calculateDiff(itemDiffUtilCallback)
-        historyAdapter.dataSet = productList
-        itemDiffResult.dispatchUpdatesTo(historyAdapter)
-    }
+//    private fun updateAdapter(productList: MutableList<Item>) {
+//        val itemDiffUtilCallback = ItemDiffUtilCallback(historyAdapter.dataSet, productList)
+//        val itemDiffResult = DiffUtil.calculateDiff(itemDiffUtilCallback)
+//        historyAdapter.dataSet = productList
+//        itemDiffResult.dispatchUpdatesTo(historyAdapter)
+//    }
 
     private fun initRecyclerView() {
         historyRecyclerView.layoutManager = LinearLayoutManager(context)
         historyRecyclerView.adapter = historyAdapter
     }
 
-    private fun showBottomSheetDialog(recordId: Int, position: Int) {
+    private fun showRecordMenu(recordId: Int,isImportant: Boolean) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(R.layout.fragment_bottom_sheet)
-        val pin = bottomSheetDialog.findViewById<LinearLayout>(R.id.pin_unpin_record)
-        bottomSheetDialog.findViewById<TextView>(R.id.pin_unpin_record_label)?.text =
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_record_menu)
+        val pin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)
+        bottomSheetDialog.findViewById<TextView>(R.id.label_no_category)?.text =
             "Закрепить на главном экране"
-        val edit = bottomSheetDialog.findViewById<LinearLayout>(R.id.edit_record)
+        if (isImportant) pin?.isEnabled = false
+        val edit = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_templates)
         val delete = bottomSheetDialog.findViewById<LinearLayout>(R.id.delete_record)
 
         edit?.setOnClickListener {

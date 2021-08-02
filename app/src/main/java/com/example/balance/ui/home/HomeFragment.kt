@@ -5,11 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TimePicker
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
@@ -20,8 +18,6 @@ import com.example.balance.presentation.HomeViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
 import com.example.balance.ui.recycler_view.HomeAdapter
-import com.example.balance.ui.recycler_view.Item
-import com.example.balance.ui.recycler_view.ItemDiffUtilCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import timber.log.Timber
 
@@ -37,8 +33,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             balanceRepository = BalanceApp.balanceRepository,
             recordRepository = BalanceApp.recordRepository,
             templateRepository = BalanceApp.templateRepository,
-            categoryRepository = BalanceApp.categoryRepository,
-            datastore = BalanceApp.dataStore
+            categoryRepository = BalanceApp.categoryRepository
         )
     }
 
@@ -53,8 +48,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
 
         homeAdapter = HomeAdapter(
-            onLongItemClickListener = { recordId, position ->
-                showBottomSheetDialog(recordId, position)
+            onLongItemClickListener = { recordId ->
+                showRecordMenu(recordId)
                 true
             }
         )
@@ -73,18 +68,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun updateAdapter(productList: MutableList<Item>) {
-        val itemDiffUtilCallback = ItemDiffUtilCallback(homeAdapter.dataSet, productList)
-        val itemDiffResult = DiffUtil.calculateDiff(itemDiffUtilCallback)
-        homeAdapter.dataSet = productList
-        itemDiffResult.dispatchUpdatesTo(homeAdapter)
-    }
-
-    private fun showBottomSheetDialog(recordId: Int, position: Int) {
+    private fun showRecordMenu(recordId: Int) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
-        bottomSheetDialog.setContentView(R.layout.fragment_bottom_sheet)
-        val unpin = bottomSheetDialog.findViewById<LinearLayout>(R.id.pin_unpin_record)
-        val edit = bottomSheetDialog.findViewById<LinearLayout>(R.id.edit_record)
+        bottomSheetDialog.setContentView(R.layout.bottom_sheet_record_menu)
+        val unpin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)
+        val edit = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_templates)
         val delete = bottomSheetDialog.findViewById<LinearLayout>(R.id.delete_record)
 
         edit?.setOnClickListener {

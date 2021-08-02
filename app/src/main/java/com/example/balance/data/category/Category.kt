@@ -1,7 +1,10 @@
 package com.example.balance.data.category
 
 import androidx.room.*
+import com.example.balance.data.record.Record
 import kotlinx.coroutines.flow.Flow
+import org.threeten.bp.LocalDate
+import java.util.*
 
 enum class CategoryType {
     CATEGORY_COSTS,
@@ -12,10 +15,22 @@ enum class CategoryType {
 data class Category(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
+
+    var dateCreation: String = Date().toString(),
+    var day: Int? = currentDate.dayOfMonth,
+    var month: Int? = currentDate.month.value,
+    var year: Int? = currentDate.year,
+    var weekDay: Int? = currentDate.dayOfWeek.value,
+
     var name: String,
     var type: CategoryType,
-    var isDeleted: Boolean?
-)
+    var isDeleted: Boolean? = false
+
+    ) {
+    companion object {
+        private var currentDate: LocalDate = LocalDate.now()
+    }
+}
 
 @Dao
 interface CategoryDao {

@@ -7,7 +7,7 @@ import timber.log.Timber
 
 class HomeAdapter(
     var dataSet: MutableList<Item> = mutableListOf(),
-    private val onLongItemClickListener: (recordId: Int, position: Int) -> Boolean
+    private val onLongItemClickListener: (recordId: Int) -> Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()
@@ -23,7 +23,7 @@ class HomeAdapter(
             val recordViewHolder: ViewHolderFactory.RecordViewHolder =
                 holder as ViewHolderFactory.RecordViewHolder
             recordViewHolder.layout.setOnLongClickListener {
-                onLongItemClickListener(recordItem.id, position)
+                onLongItemClickListener(recordItem.id)
                 println(position)
                 true
             }

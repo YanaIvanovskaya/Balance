@@ -17,17 +17,22 @@ object ViewHolderFactory {
         return when (viewType) {
             Item.RECORD_ITEM_TYPE -> {
                 val recordTypeView: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.row_type_record, parent, false)
+                    .inflate(R.layout.item_record, parent, false)
                 RecordViewHolder(recordTypeView)
             }
             Item.BALANCE_ITEM_TYPE -> {
                 val balanceTypeView: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.row_type_balance, parent, false)
+                    .inflate(R.layout.item_balance, parent, false)
                 BalanceViewHolder(balanceTypeView)
+            }
+            Item.TEMPLATE_ITEM_TYPE -> {
+                val templateTypeView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_template, parent, false)
+                TemplateViewHolder(templateTypeView)
             }
             else -> {
                 val dateTypeView: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.row_type_date, parent, false)
+                    .inflate(R.layout.item_date, parent, false)
                 DateViewHolder(dateTypeView)
             }
         }
@@ -37,7 +42,7 @@ object ViewHolderFactory {
         val categoryText: TextView = itemView.findViewById(R.id.category)
         val sumText: TextView = itemView.findViewById(R.id.sum)
         val dateText: TextView = itemView.findViewById(R.id.date)
-        val moneyTypeText: ImageView = itemView.findViewById(R.id.image_moneyType)
+        val moneyTypeText: ImageView = itemView.findViewById(R.id.image_MoneyType)
         val layout: ConstraintLayout = itemView.findViewById(R.id.record_layout)
         val buttonShowComment: Button = itemView.findViewById(R.id.button_show_comment)
         val comment: MultiAutoCompleteTextView = itemView.findViewById(R.id.comment)
@@ -45,13 +50,22 @@ object ViewHolderFactory {
     }
 
     class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val date: TextView = itemView.findViewById(R.id.date)
+        val date: TextView = itemView.findViewById(R.id.usage_template)
     }
 
     class BalanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val balanceSum: TextView = itemView.findViewById(R.id.balance_sum_balance)
         val cashSum: TextView = itemView.findViewById(R.id.balance_sum_cash)
         val cardsSum: TextView = itemView.findViewById(R.id.balance_sum_cards)
+    }
+
+    class TemplateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val nameTemplateText: TextView = itemView.findViewById(R.id.name_template)
+        val categoryText: TextView = itemView.findViewById(R.id.category_template)
+        val sumText: TextView = itemView.findViewById(R.id.sum_template)
+        val usageText: TextView = itemView.findViewById(R.id.usage_template)
+        val moneyTypeText: ImageView = itemView.findViewById(R.id.image_money_type_template)
+        val layout: ConstraintLayout = itemView.findViewById(R.id.template_layout)
     }
 
 }

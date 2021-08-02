@@ -8,7 +8,7 @@ import com.example.balance.R
 
 class HistoryAdapter(
     var dataSet: MutableList<Item> = mutableListOf(),
-    private val onLongItemClickListener: (recordId: Int, position: Int) -> Boolean
+    private val onLongItemClickListener: (recordId: Int, isImportant: Boolean) -> Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     StickHeaderItemDecoration.StickyHeaderInterface {
 
@@ -25,8 +25,7 @@ class HistoryAdapter(
             val recordViewHolder: ViewHolderFactory.RecordViewHolder =
                 holder as ViewHolderFactory.RecordViewHolder
             recordViewHolder.layout.setOnLongClickListener {
-                onLongItemClickListener(recordItem.id, position)
-                println(position)
+                onLongItemClickListener(recordItem.id, recordItem.isImportant)
                 true
             }
         }
@@ -48,7 +47,7 @@ class HistoryAdapter(
         return headerPosition
     }
 
-    override fun getHeaderLayout(headerPosition: Int): Int = R.layout.row_type_date
+    override fun getHeaderLayout(headerPosition: Int): Int = R.layout.item_date
 
     override fun bindHeaderData(header: View?, headerPosition: Int) {}
 

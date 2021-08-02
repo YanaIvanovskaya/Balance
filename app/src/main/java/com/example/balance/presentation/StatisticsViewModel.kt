@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 
 data class StatisticsState(
     val yearsOfUse: List<Int>,
-    val entriesCommonChart: List<AppBarEntry>
+    val entriesCommonChart: List<BarEntry>
 ) {
 
     companion object {
@@ -49,87 +49,64 @@ class StatisticsViewModel(val recordRepository: RecordRepository) : ViewModel() 
             )
         }
 
-        randomBars()
-            .onEach { state.value = state.value?.copy(entriesCommonChart = it) }
-            .launchIn(viewModelScope)
+//        randomBars()
+//            .onEach { state.value = state.value?.copy(entriesCommonChart = it) }
+//            .launchIn(viewModelScope)
     }
 
-    private suspend fun getEntriesForCommonChart(): List<AppBarEntry> {
+    private suspend fun getEntriesForCommonChart(): List<BarEntry> {
         return withContext(Dispatchers.IO) {
             val entries = mutableListOf<BarEntry>()
-            val yearsOfUse = state.value?.yearsOfUse
-            if (!yearsOfUse.isNullOrEmpty()) {
-                var counter = 1
-                for (year in yearsOfUse) {
-                    for (month in Record.months.values) {
-                        val profitValue = recordRepository.getMonthlyAmount(
-                            recordType = RecordType.PROFITS,
-                            monthName = month,
-                            year = year
-                        ).first() ?: 0
-                        val costsValue = recordRepository.getMonthlyAmount(
-                            recordType = RecordType.COSTS,
-                            monthName = month,
-                            year = year
-                        ).first() ?: 0
-                        val barEntry = BarEntry(
-                            counter.toFloat(),
-                            floatArrayOf(
-                                costsValue.toFloat() * -1,
-                                profitValue.toFloat()
-                            )
-//                            floatArrayOf((-(0..9).random().toFloat()), (0..9).random().toFloat())
-//                            floatArrayOf( costsValue.toFloat(),profitValue.toFloat() )
-                        )
-
-                        Log.d("BAR_X", "${barEntry.x}")
-                        Log.d("BAR_yVALS", "${barEntry.yVals.joinToString()}")
-
-                        entries.add(barEntry)
-                        counter++
-                    }
-                }
-            }
-            entries.take(1)
-            val values = mutableListOf<AppBarEntry>()
-            for (i in 1..12) {
-                values.add(
-                    AppBarEntry(
-                        i.toFloat(),
-                        floatArrayOf(
-                            -(1000..10000).random().toFloat(),
-                            (1000..10000).random().toFloat()
-                        )
-                    )
-                )
-            }
-            values
+//            val yearsOfUse = state.value?.yearsOfUse
+//            if (!yearsOfUse.isNullOrEmpty()) {
+//                var counter = 1
+//                for (year in yearsOfUse) {
+//                    for (month in Record.months.values) {
+//                        val profitValue = recordRepository.getMonthlyAmount(
+//                            recordType = RecordType.PROFITS,
+//                            monthName = month,
+//                            year = year
+//                        ).first() ?: 0
+//                        val costsValue = recordRepository.getMonthlyAmount(
+//                            recordType = RecordType.COSTS,
+//                            monthName = month,
+//                            year = year
+//                        ).first() ?: 0
+//                        val barEntry = BarEntry(
+//                            counter.toFloat(),
+//                            floatArrayOf(
+//                                costsValue.toFloat() * -1,
+//                                profitValue.toFloat()
+//                            )
+//                        )
+//                        entries.add(barEntry)
+//                        counter++
+//                    }
+//                }
+//            }
+            entries
         }
     }
 }
 
-class AppBarEntry(
-    val x: Float,
-    val yVals: FloatArray
-)
 
-fun randomBars() = flow<List<AppBarEntry>> {
-    while (true) {
-        delay(2000)
-
-        val values = mutableListOf<AppBarEntry>()
-        for (i in 1..12) {
-            values.add(
-                AppBarEntry(
-                    i.toFloat(),
-                    floatArrayOf(
-                        -(1000..10000).random().toFloat(),
-                        (1000..10000).random().toFloat()
-                    )
-                )
-            )
-        }
-
-        emit(values)
-    }
-}
+//fun randomBars() = flow<List<AppBarEntry>> {
+//    while (true) {
+//        delay(2000)
+//
+//        val values = mutableListOf<AppBarEntry>()
+//        for (i in 1..12) {
+//            values.add(
+//                AppBarEntry(
+//                    i.toFloat(),
+//                    floatArrayOf(
+//                        -(1000..10000).random().toFloat(),
+//                        (1000..10000).random().toFloat()
+//                    )
+//                )
+//            )
+//        }
+//
+//        emit(values)
+//    }
+//}

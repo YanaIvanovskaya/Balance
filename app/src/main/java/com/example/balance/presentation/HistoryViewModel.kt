@@ -3,11 +3,14 @@ package com.example.balance.presentation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.balance.BalanceApp
+import com.example.balance.Case
 import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
+import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.TemplateRepository
+import com.example.balance.getMonthName
+import com.example.balance.getTime
 import com.example.balance.ui.recycler_view.Item
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -16,7 +19,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 
 class HistoryViewModel(
     val recordRepository: RecordRepository,
@@ -28,7 +30,7 @@ class HistoryViewModel(
 
     init {
         recordRepository.allRecords
-            .map { newRecordList -> mapItems(newRecordList.reversed()) }
+            .map { newRecordList -> mapItems(newRecordList) }
             .onEach(allHistoryRecords::setValue)
             .launchIn(viewModelScope)
     }
@@ -49,16 +51,22 @@ class HistoryViewModel(
     private fun mapItems(items: List<Record>): MutableList<Item> {
         val allHistoryRecords: MutableList<Item> = mutableListOf()
         var currentDate = ""
-        items.forEach { record ->
-            if (currentDate.isEmpty() || currentDate != record.dateText) {
-                val dateItem = Item.DateItem(date = record.dateText.drop(3).dropLast(5))
+        items.reversed().forEach { record ->
+            val recordDate = "${record.day} ${getMonthName(record.month, Case.OF)} ${record.year}"
+            if (currentDate.isEmpty() || currentDate != recordDate) {
+                val dateItem = Item.DateItem(
+                    date =
+                    "${record.day} ${getMonthName(record.month, Case.OF)}"
+                )
                 allHistoryRecords.add(dateItem)
             }
+
+            val sumRecord = record.sumOfMoney
             allHistoryRecords.add(
                 Item.RecordItem(
                     id = record.id,
-                    date = record.dateText,
-                    sumMoney = record.sumOfMoney,
+                    date = getTime(record.time),
+                    sumMoney = sumRecord,
                     recordType = record.recordType,
                     moneyType = record.moneyType,
                     category = runBlocking {
@@ -68,7 +76,7 @@ class HistoryViewModel(
                     isImportant = record.isImportant
                 )
             )
-            currentDate = record.dateText
+            currentDate = recordDate
         }
 
         return allHistoryRecords
