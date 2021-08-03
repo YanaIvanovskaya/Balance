@@ -35,8 +35,11 @@ data class Category(
 @Dao
 interface CategoryDao {
 
-    @Query("SELECT * FROM category_table WHERE type = :type")
-    fun getAll(type: CategoryType): Flow<List<Category>>
+    @Query("SELECT * FROM category_table WHERE type = :type AND isDeleted=0")
+    fun getCategoriesByType(type: CategoryType): Flow<List<Category>>
+
+    @Query("SELECT * FROM category_table WHERE isDeleted=0")
+    fun getAllCategories(): Flow<List<Category>>
 
     @Query("SELECT id FROM category_table WHERE name = :name")
     fun getId(name: String): Int
@@ -55,4 +58,7 @@ interface CategoryDao {
 
     @Query("DELETE FROM category_table")
     suspend fun deleteAll()
+
+    @Query("UPDATE category_table SET isDeleted=1 WHERE id=:id")
+    suspend fun deleteCategoryById(id:Int)
 }

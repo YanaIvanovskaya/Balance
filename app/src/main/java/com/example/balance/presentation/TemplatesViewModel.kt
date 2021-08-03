@@ -19,18 +19,18 @@ import kotlinx.coroutines.withContext
 
 data class TemplateState(
     val currentChip: Int,
-    val commonTemplates: List<Item>,
-    val costsTemplates: List<Item>,
-    val profitTemplates: List<Item>
+    val commonTemplates: MutableList<Item.TemplateItem>,
+    val costsTemplates: MutableList<Item.TemplateItem>,
+    val profitTemplates: MutableList<Item.TemplateItem>
 
 ) {
 
     companion object {
         fun default() = TemplateState(
             currentChip = 0,
-            commonTemplates = listOf(),
-            costsTemplates = listOf(),
-            profitTemplates = listOf()
+            commonTemplates = mutableListOf(),
+            costsTemplates = mutableListOf(),
+            profitTemplates = mutableListOf()
         )
     }
 
@@ -44,25 +44,38 @@ class TemplatesViewModel(
 
     val state = MutableLiveData(TemplateState.default())
 
-    val allTemplates = MutableLiveData<List<Item.TemplateItem>>(listOf())
-
     init {
         templateRepository.allTemplates
-            .map { newTemplateList -> mapItems(newTemplateList)
-//                state.value = state.value?.copy(
-//                    commonTemplates = mapItems(newTemplateList.reversed())
-//                            costsTemplates =
-//                )
+            .onEach { newTemplateList ->
+                mapItems(newTemplateList)
+                state.value = state.value?.copy(
+                    commonTemplates = mapItems(newTemplateList),
+                    costsTemplates = mapItems(newTemplateList, recordType = RecordType.COSTS),
+                    profitTemplates = mapItems(newTemplateList, recordType = RecordType.PROFITS)
+                )
             }
-            .onEach(allTemplates::setValue)
             .launchIn(viewModelScope)
     }
 
+    fun saveCurrentChip(chipNumber: Int) {
+        state.value = state.value?.copy(
+            currentChip = chipNumber
+        )
+    }
 
-    private suspend fun mapItems(items: List<Template>): MutableList<Item.TemplateItem> {
+    fun removeTemplate(templateId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            templateRepository.deleteTemplateById(templateId)
+        }
+    }
+
+    private suspend fun mapItems(
+        items: List<Template>,
+        recordType: RecordType? = null
+    ): MutableList<Item.TemplateItem> {
         val allTemplates: MutableList<Item.TemplateItem> = mutableListOf()
 
-        items.forEach { template ->
+        items.reversed().forEach { template ->
 
             val record = withContext(Dispatchers.IO) {
                 recordRepository.getRecordById(template.recordId).first()
@@ -71,11 +84,9 @@ class TemplatesViewModel(
                 categoryRepository.getNameById(record.categoryId).first()
             }
 
-            val chipCondition = when (state.value?.currentChip) {
-                1 -> record.recordType == RecordType.PROFITS
-                2 -> record.recordType == RecordType.COSTS
-                else -> true
-            }
+            val chipCondition = if (recordType != null) {
+                record.recordType == recordType
+            } else true
 
             if (chipCondition) {
                 allTemplates.add(

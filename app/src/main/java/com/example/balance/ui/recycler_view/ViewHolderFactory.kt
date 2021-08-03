@@ -30,6 +30,11 @@ object ViewHolderFactory {
                     .inflate(R.layout.item_template, parent, false)
                 TemplateViewHolder(templateTypeView)
             }
+            Item.CATEGORY_ITEM_TYPE -> {
+                val categoryTypeView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_category, parent, false)
+                CategoryViewHolder(categoryTypeView)
+            }
             else -> {
                 val dateTypeView: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_date, parent, false)
@@ -66,6 +71,12 @@ object ViewHolderFactory {
         val usageText: TextView = itemView.findViewById(R.id.usage_template)
         val moneyTypeText: ImageView = itemView.findViewById(R.id.image_money_type_template)
         val layout: ConstraintLayout = itemView.findViewById(R.id.template_layout)
+    }
+
+    class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val nameCategoryText: TextView = itemView.findViewById(R.id.name_category)
+        val dateCreationText: TextView = itemView.findViewById(R.id.date_creation_category)
+        val layout: ConstraintLayout = itemView.findViewById(R.id.category_layout)
     }
 
 }

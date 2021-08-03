@@ -5,6 +5,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
+import com.example.balance.data.category.CategoryType
 import com.example.balance.data.record.MoneyType
 import com.example.balance.data.record.RecordType
 
@@ -15,6 +16,7 @@ sealed interface Item {
         const val RECORD_ITEM_TYPE: Int = 1
         const val DATE_ITEM_TYPE: Int = 2
         const val TEMPLATE_ITEM_TYPE = 3
+        const val CATEGORY_ITEM_TYPE = 4
     }
 
     fun getItemViewType(): Int
@@ -169,6 +171,37 @@ sealed interface Item {
                 RecordType.PROFITS -> templateViewHolder.layout.background = profitsColor
             }
 
+        }
+
+    }
+
+    class CategoryItem(
+        val id: Int,
+        val name: String,
+        val categoryType: CategoryType,
+        val dateCreation: String
+    ) : Item {
+
+        override fun getItemViewType(): Int {
+            return CATEGORY_ITEM_TYPE
+        }
+
+        override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
+            val categoryViewHolder = viewHolder as ViewHolderFactory.CategoryViewHolder
+
+            categoryViewHolder.nameCategoryText.text = name
+            categoryViewHolder.dateCreationText.text = dateCreation
+
+            val resources = viewHolder.itemView.resources
+
+            val costsColor =
+                ResourcesCompat.getDrawable(resources, android.R.color.holo_red_light, null)
+            val profitsColor = ResourcesCompat.getDrawable(resources, R.color.teal_700, null)
+
+            when (categoryType) {
+                CategoryType.CATEGORY_COSTS -> categoryViewHolder.layout.background = costsColor
+                CategoryType.CATEGORY_PROFIT -> categoryViewHolder.layout.background = profitsColor
+            }
         }
 
     }

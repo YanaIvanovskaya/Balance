@@ -4,15 +4,22 @@ import kotlinx.coroutines.flow.Flow
 
 class CategoryRepository(private val categoryDao: CategoryDao) {
 
-    val allCostsCategory: Flow<List<Category>> = categoryDao.getAll(CategoryType.CATEGORY_COSTS)
+    val allCategories: Flow<List<Category>> = categoryDao.getAllCategories()
 
-    val allProfitCategory: Flow<List<Category>> = categoryDao.getAll(CategoryType.CATEGORY_PROFIT)
+    val allCostsCategory: Flow<List<Category>> =
+        categoryDao.getCategoriesByType(CategoryType.CATEGORY_COSTS)
+
+    val allProfitCategory: Flow<List<Category>> =
+        categoryDao.getCategoriesByType(CategoryType.CATEGORY_PROFIT)
 
     suspend fun insert(category: Category) = categoryDao.insert(category)
 
-    fun getCategoryNames(categoryType: CategoryType): List<String> = categoryDao.getCategoryNames(categoryType)
+    fun getCategoryNames(categoryType: CategoryType): List<String> =
+        categoryDao.getCategoryNames(categoryType)
 
     suspend fun deleteAll() = categoryDao.deleteAll()
+
+    suspend fun deleteCategoryById(id: Int) = categoryDao.deleteCategoryById(id)
 
     fun getId(name: String) = categoryDao.getId(name)
 

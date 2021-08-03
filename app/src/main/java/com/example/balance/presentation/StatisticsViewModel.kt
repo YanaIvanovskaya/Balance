@@ -1,31 +1,29 @@
 package com.example.balance.presentation
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.balance.data.record.Record
+import com.example.balance.Case
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
+import com.example.balance.getMonthName
 import com.github.mikephil.charting.data.BarEntry
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 data class StatisticsState(
     val yearsOfUse: List<Int>,
-    val entriesCommonChart: List<BarEntry>
+    val entriesCommonChart: List<BarEntry>,
+    val entriesRestChart: List<BarEntry>
 ) {
 
     companion object {
         fun default() = StatisticsState(
             yearsOfUse = listOf(),
-            entriesCommonChart = mutableListOf()
+            entriesCommonChart = mutableListOf(),
+            entriesRestChart = mutableListOf()
         )
     }
 
@@ -43,70 +41,72 @@ class StatisticsViewModel(val recordRepository: RecordRepository) : ViewModel() 
             state.value = state.value?.copy(
                 yearsOfUse = yearsOfUse
             )
-            val entriesCommonChart = getEntriesForCommonChart()
-            state.value = state.value?.copy(
-                entriesCommonChart = entriesCommonChart
-            )
-        }
 
-//        randomBars()
-//            .onEach { state.value = state.value?.copy(entriesCommonChart = it) }
-//            .launchIn(viewModelScope)
+            val entriesCommonChart = getEntriesForChart(ChartType.COMMON_CHART)
+            val entriesRestChart = getEntriesForChart(ChartType.REST_CHART)
+            state.value = state.value?.copy(
+                entriesCommonChart = entriesCommonChart,
+                entriesRestChart = entriesRestChart
+            )
+
+        }
     }
 
-    private suspend fun getEntriesForCommonChart(): List<BarEntry> {
+    enum class ChartType {
+        COMMON_CHART,
+        REST_CHART
+    }
+
+    private suspend fun getEntriesForChart(chartType: ChartType): List<BarEntry> {
         return withContext(Dispatchers.IO) {
             val entries = mutableListOf<BarEntry>()
-//            val yearsOfUse = state.value?.yearsOfUse
-//            if (!yearsOfUse.isNullOrEmpty()) {
-//                var counter = 1
-//                for (year in yearsOfUse) {
-//                    for (month in Record.months.values) {
-//                        val profitValue = recordRepository.getMonthlyAmount(
-//                            recordType = RecordType.PROFITS,
-//                            monthName = month,
-//                            year = year
-//                        ).first() ?: 0
-//                        val costsValue = recordRepository.getMonthlyAmount(
-//                            recordType = RecordType.COSTS,
-//                            monthName = month,
-//                            year = year
-//                        ).first() ?: 0
-//                        val barEntry = BarEntry(
-//                            counter.toFloat(),
-//                            floatArrayOf(
-//                                costsValue.toFloat() * -1,
-//                                profitValue.toFloat()
-//                            )
-//                        )
-//                        entries.add(barEntry)
-//                        counter++
-//                    }
-//                }
-//            }
+            val yearsOfUse = state.value?.yearsOfUse
+            if (!yearsOfUse.isNullOrEmpty()) {
+
+                var counter = 1
+                for (year in yearsOfUse) {
+                    val months = recordRepository.getMonthsInYear(year).first()
+                    println(months)
+                    for (month in months) {
+                        val profitValue = recordRepository.getMonthlyAmount(
+                            recordType = RecordType.PROFITS,
+                            month = month,
+                            year = year
+                        ).first() ?: 0
+                        val costsValue = recordRepository.getMonthlyAmount(
+                            recordType = RecordType.COSTS,
+                            month = month,
+                            year = year
+                        ).first() ?: 0
+
+                        if (profitValue != 0 || costsValue != 0) {
+                            val barEntry = when (chartType) {
+                                ChartType.COMMON_CHART -> {
+                                    BarEntry(
+                                        counter.toFloat(),
+                                        floatArrayOf(
+                                            costsValue.toFloat() * -1,
+                                            profitValue.toFloat()
+                                        ),
+                                        month
+                                    )
+                                }
+                                ChartType.REST_CHART -> {
+                                    BarEntry(
+                                        counter.toFloat(),
+                                        (profitValue - costsValue).toFloat(),
+                                        month
+                                    )
+                                }
+                            }
+                            entries.add(barEntry)
+                        }
+                        counter++
+                    }
+                }
+            }
             entries
         }
     }
+
 }
-
-
-//fun randomBars() = flow<List<AppBarEntry>> {
-//    while (true) {
-//        delay(2000)
-//
-//        val values = mutableListOf<AppBarEntry>()
-//        for (i in 1..12) {
-//            values.add(
-//                AppBarEntry(
-//                    i.toFloat(),
-//                    floatArrayOf(
-//                        -(1000..10000).random().toFloat(),
-//                        (1000..10000).random().toFloat()
-//                    )
-//                )
-//            )
-//        }
-//
-//        emit(values)
-//    }
-//}

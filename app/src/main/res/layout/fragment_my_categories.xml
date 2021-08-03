@@ -12,29 +12,34 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_my_templates">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_my_categories"
+        app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
             android:id="@+id/common_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="Все" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/profit_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="Доходы" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/costs_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checkable="true"
             android:text="Расходы" />
+
     </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/templates_recycler_view"
+        android:id="@+id/categories_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#E57373"
@@ -59,7 +64,7 @@
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_my_templates"
+        android:id="@+id/toolbar_my_categories"
         android:layout_width="407dp"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"

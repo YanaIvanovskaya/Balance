@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -53,6 +54,8 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
             PasscodeScreenType.AUTH -> {
                 mBinding?.buttonNext?.visibility = View.INVISIBLE
                 mBinding?.buttonShowPasscode?.visibility = View.GONE
+                mBinding?.editTextCreationPasscode?.visibility = View.GONE
+                mBinding?.passcodeChars?.visibility = View.VISIBLE
                 mBinding?.titlePasscodeEntry?.text =
                     context?.resources?.getString(R.string.greeting)
             }
@@ -73,6 +76,14 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
             }
             PasscodeScreenType.AUTH -> {
                 mBinding?.errorMsgPasscode?.isVisible = state.canComplete && !state.isMatches
+
+                val passcodeLength = state.passcode.length
+                mBinding?.char1?.isChecked = passcodeLength >= 1
+                mBinding?.char2?.isChecked = passcodeLength >= 2
+                mBinding?.char3?.isChecked = passcodeLength >= 3
+                mBinding?.char4?.isChecked = passcodeLength >= 4
+                mBinding?.char5?.isChecked = passcodeLength == 5
+
                 if (state.canComplete and state.isMatches) {
                     mNavController.navigate(R.id.bottomNavigationFragment)
                 }

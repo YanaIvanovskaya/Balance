@@ -31,6 +31,9 @@ class SettingsFragment: Fragment(R.layout.fragment_settings) {
         mBinding?.viewMyTemplates?.setOnClickListener {
             mNavController.navigate(R.id.templatesFragment)
         }
+        mBinding?.viewMyCategories?.setOnClickListener {
+            mNavController.navigate(R.id.categoriesFragment)
+        }
     }
 
 }

@@ -21,6 +21,12 @@ interface TemplateDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(template: Template)
 
+    @Query("UPDATE template_table SET frequencyOfUse = frequencyOfUse + 1 WHERE id=:id")
+    suspend fun increaseUsage(id: Int)
+
     @Query("DELETE FROM template_table WHERE recordId=:recordId")
     suspend fun deleteTemplateByRecordId(recordId: Int)
+
+    @Query("DELETE FROM template_table WHERE id=:id")
+    suspend fun deleteTemplateById(id: Int)
 }

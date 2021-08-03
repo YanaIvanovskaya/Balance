@@ -57,6 +57,9 @@ interface RecordDao {
     @Query("SELECT * FROM record_table ORDER BY id DESC LIMIT 1")
     fun getLastRecord(): Flow<Record>
 
+    @Query("SELECT DISTINCT month FROM record_table WHERE year=:year")
+    fun getMonthsInYear(year: Int): Flow<List<Int>>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(record: Record): Long
 
@@ -88,8 +91,8 @@ interface RecordDao {
     @Query("SELECT SUM(sumOfMoney) FROM record_table")
     fun getCommonSum(): Flow<Int?>
 
-    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType AND month =:monthName AND year=:year")
-    fun getMonthlyAmount(recordType: RecordType, monthName: String, year: Int): Flow<Int?>
+    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType AND month =:month AND year=:year")
+    fun getMonthlyAmount(recordType: RecordType, month: Int, year: Int): Flow<Int?>
 
     @Query("SELECT DISTINCT year FROM record_table")
     fun getYears(): Flow<List<Int>>

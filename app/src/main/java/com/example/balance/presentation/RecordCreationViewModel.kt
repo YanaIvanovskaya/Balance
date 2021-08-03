@@ -97,17 +97,13 @@ class RecordCreationViewModel(
 
     private fun applyValues() {
         viewModelScope.launch {
-            val record =
-                withContext(Dispatchers.IO) { recordRepository.getRecordById(recordId).first() }
+            val record = withContext(Dispatchers.IO) {
+                recordRepository.getRecordById(recordId).first()
+            }
 
-            val recordCategory =
-                try {
-                    withContext(Dispatchers.IO) {
-                        categoryRepository.getNameById(record.categoryId).first()
-                    }
-                } catch (e: NoSuchElementException) {
-                    "Deleted"
-                }
+            val recordCategory = withContext(Dispatchers.IO) {
+                categoryRepository.getNameById(record.categoryId).first()
+            }
 
             state.value = state.value?.copy(
                 sumRecord = record.sumOfMoney.toString(),
@@ -142,9 +138,10 @@ class RecordCreationViewModel(
 
     private fun checkAndSaveValid() {
         val isSumValid = state.value?.sumRecord?.isNotEmpty() == true
+        val isCategoryValid = state.value?.selectedCategory?.isNotEmpty() == true
         val isAllValid = if (state.value?.isTemplate == true) {
-            isSumValid && state.value?.isValidTemplateName == true
-        } else isSumValid
+            isSumValid && state.value?.isValidTemplateName == true && isCategoryValid
+        } else isSumValid && isCategoryValid
         state.value = state.value?.copy(
             canSave = isAllValid
         )
@@ -211,11 +208,9 @@ class RecordCreationViewModel(
                 val record = withContext(Dispatchers.IO) {
                     recordRepository.getRecordById(currentTemplate.recordId).first()
                 }
-                val recordCategory =
-                    withContext(Dispatchers.IO) {
-                        categoryRepository.getNameById(record.categoryId).first()
-                    }
-
+                val recordCategory = withContext(Dispatchers.IO) {
+                    categoryRepository.getNameById(record.categoryId).first()
+                }
 
                 if (record.recordType == RecordType.COSTS)
                     onCostsSelected()
@@ -254,6 +249,12 @@ class RecordCreationViewModel(
                 )
                 val recordId =
                     withContext(Dispatchers.IO) { recordRepository.insert(newRecord).toInt() }
+
+                val templatePosition = state.value?.selectedTemplatePosition ?: 0
+                val usedTemplate = state.value?.templates?.getOrNull(templatePosition - 1)
+                if (usedTemplate != null) {
+                    templateRepository.increaseUsage(usedTemplate.id)
+                }
 
                 if (state.value?.isTemplate == true) {
                     val newTemplate = Template(

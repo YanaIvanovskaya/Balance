@@ -3,8 +3,8 @@ package com.example.balance.ui.recycler_view
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-class TemplateAdapter(
-    var dataSet: MutableList<Item.TemplateItem> = mutableListOf()
+class CategoryAdapter(
+    var dataSet: MutableList<Item.CategoryItem> = mutableListOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()
@@ -16,5 +16,15 @@ class TemplateAdapter(
         dataSet[position].onBindViewHolder(holder)
 
     override fun getItemCount(): Int = dataSet.size
+
+    fun removeAt(position: Int) {
+        dataSet.removeAt(position)
+        notifyDataSetChanged()
+    }
+
+    fun insertAt(position: Int,item: Item.CategoryItem) {
+        dataSet.add(position,item)
+        notifyDataSetChanged()
+    }
 
 }

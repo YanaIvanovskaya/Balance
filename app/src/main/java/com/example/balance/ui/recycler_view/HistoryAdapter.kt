@@ -14,9 +14,8 @@ class HistoryAdapter(
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return ViewHolderFactory.create(parent, viewType)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        ViewHolderFactory.create(parent, viewType)
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = dataSet[position]
@@ -33,6 +32,7 @@ class HistoryAdapter(
     }
 
     override fun getItemCount(): Int = dataSet.size
+
 
     override fun getHeaderPositionForItem(itemPosition: Int): Int {
         var position = itemPosition

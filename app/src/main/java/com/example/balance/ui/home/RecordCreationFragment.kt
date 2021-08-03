@@ -75,7 +75,6 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
                 }
             }
         }
-
         initTextEdits()
         initButtons()
         initRadioButtons()
@@ -98,24 +97,30 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
 
     override fun onDestroyView() {
         mBinding = null
+        mSumChangeListener = null
+        mCommentChangeListener = null
+        mTemplateNameChangeListener = null
         super.onDestroyView()
     }
 
     private fun renderEditText(state: RecordCreationState) {
         mEditTextSumMoney?.removeTextChangedListener(mSumChangeListener)
-        mEditTextSumMoney?.setText(state.sumRecord)
+        mEditTextSumMoney?.text?.clear()
+        mEditTextSumMoney?.append(state.sumRecord)
         mSumChangeListener = mEditTextSumMoney?.doAfterTextChanged {
             mViewModel.onChangeSum(it.toString())
             mEditTextSumMoney?.setSelection(it.toString().length)
         }
         mEditTextNameTemplate?.removeTextChangedListener(mTemplateNameChangeListener)
-        mEditTextNameTemplate?.setText(state.templateName)
+        mEditTextNameTemplate?.text?.clear()
+        mEditTextNameTemplate?.append(state.templateName)
         mTemplateNameChangeListener = mEditTextNameTemplate?.doAfterTextChanged {
             mViewModel.onChangeTemplateName(it.toString())
             mEditTextNameTemplate?.setSelection(it.toString().length)
         }
         mEditTextComment?.removeTextChangedListener(mCommentChangeListener)
-        mEditTextComment?.setText(state.comment)
+        mEditTextComment?.text?.clear()
+        mEditTextComment?.append(state.comment)
         mCommentChangeListener = mEditTextComment?.doAfterTextChanged {
             mViewModel.onChangeComment(it.toString())
             mEditTextComment?.setSelection(it.toString().length)
@@ -124,6 +129,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
 
     private fun render(state: RecordCreationState) {
         renderEditText(state)
+        renderTemplates(state.templates)
         mBinding?.spinnerTemplates?.setSelection(state.selectedTemplatePosition)
         mBinding?.errorMsgSumOfMoney?.isVisible = state.sumRecord.isEmpty()
 
@@ -143,7 +149,6 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mBinding?.errorMsgTemplateName?.isVisible = state.isTemplate && !state.isValidTemplateName
 
         mBinding?.buttonCreateAndSaveNewRecord?.isEnabled = state.canSave
-        renderTemplates(state.templates)
     }
 
     private fun renderTemplates(templates: List<Template>) {
@@ -151,7 +156,8 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mTemplatesSpinnerAdapter = ArrayAdapter<String>(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            templates.map { it.name }
+            templates.sortedBy { it.frequencyOfUse }
+                .map { it.name }
                 .toMutableList()
                 .apply { add(0, "Без шаблона") }
         )
@@ -159,7 +165,6 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         mTemplatesSpinner?.adapter = mTemplatesSpinnerAdapter
         mTemplatesSpinner?.onItemSelectedListener = TemplateSelectedListener(mViewModel)
-
     }
 
     private fun initTextEdits() {
@@ -313,8 +318,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
     ) : AdapterView.OnItemSelectedListener {
 
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if (position != 0)
-                viewModel.onApplyTemplate(position)
+            viewModel.onApplyTemplate(position)
         }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {}

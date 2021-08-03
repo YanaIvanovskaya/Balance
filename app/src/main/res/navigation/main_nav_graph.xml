@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_bottomNavigationFragment_to_templatesFragment"
             app:destination="@id/templatesFragment" />
+        <action
+            android:id="@+id/action_bottomNavigationFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
     </fragment>
     <fragment
         android:id="@+id/recordCreationFragment"
@@ -76,6 +79,17 @@
             app:destination="@id/bottomNavigationFragment" />
     </fragment>
 
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.example.balance.ui.settings.CategoriesFragment"
+        android:label="CategoriesFragment"
+        tools:layout="@layout/fragment_my_categories">
+        <action
+            android:id="@+id/action_categoriesFragment_to_bottomNavigationFragment"
+            app:destination="@id/bottomNavigationFragment" />
+    </fragment>
+
     <include app:graph="@navigation/onboarding_nav_graph" />
     <include app:graph="@navigation/auth_nav_graph" />
+
 </navigation>

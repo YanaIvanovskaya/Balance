@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.balance.BalanceApp
+import com.example.balance.Case
 import com.example.balance.R
 import com.example.balance.databinding.FragmentStatisticsBinding
+import com.example.balance.getMonthName
 import com.example.balance.presentation.StatisticsState
 import com.example.balance.presentation.StatisticsViewModel
 import com.example.balance.presentation.getViewModel
@@ -46,24 +48,10 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
     private val onCommonChartValueSelectedListener = object : OnChartValueSelectedListener {
         override fun onValueSelected(e: Entry?, h: Highlight?) {
             if (e is BarEntry) {
-                val months = mapOf(
-                    1 to "январе",
-                    2 to "феврале",
-                    3 to "марте",
-                    4 to "апреле",
-                    5 to "мае",
-                    6 to "июне",
-                    7 to "июле",
-                    8 to "августе",
-                    9 to "сентябре",
-                    10 to "октябре",
-                    11 to "ноябре",
-                    12 to "декабре"
-                )
-                val month = months[e.x.toInt()]
+                val month = getMonthName(e.data as Int, Case.IN)
                 val sumMoney = e.yVals[h!!.stackIndex].toInt()
                 val message =
-                    "В $month ${if (sumMoney >= 0) "получено" else "потрачено"} ${abs(sumMoney)} P"
+                    "В $month ${if (sumMoney > 0) "получено" else "потрачено"} ${abs(sumMoney)} P"
                 mBinding?.descriptionChartCommon?.text = message
             }
 
@@ -72,13 +60,32 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         override fun onNothingSelected() {}
     }
 
+    private val onRestChartValueSelectedListener = object : OnChartValueSelectedListener {
+        override fun onValueSelected(e: Entry?, h: Highlight?) {
+            if (e is BarEntry) {
+                val month = getMonthName(e.data as Int, Case.IN)
+                val sumMoney = e.y.toInt()
+                val message =
+                    "В $month ${
+                        if (sumMoney > 0) "получена прибыль"
+                        else "получен убыток"
+                    } - ${abs(sumMoney)} P"
+                mBinding?.descriptionChartRest?.text = message
+            }
+        }
+
+        override fun onNothingSelected() {}
+    }
+
     private val xAxisFormatter: ValueFormatter = object : ValueFormatter() {
 
         override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-            val v = value - 1
-            return if (v == v.toInt().toFloat()) {
-                getListMonths().getOrNull(v.toInt()) ?: "5"
-            } else "5"
+            val currentEntry = mCommonBarChart.data.dataSets[0].getEntriesForXValue(value)[0]
+            return getMonthName(currentEntry.data as Int, Case.SHORT)
+        }
+
+        override fun getBarLabel(barEntry: BarEntry?): String {
+            return super.getBarLabel(barEntry)
         }
 
     }
@@ -109,29 +116,14 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         mRestBarChart = binding.restChart
         mViewModel.state.observe(viewLifecycleOwner, ::render)
         createCommonChart()
-//        createRestChart()
+        createRestChart()
         return binding.root
     }
 
+
     private fun render(state: StatisticsState) {
         updateCommonChart(state.entriesCommonChart)
-    }
-
-    fun getListMonths(): Array<String> {
-        return arrayOf(
-            "Янв",
-            "Фев",
-            "Мар",
-            "Апр",
-            "Май",
-            "Июн",
-            "Июл",
-            "Авг",
-            "Сен",
-            "Окт",
-            "Ноя",
-            "Дек"
-        )
+        updateRestChart(state.entriesRestChart)
     }
 
     override fun onDestroyView() {
@@ -153,8 +145,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         mCommonBarChart.axisLeft.setDrawZeroLine(true)
         mCommonBarChart.axisLeft.setLabelCount(7, false)
         mCommonBarChart.axisLeft.textSize = 12f
-
-        mCommonBarChart.width
+        mCommonBarChart.axisLeft.valueFormatter = yAxisFormatter
 
         val xAxis = mCommonBarChart.xAxis
         xAxis.position = XAxisPosition.TOP_INSIDE
@@ -163,31 +154,20 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         xAxis.textSize = 12f
         xAxis.granularity = 1f
         xAxis.valueFormatter = xAxisFormatter
-//        mCommonBarChart.axisLeft.valueFormatter = yAxisFormatter
 
         val l: Legend = mCommonBarChart.legend
-        l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
         l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        l.orientation = Legend.LegendOrientation.HORIZONTAL
-        l.setDrawInside(false)
         l.formSize = 8f
         l.formToTextSpace = 4f
         l.xEntrySpace = 6f
-
     }
 
     private fun updateCommonChart(barEntries: List<BarEntry>) {
         if (barEntries.isNullOrEmpty()) {
-            println("!barEntries.isNullOrEmpty() $barEntries")
             return
         }
-        val values = barEntries.map {
-            BarEntry(
-                it.x,
-                it.yVals
-            )
-        }
-        val set = BarDataSet(values, "")
+
+        val set = BarDataSet(barEntries, "")
         set.setDrawIcons(false)
         set.valueTextSize = 11f
         set.valueFormatter = yAxisFormatter
@@ -207,49 +187,51 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
     }
 
     private fun createRestChart() {
+        mRestBarChart.setOnChartValueSelectedListener(onRestChartValueSelectedListener)
         mRestBarChart.setDrawValueAboveBar(true)
         mRestBarChart.description.isEnabled = false
         mRestBarChart.setDrawGridBackground(false)
+        mRestBarChart.setFitBars(true)
+        mRestBarChart.animateX(500)
+        mRestBarChart.animateY(700)
 
-        val xAxis: XAxis = mRestBarChart.xAxis
-        xAxis.position = XAxisPosition.BOTH_SIDED
+        mRestBarChart.axisRight.isEnabled = false
+        mRestBarChart.axisLeft.setDrawGridLines(false)
+        mRestBarChart.axisLeft.setDrawZeroLine(true)
+        mRestBarChart.axisLeft.setLabelCount(7, false)
+        mRestBarChart.axisLeft.textSize = 12f
+        mRestBarChart.axisLeft.valueFormatter = yAxisFormatter
+
+        val xAxis = mRestBarChart.xAxis
+        xAxis.position = XAxisPosition.TOP_INSIDE
         xAxis.setDrawGridLines(false)
         xAxis.setDrawAxisLine(false)
-        xAxis.textSize = 13f
+        xAxis.textSize = 12f
         xAxis.granularity = 1f
         xAxis.valueFormatter = xAxisFormatter
 
-        val left: YAxis = mRestBarChart.axisLeft
-        left.setDrawLabels(false)
-        left.setDrawAxisLine(false)
-        left.setDrawGridLines(false)
-        left.setDrawZeroLine(true)
-
-        left.zeroLineColor = Color.GRAY
-        left.zeroLineWidth = 0.7f
-        mRestBarChart.axisRight.isEnabled = false
         mRestBarChart.legend.isEnabled = false
+    }
 
-        val values = ArrayList<BarEntry>()
+    private fun updateRestChart(barEntries: List<BarEntry>) {
+        if (barEntries.isNullOrEmpty()) {
+            return
+        }
+
         val colors: MutableList<Int> = ArrayList()
-
         val green = Color.rgb(110, 190, 102)
         val red = Color.rgb(211, 74, 88)
 
-        for (i in 1..12) {
-            val y = (-100..100).random().toFloat()
-            val entry = BarEntry(i.toFloat(), y)
-            values.add(entry)
-            if (y <= 0) colors.add(red) else colors.add(green)
+        barEntries.forEach {
+            if (it.y <= 0) colors.add(red) else colors.add(green)
         }
 
-        val set = BarDataSet(values, "Values")
+        val set = BarDataSet(barEntries, "")
         set.colors = colors
         set.setValueTextColors(colors)
 
         val data = BarData(set)
         data.setValueTextSize(13f)
-
         mRestBarChart.data = data
         mRestBarChart.invalidate()
     }

@@ -11,17 +11,12 @@ enum class Case {
 }
 
 fun getTime(time: String): String {
-    val timeOffset = 3
+//    val timeOffset = 3
     val timeObj = LocalTime.parse(time)
-    val currentHour = timeObj.hour + timeOffset
+    val currentHour = timeObj.hour //+ timeOffset
     val currentMinute = if (timeObj.minute < 10) "0${timeObj.minute}" else timeObj.minute.toString()
     return "$currentHour:$currentMinute"
 }
-
-//fun getTimeDifference(time: String,) {
-//    val
-//}
-
 
 fun getWeekDay(dayNumber: Int): String {
     return when (dayNumber) {
@@ -73,8 +68,8 @@ fun getMonthName(monthNumber: Int, case: Case): String {
         5 -> {
             when (case) {
                 Case.NONE -> "май"
-                Case.OF -> "мае"
-                Case.IN -> "мая"
+                Case.OF -> "мая"
+                Case.IN -> "мае"
                 Case.SHORT -> "май"
             }
         }

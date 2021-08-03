@@ -43,13 +43,15 @@ class RecordRepository(private val recordDao: RecordDao) {
 
     fun getCommonSum(): Flow<Int> = recordDao.getCommonSum().map { it ?: 0 }
 
-    fun getMonthlyAmount(recordType: RecordType, monthName: String, year: Int): Flow<Int?> =
-        recordDao.getMonthlyAmount(recordType, monthName, year).map { it ?: 0 }
+    fun getMonthlyAmount(recordType: RecordType, month: Int, year: Int): Flow<Int?> =
+        recordDao.getMonthlyAmount(recordType, month, year).map { it ?: 0 }
 
     suspend fun deleteRecordById(recordId: Int) = recordDao.deleteRecordById(recordId)
+
+    suspend fun deleteAll() = recordDao.deleteAll()
 
     suspend fun setImportance(recordId: Int, isImportant: Boolean) =
         recordDao.setImportance(recordId, isImportant)
 
-
+    fun getMonthsInYear(year: Int): Flow<List<Int>> = recordDao.getMonthsInYear(year)
 }

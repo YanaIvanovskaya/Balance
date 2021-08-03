@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -14,14 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
-import com.example.balance.data.record.RecordType
 import com.example.balance.databinding.FragmentMyTemplatesBinding
+import com.example.balance.presentation.TemplateState
 import com.example.balance.presentation.TemplatesViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.SwipeToDeleteCallback
 import com.example.balance.ui.recycler_view.TemplateAdapter
 import com.google.android.material.snackbar.Snackbar
-
 
 class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
     private var mBinding: FragmentMyTemplatesBinding? = null
@@ -54,10 +52,7 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.allTemplates.observe(viewLifecycleOwner) { list ->
-            templateAdapter.dataSet = list.toMutableList()
-            templateAdapter.notifyDataSetChanged()
-        }
+        mViewModel.state.observe(viewLifecycleOwner, ::render)
     }
 
     private fun initRecyclerView() {
@@ -66,28 +61,73 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
 
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                templateAdapter.removeAt(viewHolder.bindingAdapterPosition)
-                val snackBar = Snackbar.make(requireView(), "Шаблон удален", Snackbar.LENGTH_SHORT)
+                val position = viewHolder.bindingAdapterPosition
+                viewHolder.itemView.visibility = View.GONE
+                templateAdapter.notifyDataSetChanged()
 
-                snackBar.setAction("Восстановить") {
+                val deletedTemplate = templateAdapter.dataSet[position]
+                val undoSnackBar =
+                    Snackbar.make(requireView(), "Шаблон удален", Snackbar.LENGTH_LONG)
+
+                undoSnackBar.setAction("Восстановить") {
+                    viewHolder.itemView.visibility = View.VISIBLE
                     templateAdapter.notifyDataSetChanged()
                 }
-                snackBar.show()
+
+                val dismissCallback = object : Snackbar.Callback() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        super.onDismissed(transientBottomBar, event)
+                        if (event == DISMISS_EVENT_TIMEOUT) {
+                            mViewModel.removeTemplate(deletedTemplate.id)
+                        }
+
+                    }
+                }
+                undoSnackBar.addCallback(dismissCallback)
+                undoSnackBar.show()
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(templateRecyclerView)
-
     }
 
+    private fun render(state: TemplateState) {
+        when (state.currentChip) {
+            0 -> {
+                mBinding?.commonTemplates?.isChecked = true
+                templateAdapter.dataSet = state.commonTemplates
+            }
+            1 -> {
+                mBinding?.profitTemplates?.isChecked = true
+                templateAdapter.dataSet = state.profitTemplates
+            }
+            2 -> {
+                mBinding?.costsTemplates?.isChecked = true
+                templateAdapter.dataSet = state.costsTemplates
+            }
+        }
+        templateAdapter.notifyDataSetChanged()
+    }
 
     private fun initButtons() {
-        mBinding?.toolbarMyTemplates?.setNavigationOnClickListener {
-            mNavController.popBackStack()
+        mBinding?.costsTemplates?.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mViewModel.saveCurrentChip(2)
+            }
+        }
+        mBinding?.profitTemplates?.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mViewModel.saveCurrentChip(1)
+            }
+        }
+        mBinding?.commonTemplates?.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mViewModel.saveCurrentChip(0)
+            }
         }
 
-        mBinding?.costsTemplates?.setOnCheckedChangeListener { buttonView, isChecked ->
-
+        mBinding?.toolbarMyTemplates?.setNavigationOnClickListener {
+            mNavController.popBackStack()
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
