@@ -11,7 +11,9 @@ import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.getTime
-import com.example.balance.ui.recycler_view.Item
+import com.example.balance.ui.recycler_view.item.BalanceItem
+import com.example.balance.ui.recycler_view.item.Item
+import com.example.balance.ui.recycler_view.item.RecordItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -123,7 +125,7 @@ class HomeViewModel(
         val allHomeRecords: MutableList<Item> = mutableListOf()
 
         allHomeRecords.add(
-            Item.BalanceItem(
+            BalanceItem(
                 sumCash = state.value?.cash.toString(),
                 sumCards = state.value?.cards.toString()
             )
@@ -132,7 +134,7 @@ class HomeViewModel(
         items.forEach { record ->
             if (record.isImportant) {
                 allHomeRecords.add(
-                    Item.RecordItem(
+                    RecordItem(
                         id = record.id,
                         date = getTime(record.time),
                         sumMoney = record.sumOfMoney,

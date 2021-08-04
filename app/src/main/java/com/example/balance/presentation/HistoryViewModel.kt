@@ -7,11 +7,12 @@ import com.example.balance.Case
 import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
-import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.getMonthName
 import com.example.balance.getTime
-import com.example.balance.ui.recycler_view.Item
+import com.example.balance.ui.recycler_view.item.DateItem
+import com.example.balance.ui.recycler_view.item.Item
+import com.example.balance.ui.recycler_view.item.RecordItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -54,7 +55,7 @@ class HistoryViewModel(
         items.reversed().forEach { record ->
             val recordDate = "${record.day} ${getMonthName(record.month, Case.OF)} ${record.year}"
             if (currentDate.isEmpty() || currentDate != recordDate) {
-                val dateItem = Item.DateItem(
+                val dateItem = DateItem(
                     date =
                     "${record.day} ${getMonthName(record.month, Case.OF)}"
                 )
@@ -63,7 +64,7 @@ class HistoryViewModel(
 
             val sumRecord = record.sumOfMoney
             allHistoryRecords.add(
-                Item.RecordItem(
+                RecordItem(
                     id = record.id,
                     date = getTime(record.time),
                     sumMoney = sumRecord,

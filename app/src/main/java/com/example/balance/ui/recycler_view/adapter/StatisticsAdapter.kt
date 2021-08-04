@@ -1,10 +1,13 @@
-package com.example.balance.ui.recycler_view
+package com.example.balance.ui.recycler_view.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.balance.ui.recycler_view.item.CategoryItem
+import com.example.balance.ui.recycler_view.ViewHolderFactory
+import com.example.balance.ui.recycler_view.item.StatisticsItem
 
-class CategoryAdapter(
-    var dataSet: MutableList<Item.CategoryItem> = mutableListOf()
+class StatisticsAdapter(
+    var dataSet: List<StatisticsItem> = listOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()
@@ -16,15 +19,5 @@ class CategoryAdapter(
         dataSet[position].onBindViewHolder(holder)
 
     override fun getItemCount(): Int = dataSet.size
-
-    fun removeAt(position: Int) {
-        dataSet.removeAt(position)
-        notifyDataSetChanged()
-    }
-
-    fun insertAt(position: Int,item: Item.CategoryItem) {
-        dataSet.add(position,item)
-        notifyDataSetChanged()
-    }
 
 }

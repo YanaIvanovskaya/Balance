@@ -8,20 +8,20 @@ import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.Template
 import com.example.balance.data.template.TemplateRepository
-import com.example.balance.ui.recycler_view.Item
+import com.example.balance.ui.recycler_view.item.Item
+import com.example.balance.ui.recycler_view.item.TemplateItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 data class TemplateState(
     val currentChip: Int,
-    val commonTemplates: MutableList<Item.TemplateItem>,
-    val costsTemplates: MutableList<Item.TemplateItem>,
-    val profitTemplates: MutableList<Item.TemplateItem>
+    val commonTemplates: MutableList<TemplateItem>,
+    val costsTemplates: MutableList<TemplateItem>,
+    val profitTemplates: MutableList<TemplateItem>
 
 ) {
 
@@ -72,8 +72,8 @@ class TemplatesViewModel(
     private suspend fun mapItems(
         items: List<Template>,
         recordType: RecordType? = null
-    ): MutableList<Item.TemplateItem> {
-        val allTemplates: MutableList<Item.TemplateItem> = mutableListOf()
+    ): MutableList<TemplateItem> {
+        val allTemplates: MutableList<TemplateItem> = mutableListOf()
 
         items.reversed().forEach { template ->
 
@@ -90,7 +90,7 @@ class TemplatesViewModel(
 
             if (chipCondition) {
                 allTemplates.add(
-                    Item.TemplateItem(
+                    TemplateItem(
                         id = template.id,
                         name = template.name,
                         usage = template.frequencyOfUse,

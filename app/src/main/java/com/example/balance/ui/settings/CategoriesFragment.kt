@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RadioButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
@@ -20,14 +19,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.data.category.CategoryType
-import com.example.balance.data.record.RecordType
 import com.example.balance.databinding.FragmentMyCategoriesBinding
-import com.example.balance.databinding.FragmentMyTemplatesBinding
 import com.example.balance.presentation.CategoriesViewModel
 import com.example.balance.presentation.CategoryState
-import com.example.balance.presentation.TemplatesViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.*
+import com.example.balance.ui.recycler_view.adapter.CategoryAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText

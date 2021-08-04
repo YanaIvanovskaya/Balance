@@ -7,6 +7,8 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
+import com.example.balance.ui.recycler_view.item.Item
+import com.github.mikephil.charting.charts.BarChart
 
 object ViewHolderFactory {
 
@@ -34,6 +36,11 @@ object ViewHolderFactory {
                 val categoryTypeView: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_category, parent, false)
                 CategoryViewHolder(categoryTypeView)
+            }
+            Item.STATISTICS_ITEM_TYPE -> {
+                val statisticsTypeView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_statistics, parent, false)
+                StatisticsViewHolder(statisticsTypeView)
             }
             else -> {
                 val dateTypeView: View = LayoutInflater.from(parent.context)
@@ -77,6 +84,14 @@ object ViewHolderFactory {
         val nameCategoryText: TextView = itemView.findViewById(R.id.name_category)
         val dateCreationText: TextView = itemView.findViewById(R.id.date_creation_category)
         val layout: ConstraintLayout = itemView.findViewById(R.id.category_layout)
+    }
+
+    class StatisticsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val nameCategoryText: TextView = itemView.findViewById(R.id.title_name_category)
+        val resumeAverageMonth: TextView =  itemView.findViewById(R.id.resume_average_month)
+        val resumeAverageCheque: TextView =  itemView.findViewById(R.id.resume_average_cheque)
+        val resumeOnSelect: TextView =  itemView.findViewById(R.id.resume_on_select)
+        val categoryChart: BarChart = itemView.findViewById(R.id.category_chart)
     }
 
 }

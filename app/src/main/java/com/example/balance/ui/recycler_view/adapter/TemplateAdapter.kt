@@ -1,10 +1,12 @@
-package com.example.balance.ui.recycler_view
+package com.example.balance.ui.recycler_view.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.balance.ui.recycler_view.item.TemplateItem
+import com.example.balance.ui.recycler_view.ViewHolderFactory
 
 class TemplateAdapter(
-    var dataSet: MutableList<Item.TemplateItem> = mutableListOf()
+    var dataSet: MutableList<TemplateItem> = mutableListOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()

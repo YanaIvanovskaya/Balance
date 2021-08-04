@@ -54,12 +54,6 @@ interface RecordDao {
     @Query("SELECT * FROM record_table WHERE id = :recordId")
     fun getRecordById(recordId: Int): Flow<Record>
 
-    @Query("SELECT * FROM record_table ORDER BY id DESC LIMIT 1")
-    fun getLastRecord(): Flow<Record>
-
-    @Query("SELECT DISTINCT month FROM record_table WHERE year=:year")
-    fun getMonthsInYear(year: Int): Flow<List<Int>>
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(record: Record): Long
 
@@ -91,11 +85,38 @@ interface RecordDao {
     @Query("SELECT SUM(sumOfMoney) FROM record_table")
     fun getCommonSum(): Flow<Int?>
 
+
+    // statistics
+    @Query("SELECT DISTINCT month FROM record_table WHERE year=:year")
+    fun getMonthsInYear(year: Int): Flow<List<Int>>
+
     @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType AND month =:month AND year=:year")
     fun getMonthlyAmount(recordType: RecordType, month: Int, year: Int): Flow<Int?>
+
+    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE category_id =:categoryId AND month =:month AND year=:year")
+    fun getMonthlyAmount(categoryId: Int, month: Int, year: Int): Flow<Int?>
 
     @Query("SELECT DISTINCT year FROM record_table")
     fun getYears(): Flow<List<Int>>
 
+//    @Query("SELECT DISTINCT year,month FROM record_table")
+//    fun getcc()
+
+//    @Query("SELECT year,month, SUM(sumOfMoney) FROM record_table GROUP BY year,month")
+//    fun getAverageMonthlySum(): Flow<List<>>CAST('abc' AS varchar(5))
+
+//    @Query("SELECT DISTINCT CAST(year AS VARCHAR) + CAST(month AS VARCHAR) FROM record_table")
+//    fun getcc() : Flow<Int>
 
 }
+
+//class Some(
+//    @ColumnInfo(name = "year")
+//    val year: Int = 0,
+//    @ColumnInfo(name = "month")
+//    val month: Int = 0,
+//    @ColumnInfo(name = "sumOfMoney")
+//    val sumOfMoney: Int = 0,
+//) {
+//
+//}

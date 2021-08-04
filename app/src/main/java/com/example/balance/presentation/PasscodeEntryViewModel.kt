@@ -23,8 +23,8 @@ data class PasscodeEntryState(
             passcodeMode = PasscodeEntryViewModel.PASSCODE_INVISIBLE_MODE,
 
             // для входа в приложение без ввода пароля
-            canComplete = false,
-            isMatches = false,
+            canComplete = true,
+            isMatches = true,
 
             screenType = PasscodeScreenType.ONBOARDING
         )
@@ -42,7 +42,7 @@ class PasscodeEntryViewModel(
 
     init {
         state.value = state.value?.copy(screenType = screenType)
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             savedPasscode = dataStore.passcode.first() ?: ""
         }
     }

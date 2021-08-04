@@ -18,7 +18,7 @@ import com.example.balance.presentation.TemplateState
 import com.example.balance.presentation.TemplatesViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.SwipeToDeleteCallback
-import com.example.balance.ui.recycler_view.TemplateAdapter
+import com.example.balance.ui.recycler_view.adapter.TemplateAdapter
 import com.google.android.material.snackbar.Snackbar
 
 class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {

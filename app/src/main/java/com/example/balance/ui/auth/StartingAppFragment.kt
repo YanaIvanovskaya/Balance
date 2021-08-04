@@ -95,6 +95,9 @@ class StartingAppViewModel(
 //            withContext(Dispatchers.IO) {
 //                fillDatabase()
 //            }
+
+//            println(BalanceApp.recordRepository.getcc().first())
+
             val passcode = withContext(Dispatchers.IO) {
                 dataStore.passcode.first()
             }

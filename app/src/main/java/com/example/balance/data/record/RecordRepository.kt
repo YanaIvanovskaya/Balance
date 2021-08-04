@@ -16,8 +16,6 @@ class RecordRepository(private val recordDao: RecordDao) {
 
     fun getRecordById(recordId: Int): Flow<Record> = recordDao.getRecordById(recordId)
 
-    fun getLastRecord(): Flow<Record> = recordDao.getLastRecord()
-
     suspend fun update(
         recordId: Int,
         sumOfMoney: Int,
@@ -38,13 +36,13 @@ class RecordRepository(private val recordDao: RecordDao) {
         recordDao.getSum(recordType, moneyType)
             .map { it ?: 0 }
 
-    fun getSumByMoneyType(moneyType: MoneyType): Flow<Int> =
-        recordDao.getSumByMoneyType(moneyType).map { it ?: 0 }
-
     fun getCommonSum(): Flow<Int> = recordDao.getCommonSum().map { it ?: 0 }
 
     fun getMonthlyAmount(recordType: RecordType, month: Int, year: Int): Flow<Int?> =
         recordDao.getMonthlyAmount(recordType, month, year).map { it ?: 0 }
+
+    fun getMonthlyAmount(categoryId: Int, month: Int, year: Int): Flow<Int?> =
+        recordDao.getMonthlyAmount(categoryId, month, year).map { it ?: 0 }
 
     suspend fun deleteRecordById(recordId: Int) = recordDao.deleteRecordById(recordId)
 
@@ -54,4 +52,8 @@ class RecordRepository(private val recordDao: RecordDao) {
         recordDao.setImportance(recordId, isImportant)
 
     fun getMonthsInYear(year: Int): Flow<List<Int>> = recordDao.getMonthsInYear(year)
+
+//    fun getcc() = recordDao.getcc()
+
+//    fun getAverageMonthlySum(): Flow<List<Some>> = recordDao.getAverageMonthlySum()
 }

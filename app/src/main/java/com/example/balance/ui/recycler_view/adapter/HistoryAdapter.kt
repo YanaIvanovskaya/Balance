@@ -1,10 +1,13 @@
-package com.example.balance.ui.recycler_view
+package com.example.balance.ui.recycler_view.adapter
 
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
-
+import com.example.balance.ui.recycler_view.item.Item
+import com.example.balance.ui.recycler_view.item.RecordItem
+import com.example.balance.ui.recycler_view.StickHeaderItemDecoration
+import com.example.balance.ui.recycler_view.ViewHolderFactory
 
 class HistoryAdapter(
     var dataSet: MutableList<Item> = mutableListOf(),
@@ -19,8 +22,8 @@ class HistoryAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = dataSet[position]
-        if (item is Item.RecordItem) {
-            val recordItem: Item.RecordItem = item
+        if (item is RecordItem) {
+            val recordItem: RecordItem = item
             val recordViewHolder: ViewHolderFactory.RecordViewHolder =
                 holder as ViewHolderFactory.RecordViewHolder
             recordViewHolder.layout.setOnLongClickListener {

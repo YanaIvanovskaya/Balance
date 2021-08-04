@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Balance</string>
+    <string name="app_name">BalanceApp</string>
     <string name="continue_btn">Продолжить</string>
     <string name="greeting_new_user">Привет Я Balance Я помогу тебе быть спокойнее за свои деньги</string>
     <string name="enter_the_passcode">Придумай пароль для входа, чтобы твои данные были в безопасности</string>

@@ -8,25 +8,22 @@ import com.example.balance.data.category.Category
 import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.category.CategoryType
 import com.example.balance.data.record.RecordRepository
-import com.example.balance.data.record.RecordType
-import com.example.balance.data.template.Template
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.getMonthName
-import com.example.balance.ui.recycler_view.Item
+import com.example.balance.ui.recycler_view.item.CategoryItem
+import com.example.balance.ui.recycler_view.item.Item
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 data class CategoryState(
     val currentChip: Int,
-    val commonCategories: MutableList<Item.CategoryItem>,
-    val costsCategories: MutableList<Item.CategoryItem>,
-    val profitCategories: MutableList<Item.CategoryItem>
+    val commonCategories: MutableList<CategoryItem>,
+    val costsCategories: MutableList<CategoryItem>,
+    val profitCategories: MutableList<CategoryItem>
 ) {
 
     companion object {
@@ -123,8 +120,8 @@ class CategoriesViewModel(
     private suspend fun mapItems(
         items: List<Category>,
         categoryType: CategoryType? = null
-    ): MutableList<Item.CategoryItem> {
-        val allCategories: MutableList<Item.CategoryItem> = mutableListOf()
+    ): MutableList<CategoryItem> {
+        val allCategories: MutableList<CategoryItem> = mutableListOf()
 
         items.reversed().forEach { category ->
 
@@ -134,7 +131,7 @@ class CategoriesViewModel(
 
             if (chipCondition) {
                 allCategories.add(
-                    Item.CategoryItem(
+                    CategoryItem(
                         id = category.id,
                         name = category.name,
                         categoryType = category.type,

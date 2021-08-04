@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_home"
-        android:icon="@android:drawable/ic_dialog_map"
-        android:title="@string/home"/>
+        android:icon="@drawable/icon_menu_home"
+        android:title="@string/home" />
     <item
         android:id="@+id/action_history"
-        android:icon="@android:drawable/ic_dialog_dialer"
+        android:icon="@drawable/icon_menu_history"
         android:title="@string/history" />
     <item
         android:id="@+id/action_statistics"
-        android:icon="@android:drawable/ic_dialog_email"
+        android:icon="@drawable/icon_menu_statistics"
         android:title="@string/statistics" />
     <item
         android:id="@+id/action_settings"
-        android:icon="@android:drawable/ic_menu_view"
+        android:icon="@drawable/icon_menu_settings"
         android:title="@string/extra" />
 </menu>

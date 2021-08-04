@@ -17,7 +17,7 @@ import com.example.balance.databinding.FragmentHistoryBinding
 import com.example.balance.presentation.HistoryViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
-import com.example.balance.ui.recycler_view.HistoryAdapter
+import com.example.balance.ui.recycler_view.adapter.HistoryAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class HistoryFragment : Fragment(R.layout.fragment_history) {
