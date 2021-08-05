@@ -36,6 +36,8 @@ class RecordRepository(private val recordDao: RecordDao) {
         recordDao.getSum(recordType, moneyType)
             .map { it ?: 0 }
 
+    fun getSum(recordType: RecordType): Flow<Int> = recordDao.getSum(recordType).map { it ?: 0 }
+
     fun getCommonSum(): Flow<Int> = recordDao.getCommonSum().map { it ?: 0 }
 
     fun getMonthlyAmount(recordType: RecordType, month: Int, year: Int): Flow<Int?> =
@@ -52,6 +54,10 @@ class RecordRepository(private val recordDao: RecordDao) {
         recordDao.setImportance(recordId, isImportant)
 
     fun getMonthsInYear(year: Int): Flow<List<Int>> = recordDao.getMonthsInYear(year)
+
+    fun getRecordsByType(recordType: RecordType): Flow<List<Record>> = recordDao.getRecordsByType(recordType)
+
+    fun getSumByCategoryId(categoryId: Int): Flow<Int> = recordDao.getSumByCategoryId(categoryId).map { it ?: 0 }
 
 //    fun getcc() = recordDao.getcc()
 

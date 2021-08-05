@@ -43,4 +43,8 @@
     <string name="save_as_template">Сохранить как шаблон</string>
     <string name="comment">comment</string>
     <string name="extra">Еще</string>
+    <string name="text_stat_general_costs">Всего потрачено</string>
+    <string name="text_stat_average_costs_month">Средний расход в месяц</string>
+    <string name="text_stat_average_purchase">Среднее количество покупок в месяц</string>
+    <string name="text_stat_avg_costs_month_percent">Средний процент расхода в месяц</string>
 </resources>

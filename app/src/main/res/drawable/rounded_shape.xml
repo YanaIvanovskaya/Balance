@@ -4,17 +4,16 @@
     <stroke
         android:width="0dp"
         android:color="#B1BCBE" />
-    <corners android:radius="10dp" />
     <padding
         android:bottom="0dp"
         android:left="0dp"
         android:right="0dp"
         android:top="0dp" />
     <gradient
-        android:startColor="#9444"
-        android:endColor="#0000"
+        android:startColor="@color/app_money"
+        android:endColor="@color/app_background"
         android:type="linear"
-        android:angle="90"> <!-- Change this value to have the correct shadow angle, must be multiple from 45 -->
+        android:angle="270"> <!-- Change this value to have the correct shadow angle, must be multiple from 45 -->
     </gradient>
 
 </shape>

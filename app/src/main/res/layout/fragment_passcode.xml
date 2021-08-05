@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    xmlns:tools="http://schemas.android.com/tools"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent"-->
-<!--    android:layout_margin="20dp"-->
-<!--    android:orientation="vertical">-->
-
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#E69A9A">
@@ -18,13 +9,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="#D56060">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#D7E6C6"
             android:isScrollContainer="true"
             android:orientation="vertical"
             android:paddingLeft="15dp"
@@ -50,7 +40,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginTop="50dp"
-                android:background="#F6ABAB"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:visibility="gone"
@@ -64,7 +53,6 @@
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
                     android:checked="false"
-                    android:editable="false"
                     android:enabled="false"
                     android:textSize="14sp" />
 
@@ -72,14 +60,12 @@
                     android:id="@+id/char2"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:editable="false"
                     android:enabled="false" />
 
                 <RadioButton
                     android:id="@+id/char3"
                     android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:editable="false"
                     android:enabled="false" />
 
                 <RadioButton
@@ -114,7 +100,6 @@
                     android:layout_margin="10dp"
                     android:layout_weight="1"
                     android:autofillHints="21212"
-                    android:background="#E8D3D3"
                     android:ems="10"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
@@ -159,11 +144,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_1"
-                        android:textColor="#504444"
                         android:textSize="24sp"
-                        app:backgroundTint="#EADFDF"
                         app:cornerRadius="10dp" />
 
                     <Button
@@ -172,22 +154,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_2"
-                        android:textColor="#504444"
                         android:textSize="24sp"
-                        app:backgroundTint="#EADFDF" />
+                      />
 
                     <Button
                         android:id="@+id/button3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_3"
-                        android:textColor="#504444"
-                        android:textSize="24sp"
-                        app:backgroundTint="#EADFDF" />
+                        android:textSize="24sp" />
 
                 </TableRow>
 
@@ -202,33 +179,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_4"
-                        android:textColor="#504444"
-                        android:textSize="24sp"
-                        app:backgroundTint="#EADFDF" />
+                        android:textSize="24sp" />
 
                     <Button
                         android:id="@+id/button5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_5"
-                        android:textColor="#504444"
-                        android:textSize="24sp"
-                        app:backgroundTint="#EADFDF" />
+                        android:textSize="24sp" />
 
                     <Button
                         android:id="@+id/button6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_6"
-                        android:textColor="#504444"
-                        android:textSize="24sp"
-                        app:backgroundTint="#EADFDF" />
+                        android:textSize="24sp" />
 
                 </TableRow>
 
@@ -243,11 +211,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_7"
-                        android:textColor="#504444"
                         android:textSize="24sp"
-                        app:backgroundTint="#EADFDF" />
+                     />
 
                     <Button
                         android:id="@+id/button8"
@@ -255,11 +221,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_8"
-                        android:textColor="#504444"
-                        android:textSize="24sp"
-                        app:backgroundTint="#EADFDF" />
+                        android:textSize="24sp" />
 
                     <Button
                         android:id="@+id/button9"
@@ -267,11 +230,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_9"
-                        android:textColor="#504444"
-                        android:textSize="24sp"
-                        app:backgroundTint="#EADFDF" />
+                        android:textSize="24sp" />
 
                 </TableRow>
 
@@ -286,11 +246,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
-                        android:textColor="#504444"
                         android:textSize="24sp"
-                        android:visibility="invisible"
-                        app:backgroundTint="#EADFDF" />
+                        android:visibility="invisible" />
 
                     <Button
                         android:id="@+id/button0"
@@ -298,11 +255,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
                         android:text="@string/_0"
-                        android:textColor="#504444"
                         android:textSize="24sp"
-                        app:backgroundTint="#EADFDF" />
+                    />
 
                     <Button
                         android:id="@+id/button_clear_passcode"
@@ -310,13 +265,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
-                        android:background="#EDCCCC"
-                        android:textColor="#504444"
                         android:textSize="24sp"
-                        app:backgroundTint="#EADFDF"
                         app:icon="@android:drawable/ic_input_delete"
-                        app:iconSize="35dp"
-                        app:iconTint="#1A181B" />
+                        app:iconSize="35dp" />
 
                 </TableRow>
 
@@ -344,7 +295,6 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:text="Пароль не совпадает"
-                android:textColor="#E67272"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -352,10 +302,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
 </ScrollView>
-
-<!--</LinearLayout>-->

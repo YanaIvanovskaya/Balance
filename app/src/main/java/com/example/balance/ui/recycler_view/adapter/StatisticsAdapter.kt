@@ -2,12 +2,12 @@ package com.example.balance.ui.recycler_view.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.balance.ui.recycler_view.item.CategoryItem
 import com.example.balance.ui.recycler_view.ViewHolderFactory
-import com.example.balance.ui.recycler_view.item.StatisticsItem
+import com.example.balance.ui.recycler_view.item.CategoryChartItem
+import com.example.balance.ui.recycler_view.item.Item
 
 class StatisticsAdapter(
-    var dataSet: List<StatisticsItem> = listOf()
+    var dataSet: List<Item> = listOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()

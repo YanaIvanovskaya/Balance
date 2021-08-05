@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
@@ -66,6 +67,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             homeAdapter.dataSet = list.toMutableList()
             homeAdapter.notifyDataSetChanged()
         }
+        println("onViewCreated")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        println("Resume")
+        mBinding?.splash?.visibility = View.GONE
+        mBinding?.floatingButtonCreateNewRecord?.isVisible = true
     }
 
     private fun showRecordMenu(recordId: Int) {

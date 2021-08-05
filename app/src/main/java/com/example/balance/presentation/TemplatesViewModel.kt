@@ -47,7 +47,7 @@ class TemplatesViewModel(
     init {
         templateRepository.allTemplates
             .onEach { newTemplateList ->
-                mapItems(newTemplateList)
+//                mapItems(newTemplateList)
                 state.value = state.value?.copy(
                     commonTemplates = mapItems(newTemplateList),
                     costsTemplates = mapItems(newTemplateList, recordType = RecordType.COSTS),

@@ -14,17 +14,19 @@ import com.example.balance.getMonthName
 import com.example.balance.presentation.GeneralStatisticsState
 import com.example.balance.presentation.GeneralStatisticsViewModel
 import com.example.balance.presentation.getViewModel
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.github.mikephil.charting.utils.MPPointF
 import kotlin.math.abs
 
 class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics) {
@@ -39,6 +41,7 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
 
     private lateinit var mCommonBarChart: BarChart
     private lateinit var mRestBarChart: BarChart
+    private lateinit var chart: PieChart
 
     private val onCommonChartValueSelectedListener = object : OnChartValueSelectedListener {
         override fun onValueSelected(e: Entry?, h: Highlight?) {
@@ -104,9 +107,11 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
         mBinding = binding
         mCommonBarChart = binding.commonChart
         mRestBarChart = binding.restChart
+        chart = binding.pieChart
         mViewModel.state.observe(viewLifecycleOwner, ::render)
         createCommonChart()
         createRestChart()
+//        createPieChart()
         return binding.root
 
     }
@@ -226,5 +231,93 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
         mRestBarChart.invalidate()
     }
 
+
+
+//    private fun createPieChart() {
+//
+//        chart.setUsePercentValues(true)
+//        chart.getDescription().setEnabled(false)
+//        chart.setExtraOffsets(5f, 10f, 5f, 5f)
+//
+//        chart.setDragDecelerationFrictionCoef(0.95f)
+//
+//        chart.setCenterText("Profit")
+//
+//        chart.setDrawHoleEnabled(true)
+//        chart.setHoleColor(Color.WHITE)
+//
+//        chart.setTransparentCircleColor(Color.WHITE)
+//        chart.setTransparentCircleAlpha(110)
+//
+//        chart.setHoleRadius(58f)
+//        chart.setTransparentCircleRadius(61f)
+//
+//        chart.setDrawCenterText(true)
+//
+//        chart.rotationAngle = 0f
+//        chart.isRotationEnabled = true
+//        chart.isHighlightPerTapEnabled = true
+//        // add a selection listener
+////        chart.setOnChartValueSelectedListener(this)
+//
+//        chart.animateY(1400, Easing.EaseInOutQuad)
+//
+//        val l: Legend = chart.getLegend()
+//        l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+//        l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+//        l.orientation = Legend.LegendOrientation.HORIZONTAL
+//        l.setDrawInside(true)
+//        l.isWordWrapEnabled = true
+//        l.xEntrySpace = 7f
+//        l.textSize = 12f
+//        l.yEntrySpace = 0f
+//        l.yOffset = 0f
+//
+//        chart.setEntryLabelColor(Color.WHITE)
+//        chart.setEntryLabelTextSize(12f)
+//        setData(15,10f)
+//    }
+
+//    private fun setData(count: Int, range: Float) {
+//        val entries = java.util.ArrayList<PieEntry>()
+//
+//        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+//        // the chart.
+//        var summ = 0f
+//        for (i in 0 until count) {
+//            val value = (Math.random() * range + range / 5).toFloat()
+//            summ += value
+//            entries.add(
+//                PieEntry(
+//                    value,"category$i"
+//                )
+//            )
+//        }
+//
+//        val dataSet = PieDataSet(entries, "Election Results")
+//        dataSet.setDrawIcons(false)
+//        dataSet.sliceSpace = 3f
+//        dataSet.iconsOffset = MPPointF(0f, 40f)
+//        dataSet.selectionShift = 5f
+//
+//        // add a lot of colors
+//        val colors = java.util.ArrayList<Int>()
+//        for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
+//        for (c in ColorTemplate.JOYFUL_COLORS) colors.add(c)
+//        for (c in ColorTemplate.COLORFUL_COLORS) colors.add(c)
+//        for (c in ColorTemplate.LIBERTY_COLORS) colors.add(c)
+//        for (c in ColorTemplate.PASTEL_COLORS) colors.add(c)
+//        colors.add(ColorTemplate.getHoloBlue())
+//        dataSet.colors = colors
+//
+//        val data = PieData(dataSet)
+//        data.setValueFormatter(PercentFormatter())
+//        data.setValueTextSize(11f)
+//        data.setValueTextColor(Color.WHITE)
+//
+//        chart.data = data
+//        chart.highlightValues(null)
+//        chart.invalidate()
+//    }
 }
 

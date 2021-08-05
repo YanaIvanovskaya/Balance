@@ -38,21 +38,20 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         mGeneralStatisticsFragment = GeneralStatisticsFragment()
         mProfitsStatisticsFragment = ProfitsStatisticsFragment()
         mCostsStatisticsFragment = CostsStatisticsFragment()
-
+        mViewModel.init()
         binding.chipGeneral.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 childFragmentManager.beginTransaction()
                     .replace(binding.frame.id, mGeneralStatisticsFragment)
                     .show(mGeneralStatisticsFragment)
                     .commit()
-
             }
         }
 
         binding.chipCosts.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 childFragmentManager.beginTransaction()
-                    .replace(binding.frame.id,mCostsStatisticsFragment)
+                    .replace(binding.frame.id, mCostsStatisticsFragment)
                     .show(mCostsStatisticsFragment)
                     .commit()
                 mCostsStatisticsFragment.setData(mViewModel.getCostsStatItems())
@@ -87,7 +86,6 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
         mBinding = null
         super.onDestroyView()
     }
-
 
 
 }

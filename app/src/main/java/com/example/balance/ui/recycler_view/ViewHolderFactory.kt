@@ -37,10 +37,20 @@ object ViewHolderFactory {
                     .inflate(R.layout.item_category, parent, false)
                 CategoryViewHolder(categoryTypeView)
             }
-            Item.STATISTICS_ITEM_TYPE -> {
-                val statisticsTypeView: View = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_statistics, parent, false)
-                StatisticsViewHolder(statisticsTypeView)
+            Item.CATEGORY_CHART_ITEM_TYPE -> {
+                val chartTypeView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_category_chart, parent, false)
+                CategoryChartViewHolder(chartTypeView)
+            }
+            Item.COSTS_STAT_INFO_ITEM_TYPE -> {
+                val costsStatTypeView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_costs_stat_info, parent, false)
+                CostsStatInfoViewHolder(costsStatTypeView)
+            }
+            Item.PROFIT_STAT_INFO_ITEM_TYPE -> {
+                val profitStatTypeView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_profit_stat_info, parent, false)
+                ProfitStatInfoViewHolder(profitStatTypeView)
             }
             else -> {
                 val dateTypeView: View = LayoutInflater.from(parent.context)
@@ -86,12 +96,25 @@ object ViewHolderFactory {
         val layout: ConstraintLayout = itemView.findViewById(R.id.category_layout)
     }
 
-    class StatisticsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class CategoryChartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameCategoryText: TextView = itemView.findViewById(R.id.title_name_category)
-        val resumeAverageMonth: TextView =  itemView.findViewById(R.id.resume_average_month)
-        val resumeAverageCheque: TextView =  itemView.findViewById(R.id.resume_average_cheque)
-        val resumeOnSelect: TextView =  itemView.findViewById(R.id.resume_on_select)
+        val sumAvgMonthly: TextView = itemView.findViewById(R.id.sum_avg_monthly)
         val categoryChart: BarChart = itemView.findViewById(R.id.category_chart)
+    }
+
+    class CostsStatInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val sumGeneralCosts: TextView = itemView.findViewById(R.id.sum_general_costs)
+        val sumAvgMonthlyCosts: TextView = itemView.findViewById(R.id.sum_avg_monthly_costs)
+        val amountMonthlyPurchases: TextView = itemView.findViewById(R.id.amount_purchases)
+        val percentAvgMonthlyCosts: TextView = itemView.findViewById(R.id.percent_montly_costs)
+    }
+
+    class ProfitStatInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val sumGeneralProfit: TextView = itemView.findViewById(R.id.sum_general_profits)
+        val sumAvgMonthlyProfit: TextView = itemView.findViewById(R.id.sum_avg_monthly_profit)
+        val sumAvgMonthlyBalance: TextView = itemView.findViewById(R.id.amount_balance)
+        val percentAvgMonthlyProfit: TextView =
+            itemView.findViewById(R.id.percent_montly_pure_profit)
     }
 
 }

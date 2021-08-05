@@ -1,8 +1,10 @@
 package com.example.balance.presentation
 
+import androidx.core.util.rangeTo
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.balance.Case
 import com.example.balance.data.BalanceRepository
 import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.record.MoneyType
@@ -10,6 +12,7 @@ import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.TemplateRepository
+import com.example.balance.getMonthName
 import com.example.balance.getTime
 import com.example.balance.ui.recycler_view.item.BalanceItem
 import com.example.balance.ui.recycler_view.item.Item
@@ -17,9 +20,10 @@ import com.example.balance.ui.recycler_view.item.RecordItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 
 data class HomeState(
     val sumCostsCash: Int,
@@ -61,8 +65,6 @@ class HomeViewModel(
         recordRepository.getCommonSum()
             .distinctUntilChanged()
             .onEach {
-                Timber.w("onEach start ${System.currentTimeMillis()}")
-
                 val sumCostsCash = withContext(Dispatchers.IO) {
                     recordRepository.getSum(
                         RecordType.COSTS,
@@ -99,7 +101,6 @@ class HomeViewModel(
                 )
 
                 measureBalance()
-                Timber.w("onEach end ${System.currentTimeMillis()}")
             }.launchIn(viewModelScope)
 
         recordRepository.allRecords
@@ -121,35 +122,56 @@ class HomeViewModel(
         }
     }
 
-    private fun mapItems(items: List<Record>): MutableList<Item> {
-        val allHomeRecords: MutableList<Item> = mutableListOf()
-
-        allHomeRecords.add(
-            BalanceItem(
-                sumCash = state.value?.cash.toString(),
-                sumCards = state.value?.cards.toString()
+    private suspend fun mapItems(items: List<Record>): MutableList<Item> {
+        return withContext(Dispatchers.IO) {
+            val allHomeRecords: MutableList<Item> = mutableListOf()
+            allHomeRecords.add(
+                BalanceItem(
+                    sumCash = state.value?.cash.toString(),
+                    sumCards = state.value?.cards.toString()
+                )
             )
-        )
+            val currentDateTime = LocalDateTime.now()
 
-        items.forEach { record ->
-            if (record.isImportant) {
+            val currentDate = currentDateTime.toLocalDate()
+
+            val recentlyRecords = when (items.size) {
+                in 1..15 -> items
+                else -> items.subList(0,15)
+            }
+
+            recentlyRecords.forEach { record ->
+                val recordDate = LocalDate.of(record.year, record.month, record.day)
+
+                val timeOfRecord = if (currentDate == recordDate) {
+                    "today"
+                } else if (currentDate.minusDays(1) == recordDate) {
+                    "yesterday"
+                } else {
+                    "${record.day} ${getMonthName(record.month, Case.OF)} ${record.year}"
+                }
+
+//                if (currentDateTime.dayOfMonth == record.day
+//                    && currentDateTime.month.value == record.month
+//                    && currentDateTime.year == record.year
+//                )
+
                 allHomeRecords.add(
                     RecordItem(
                         id = record.id,
-                        date = getTime(record.time),
+                        time = timeOfRecord,
                         sumMoney = record.sumOfMoney,
                         recordType = record.recordType,
                         moneyType = record.moneyType,
-                        category = runBlocking {
-                            categoryRepository.getNameById(record.categoryId).first()
-                        },
+                        category = categoryRepository.getNameById(record.categoryId).first(),
                         comment = record.comment,
                         isImportant = record.isImportant
                     )
                 )
+
             }
+            allHomeRecords
         }
-        return allHomeRecords
     }
 
     private fun measureBalance() {

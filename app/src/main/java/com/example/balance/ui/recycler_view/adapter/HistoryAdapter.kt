@@ -10,7 +10,7 @@ import com.example.balance.ui.recycler_view.StickHeaderItemDecoration
 import com.example.balance.ui.recycler_view.ViewHolderFactory
 
 class HistoryAdapter(
-    var dataSet: MutableList<Item> = mutableListOf(),
+    var dataSet: List<Item> = mutableListOf(),
     private val onLongItemClickListener: (recordId: Int, isImportant: Boolean) -> Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     StickHeaderItemDecoration.StickyHeaderInterface {

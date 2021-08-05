@@ -5,17 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentCostsStatisticsBinding
-import com.example.balance.databinding.FragmentProfitStatisticsBinding
-import com.example.balance.presentation.StatisticsViewModel
-import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.adapter.StatisticsAdapter
-import com.example.balance.ui.recycler_view.item.StatisticsItem
+import com.example.balance.ui.recycler_view.item.CategoryChartItem
+import com.example.balance.ui.recycler_view.item.Item
+
 class CostsStatisticsFragment :
     Fragment(R.layout.fragment_profit_statistics) {
 
@@ -36,7 +33,7 @@ class CostsStatisticsFragment :
         return binding.root
     }
 
-    fun setData(costStatItems: List<StatisticsItem>) {
+    fun setData(costStatItems: List<Item>) {
         costsAdapter.dataSet = costStatItems
         costsAdapter.notifyDataSetChanged()
     }

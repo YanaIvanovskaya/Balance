@@ -19,25 +19,40 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.github.mikephil.charting.utils.MPPointF
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 
-class StatisticsItem(
+class CategoryChartItem(
     val category: Category,
     val sumAverageMonth: Int,
-    val sumAverageCheque: Int,
     val barEntries: List<BarEntry>
 ) : Item {
 
     override fun getItemViewType(): Int {
-        return Item.STATISTICS_ITEM_TYPE
+        return Item.CATEGORY_CHART_ITEM_TYPE
     }
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
-        val statisticsViewHolder = viewHolder as ViewHolderFactory.StatisticsViewHolder
+        val statisticsViewHolder = viewHolder as ViewHolderFactory.CategoryChartViewHolder
+        statisticsViewHolder.nameCategoryText.text = category.name.mapIndexed { i, char ->
+            if (i == 0) char.uppercase() else char
+        }.joinToString(separator = "")
 
-        statisticsViewHolder.nameCategoryText.text = category.name
-        statisticsViewHolder.resumeAverageMonth.text = "$sumAverageMonth руб./мес."
-        statisticsViewHolder.resumeAverageCheque.text = "$sumAverageCheque руб."
+        val colors: MutableList<Int> = ArrayList()
+        val green = Color.rgb(110, 190, 102)
+        val red = Color.rgb(211, 74, 88)
+        val sign = when (category.type) {
+            CategoryType.CATEGORY_COSTS -> {
+                statisticsViewHolder.sumAvgMonthly.setTextColor(red)
+                "- "
+            }
+            else -> {
+                statisticsViewHolder.sumAvgMonthly.setTextColor(green)
+                "+ "
+            }
+        }
+        statisticsViewHolder.sumAvgMonthly.text = "$sign$sumAverageMonth"
 
         val chart = statisticsViewHolder.categoryChart
 
@@ -45,7 +60,7 @@ class StatisticsItem(
 
             override fun getAxisLabel(value: Float, axis: AxisBase?): String {
                 val currentEntry = chart.data.dataSets[0].getEntriesForXValue(value)[0]
-                return getMonthName(currentEntry.data as Int, Case.SHORT)
+                return getMonthName(currentEntry.data as Int, Case.SHORT).uppercase()
             }
 
         }
@@ -93,18 +108,13 @@ class StatisticsItem(
         chart.axisLeft.valueFormatter = yAxisFormatter
 
         val xAxis = chart.xAxis
-        xAxis.position = XAxis.XAxisPosition.TOP_INSIDE
+        xAxis.position = XAxis.XAxisPosition.TOP
         xAxis.setDrawGridLines(false)
         xAxis.setDrawAxisLine(false)
-        xAxis.textSize = 12f
+        xAxis.textSize = 11f
         xAxis.granularity = 1f
         xAxis.valueFormatter = xAxisFormatter
-
         chart.legend.isEnabled = false
-
-        val colors: MutableList<Int> = ArrayList()
-        val green = Color.rgb(110, 190, 102)
-        val red = Color.rgb(211, 74, 88)
 
         barEntries.forEach { _ ->
             when (category.type) {

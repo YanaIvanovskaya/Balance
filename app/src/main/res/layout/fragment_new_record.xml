@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#D8D191">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,27 +13,23 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#CF8787"
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="718dp"
-                android:background="#F4EEEE">
+                android:layout_height="718dp">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar_new_record"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#D8B4B4"
                     android:minHeight="?attr/actionBarSize"
                     android:theme="?attr/actionBarTheme"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:navigationIcon="?attr/actionModeCloseDrawable"
-                    app:title="@string/new_record"
-                    app:titleTextColor="#EADDDD" />
+                    app:title="@string/new_record" />
 
                 <TextView
                     android:id="@+id/hint_kind_of_operation"
@@ -88,7 +83,6 @@
                     android:layout_marginEnd="22dp"
                     android:layout_marginRight="22dp"
                     android:text="@string/error_msg_sum_of_money"
-                    android:textColor="#EA8181"
                     android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
@@ -139,7 +133,6 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
-                    android:background="#DCEACB"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/hint_template"
                     app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record" />
@@ -168,7 +161,6 @@
                     android:id="@+id/radioGroup2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#C2C7E1"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -194,7 +186,6 @@
                     android:id="@+id/radioGroup"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#E4D2B8"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
@@ -246,7 +237,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
                     android:hint="@string/comment"
-                    android:text="MultiAutoCompleteTextView566666666666666666666666666666666666666666666666666666666666666666666666666"
                     app:layout_constraintBottom_toTopOf="@+id/button_create_and_save_new_record"
                     tools:layout_editor_absoluteX="0dp" />
 

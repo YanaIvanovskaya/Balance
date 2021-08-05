@@ -11,7 +11,7 @@ import com.example.balance.ui.recycler_view.ViewHolderFactory
 
 class RecordItem(
     val id: Int,
-    val date: String,
+    val time: String,
     val sumMoney: Int,
     val recordType: RecordType,
     val moneyType: MoneyType,
@@ -27,7 +27,7 @@ class RecordItem(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
         val recordViewHolder = viewHolder as ViewHolderFactory.RecordViewHolder
 
-        recordViewHolder.dateText.text = date
+        recordViewHolder.dateText.text = time
         recordViewHolder.sumText.text = sumMoney.toString()
         recordViewHolder.categoryText.text = category
 

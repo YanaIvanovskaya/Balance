@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentHistoryBinding
+import com.example.balance.presentation.HistoryState
 import com.example.balance.presentation.HistoryViewModel
+import com.example.balance.presentation.TemplateState
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
 import com.example.balance.ui.recycler_view.adapter.HistoryAdapter
@@ -45,34 +47,67 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
         historyAdapter = HistoryAdapter(
             onLongItemClickListener = { recordId, isImportant ->
-                showRecordMenu(recordId,isImportant)
+                showRecordMenu(recordId, isImportant)
                 true
             })
+        mViewModel.state.observe(viewLifecycleOwner, ::render)
         initRecyclerView()
+        initChips()
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mViewModel.allHistoryRecords.observe(viewLifecycleOwner) { list ->
-            historyAdapter.dataSet = list.toMutableList()
-            historyAdapter.notifyDataSetChanged()
+    private fun render(state: HistoryState) {
+        when (state.currentChip) {
+            0 -> {
+                mBinding?.chipAllHistory?.isChecked = true
+                historyAdapter.dataSet = state.allRecords
+            }
+            1 -> {
+                mBinding?.chipProfitHistory?.isChecked = true
+                historyAdapter.dataSet = state.profitRecords
+            }
+            2 -> {
+                mBinding?.chipCostsHistory?.isChecked = true
+                historyAdapter.dataSet = state.costsRecords
+            }
+            3 -> {
+                mBinding?.chipImportantHistory?.isChecked = true
+                historyAdapter.dataSet = state.importantRecords
+            }
         }
+        historyAdapter.notifyDataSetChanged()
     }
-
-//    private fun updateAdapter(productList: MutableList<Item>) {
-//        val itemDiffUtilCallback = ItemDiffUtilCallback(historyAdapter.dataSet, productList)
-//        val itemDiffResult = DiffUtil.calculateDiff(itemDiffUtilCallback)
-//        historyAdapter.dataSet = productList
-//        itemDiffResult.dispatchUpdatesTo(historyAdapter)
-//    }
 
     private fun initRecyclerView() {
         historyRecyclerView.layoutManager = LinearLayoutManager(context)
         historyRecyclerView.adapter = historyAdapter
     }
 
-    private fun showRecordMenu(recordId: Int,isImportant: Boolean) {
+    private fun initChips() {
+        mBinding?.chipAllHistory?.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mViewModel.saveCurrentChip(0)
+            }
+        }
+        mBinding?.chipProfitHistory?.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mViewModel.saveCurrentChip(1)
+            }
+        }
+        mBinding?.chipCostsHistory?.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mViewModel.saveCurrentChip(2)
+            }
+        }
+        mBinding?.chipImportantHistory?.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                mViewModel.saveCurrentChip(3)
+            }
+        }
+
+    }
+
+    private fun showRecordMenu(recordId: Int, isImportant: Boolean) {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_record_menu)
         val pin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)

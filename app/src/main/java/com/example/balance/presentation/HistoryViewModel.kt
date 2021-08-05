@@ -7,6 +7,7 @@ import com.example.balance.Case
 import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.record.Record
 import com.example.balance.data.record.RecordRepository
+import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.getMonthName
 import com.example.balance.getTime
@@ -16,10 +17,32 @@ import com.example.balance.ui.recycler_view.item.RecordItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+
+
+data class HistoryState(
+    val currentChip: Int,
+    val allRecords: List<Item>,
+    val costsRecords: List<Item>,
+    val profitRecords: List<Item>,
+    val importantRecords: List<Item>,
+) {
+
+    companion object {
+        fun default() = HistoryState(
+            currentChip = 0,
+            allRecords = listOf(),
+            costsRecords = listOf(),
+            profitRecords = listOf(),
+            importantRecords = listOf()
+        )
+    }
+
+}
+
 
 class HistoryViewModel(
     val recordRepository: RecordRepository,
@@ -27,13 +50,32 @@ class HistoryViewModel(
     val categoryRepository: CategoryRepository,
 ) : ViewModel() {
 
-    val allHistoryRecords = MutableLiveData<List<Item>>(listOf())
+    val state = MutableLiveData(HistoryState.default())
 
     init {
         recordRepository.allRecords
-            .map { newRecordList -> mapItems(newRecordList) }
-            .onEach(allHistoryRecords::setValue)
+            .onEach { newRecordList ->
+                state.value = state.value?.copy(
+                    allRecords = mapItems(newRecordList),
+                    costsRecords = mapItems(newRecordList, recordType = RecordType.COSTS),
+                    profitRecords = mapItems(newRecordList, recordType = RecordType.PROFITS),
+                    importantRecords = mapItems(newRecordList, onlyImportant = true)
+                )
+            }
             .launchIn(viewModelScope)
+    }
+
+//    init {
+//        recordRepository.allRecords
+//            .map { newRecordList -> mapItems(newRecordList) }
+//            .onEach(allHistoryRecords::setValue)
+//            .launchIn(viewModelScope)
+//    }
+
+    fun saveCurrentChip(chipNumber: Int) {
+        state.value = state.value?.copy(
+            currentChip = chipNumber
+        )
     }
 
     fun removeRecord(recordId: Int) {
@@ -49,38 +91,53 @@ class HistoryViewModel(
         }
     }
 
-    private fun mapItems(items: List<Record>): MutableList<Item> {
-        val allHistoryRecords: MutableList<Item> = mutableListOf()
-        var currentDate = ""
-        items.reversed().forEach { record ->
-            val recordDate = "${record.day} ${getMonthName(record.month, Case.OF)} ${record.year}"
-            if (currentDate.isEmpty() || currentDate != recordDate) {
-                val dateItem = DateItem(
-                    date =
-                    "${record.day} ${getMonthName(record.month, Case.OF)}"
-                )
-                allHistoryRecords.add(dateItem)
+    private suspend fun mapItems(
+        items: List<Record>,
+        recordType: RecordType? = null,
+        onlyImportant: Boolean? = null
+    ): MutableList<Item> {
+        return withContext(Dispatchers.IO) {
+            val allHistoryRecords: MutableList<Item> = mutableListOf()
+            var currentDate = ""
+
+            items.reversed().forEach { record ->
+                val isRecordValid = if (recordType != null) {
+                    record.recordType == recordType
+                } else if (recordType == null && onlyImportant == true) {
+                    record.isImportant
+                } else true
+
+                if (isRecordValid) {
+                    val recordDate =
+                        "${record.day} ${getMonthName(record.month, Case.OF)} ${record.year}"
+                    if (currentDate.isEmpty() || currentDate != recordDate) {
+                        val dateItem = DateItem(
+                            date =
+                            "${record.day} ${getMonthName(record.month, Case.OF)}"
+                        )
+                        allHistoryRecords.add(dateItem)
+                    }
+
+                    val sumRecord = record.sumOfMoney
+                    allHistoryRecords.add(
+                        RecordItem(
+                            id = record.id,
+                            time = getTime(record.time),
+                            sumMoney = sumRecord,
+                            recordType = record.recordType,
+                            moneyType = record.moneyType,
+                            category = runBlocking {
+                                categoryRepository.getNameById(record.categoryId).first()
+                            },
+                            comment = record.comment,
+                            isImportant = record.isImportant
+                        )
+                    )
+                    currentDate = recordDate
+                }
             }
-
-            val sumRecord = record.sumOfMoney
-            allHistoryRecords.add(
-                RecordItem(
-                    id = record.id,
-                    date = getTime(record.time),
-                    sumMoney = sumRecord,
-                    recordType = record.recordType,
-                    moneyType = record.moneyType,
-                    category = runBlocking {
-                        categoryRepository.getNameById(record.categoryId).first()
-                    },
-                    comment = record.comment,
-                    isImportant = record.isImportant
-                )
-            )
-            currentDate = recordDate
+            allHistoryRecords
         }
-
-        return allHistoryRecords
     }
 
 }

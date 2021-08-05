@@ -10,7 +10,10 @@ sealed interface Item {
         const val DATE_ITEM_TYPE: Int = 2
         const val TEMPLATE_ITEM_TYPE = 3
         const val CATEGORY_ITEM_TYPE = 4
-        const val STATISTICS_ITEM_TYPE = 5
+        const val CATEGORY_CHART_ITEM_TYPE = 5
+
+        const val COSTS_STAT_INFO_ITEM_TYPE = 6
+        const val PROFIT_STAT_INFO_ITEM_TYPE = 7
     }
 
     fun getItemViewType(): Int

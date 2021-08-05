@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
 import com.example.balance.databinding.FragmentProfitStatisticsBinding
 import com.example.balance.ui.recycler_view.adapter.StatisticsAdapter
-import com.example.balance.ui.recycler_view.item.StatisticsItem
+import com.example.balance.ui.recycler_view.item.CategoryChartItem
+import com.example.balance.ui.recycler_view.item.Item
 
 class ProfitsStatisticsFragment: Fragment(R.layout.fragment_profit_statistics) {
 
@@ -31,7 +32,7 @@ class ProfitsStatisticsFragment: Fragment(R.layout.fragment_profit_statistics) {
         return binding.root
     }
 
-    fun setData(profitStatItems: List<StatisticsItem>) {
+    fun setData(profitStatItems: List<Item>) {
         profitAdapter.dataSet = profitStatItems
         profitAdapter.notifyDataSetChanged()
     }
