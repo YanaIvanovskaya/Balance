@@ -76,6 +76,9 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
             }
         }
         historyAdapter.notifyDataSetChanged()
+        mBinding?.preloaderHistory?.visibility =
+            if (historyAdapter.dataSet.isNotEmpty()) View.GONE
+            else View.VISIBLE
     }
 
     private fun initRecyclerView() {

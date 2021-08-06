@@ -81,7 +81,11 @@ class RecordCreationViewModel(
     private fun updateLists(): Job {
         return viewModelScope.launch {
             val templates =
-                withContext(Dispatchers.IO) { templateRepository.allTemplates.first() }
+                withContext(Dispatchers.IO) {
+                    templateRepository.allTemplates.first()
+                        .sortedBy { it.frequencyOfUse }
+                        .reversed()
+                }
             val costsCategories =
                 withContext(Dispatchers.IO) { categoryRepository.allCostsCategory.first() }
             val profitCategories =
@@ -100,11 +104,9 @@ class RecordCreationViewModel(
             val record = withContext(Dispatchers.IO) {
                 recordRepository.getRecordById(recordId).first()
             }
-
             val recordCategory = withContext(Dispatchers.IO) {
                 categoryRepository.getNameById(record.categoryId).first()
             }
-
             state.value = state.value?.copy(
                 sumRecord = record.sumOfMoney.toString(),
                 recordType = record.recordType,
@@ -115,7 +117,6 @@ class RecordCreationViewModel(
             )
             onCategorySelected(recordCategory)
         }
-
     }
 
     private fun saveSumRecordState(newSumRecord: String) {
@@ -161,11 +162,23 @@ class RecordCreationViewModel(
         state.value = state.value?.copy(selectedCategory = category)
     }
 
-    fun onChangeComment(newComment: String) = saveCommentState(newComment)
+    fun onChangeComment(newComment: String) {
+        if (newComment != state.value?.comment) {
+            saveCommentState(newComment)
+        }
+    }
 
-    fun onChangeSum(sumRecord: String) = saveSumRecordState(sumRecord)
+    fun onChangeSum(sumRecord: String) {
+        if (sumRecord != state.value?.sumRecord) {
+            saveSumRecordState(sumRecord)
+        }
+    }
 
-    fun onChangeTemplateName(newName: String) = saveTemplateNameState(newName)
+    fun onChangeTemplateName(newName: String) {
+        if (newName != state.value?.templateName) {
+            saveTemplateNameState(newName)
+        }
+    }
 
     fun onChangeImportantSwitch(isChecked: Boolean) {
         state.value = state.value?.copy(isImportant = isChecked)
@@ -201,7 +214,9 @@ class RecordCreationViewModel(
     }
 
     fun onApplyTemplate(templatePosition: Int) {
-        state.value = state.value?.copy(selectedTemplatePosition = templatePosition)
+        if (templatePosition != state.value?.selectedTemplatePosition) {
+            state.value = state.value?.copy(selectedTemplatePosition = templatePosition)
+        }
         val currentTemplate = state.value?.templates?.getOrNull(templatePosition - 1)
         if (currentTemplate != null) {
             viewModelScope.launch {
@@ -279,7 +294,6 @@ class RecordCreationViewModel(
                 events.value = EventComplete(isComplete = true)
             }
         }
-
     }
 
     fun onSaveNewCategory(categoryName: String, categoryType: CategoryType) {

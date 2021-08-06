@@ -8,10 +8,47 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.example.balance.BalanceApp
+import com.example.balance.Case
 import com.example.balance.R
 import com.example.balance.databinding.FragmentStatisticsBinding
+import com.example.balance.getMonthName
 import com.example.balance.presentation.StatisticsViewModel
 import com.example.balance.presentation.getViewModel
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.AxisBase
+import com.github.mikephil.charting.formatter.ValueFormatter
+import kotlin.math.abs
+
+class XAxisFormatter(
+    private val chart: BarChart
+) : ValueFormatter() {
+
+    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+        val currentEntry = chart.data.dataSets[0].getEntriesForXValue(value)[0]
+        return getMonthName(currentEntry.data as Int, Case.SHORT)
+    }
+
+}
+
+class YAxisFormatter : ValueFormatter() {
+
+    override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+        return if (abs(value) < 1000f) {
+            "${value.toInt()}"
+        } else "${(value / 1000).toInt()}K"
+    }
+
+}
+
+class BarValueFormatter() : ValueFormatter() {
+
+    override fun getFormattedValue(value: Float): String {
+        return if (abs(value) < 1000f) {
+            "${value.toInt()}"
+        } else "${(value / 1000).toInt()}K"
+    }
+
+}
 
 class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 

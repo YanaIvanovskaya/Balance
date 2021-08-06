@@ -1,6 +1,5 @@
 package com.example.balance.presentation
 
-import androidx.core.util.rangeTo
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,7 +12,6 @@ import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.getMonthName
-import com.example.balance.getTime
 import com.example.balance.ui.recycler_view.item.BalanceItem
 import com.example.balance.ui.recycler_view.item.Item
 import com.example.balance.ui.recycler_view.item.RecordItem
@@ -21,9 +19,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
+import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalTime
+import timber.log.Timber
+
 
 data class HomeState(
     val sumCostsCash: Int,
@@ -32,6 +32,7 @@ data class HomeState(
     val sumProfitCards: Int,
     val cash: Int,
     val cards: Int,
+    val isContentLoaded: Boolean
 ) {
 
     companion object {
@@ -41,7 +42,8 @@ data class HomeState(
             sumProfitCash = 0,
             sumProfitCards = 0,
             cash = 0,
-            cards = 0
+            cards = 0,
+            isContentLoaded = false
         )
     }
 
@@ -109,6 +111,10 @@ class HomeViewModel(
             .launchIn(viewModelScope)
     }
 
+    fun setContentLoaded(isLoaded: Boolean) {
+        state.value = state.value?.copy(isContentLoaded = isLoaded)
+    }
+
     fun removeRecord(recordId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             recordRepository.deleteRecordById(recordId)
@@ -131,20 +137,34 @@ class HomeViewModel(
                     sumCards = state.value?.cards.toString()
                 )
             )
-            val currentDateTime = LocalDateTime.now()
 
-            val currentDate = currentDateTime.toLocalDate()
+            val currentDate = LocalDate.now()
+
+            val currentTime = LocalTime.now()
 
             val recentlyRecords = when (items.size) {
                 in 1..15 -> items
-                else -> items.subList(0,15)
+                else -> items.subList(0, 15)
             }
 
             recentlyRecords.forEach { record ->
                 val recordDate = LocalDate.of(record.year, record.month, record.day)
+                val recordTime = LocalTime.parse(record.time)
+                var diff = Duration.between(currentTime,recordTime)
+                val hours: Long = diff.toHours()
+                diff = diff.minusHours(hours)
+                val minutes: Long = diff.toMinutes()
+                diff = diff.minusMinutes(minutes)
+                val seconds: Long = diff.getSeconds()
+
 
                 val timeOfRecord = if (currentDate == recordDate) {
-                    "today"
+                    String.format(
+                        "%d:%02d:%02d",
+                        hours,
+                        minutes,
+                        seconds
+                    )
                 } else if (currentDate.minusDays(1) == recordDate) {
                     "yesterday"
                 } else {

@@ -19,6 +19,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="718dp">
 
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="17dp"
+                    android:scrollbarAlwaysDrawHorizontalTrack="false"
+                    android:scrollbars="none"
+                    app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/templates_group"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:selectionRequired="true"
+                            app:singleLine="true"
+                            app:singleSelection="true"/>
+                    </LinearLayout>
+                </HorizontalScrollView>
+
                 <TextView
                     android:id="@+id/error_msg_template_name"
                     android:layout_width="173dp"
@@ -35,15 +62,13 @@
                     android:id="@+id/toolbar_new_record"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#D8B4B4"
                     android:minHeight="?attr/actionBarSize"
                     android:theme="?attr/actionBarTheme"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:navigationIcon="?attr/actionModeCloseDrawable"
-                    app:title="@string/new_record"
-                    app:titleTextColor="#EADDDD" />
+                    app:title="@string/new_record" />
 
                 <TextView
                     android:id="@+id/hint_kind_of_operation"
@@ -55,23 +80,6 @@
                     android:text="@string/hint_kind_of_operation"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
-
-                <TextView
-                    android:id="@+id/hint_template"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="32dp"
-                    android:layout_marginRight="32dp"
-                    android:layout_marginBottom="30dp"
-                    android:text="@string/use_template"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.066"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record"
-                    app:layout_constraintVertical_bias="1.0" />
 
                 <TextView
                     android:id="@+id/hint_kind_of_money"
@@ -142,18 +150,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.498"
                     app:layout_constraintStart_toStartOf="parent" />
-
-                <Spinner
-                    android:id="@+id/spinner_templates"
-                    android:layout_width="270dp"
-                    android:layout_height="33dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
-                    android:background="#DCEACB"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/toolbar_new_record" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/textInputLayout"

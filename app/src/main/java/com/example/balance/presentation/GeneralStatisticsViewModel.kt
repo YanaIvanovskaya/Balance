@@ -3,26 +3,32 @@ package com.example.balance.presentation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.balance.data.StatisticsAccessor
+import com.example.balance.data.category.CategoryType
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.PieEntry
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
 data class GeneralStatisticsState(
     val yearsOfUse: List<Int>,
-    val entriesCommonChart: List<BarEntry>,
-    val entriesRestChart: List<BarEntry>
+    val entriesGeneralBarChart: List<BarEntry>,
+    val entriesProfitLossBarChart: List<BarEntry>,
+    val entriesCostsPieChart: List<PieEntry>,
+    val entriesProfitPieChart: List<PieEntry>
 ) {
 
     companion object {
         fun default() = GeneralStatisticsState(
             yearsOfUse = listOf(),
-            entriesCommonChart = mutableListOf(),
-            entriesRestChart = mutableListOf()
+            entriesGeneralBarChart = mutableListOf(),
+            entriesProfitLossBarChart = mutableListOf(),
+            entriesCostsPieChart = mutableListOf(),
+            entriesProfitPieChart = mutableListOf()
         )
     }
 
@@ -36,18 +42,22 @@ class GeneralStatisticsViewModel(
 
     init {
         viewModelScope.launch {
-            val yearsOfUse =
-                withContext(Dispatchers.IO) { recordRepository.getYearsOfUse().first() }
+            val yearsOfUse = StatisticsAccessor.getListYearsOfUse()
 
             state.value = state.value?.copy(
                 yearsOfUse = yearsOfUse
             )
 
-            val entriesCommonChart = getEntriesForChart(ChartType.COMMON_CHART)
-            val entriesRestChart = getEntriesForChart(ChartType.REST_CHART)
+            val entriesGeneralBarChart = getEntriesForChart(ChartType.COMMON_CHART)
+            val entriesProfitLossBarChart = getEntriesForChart(ChartType.REST_CHART)
+            val entriesCostsPieChart = getEntriesForPieChart(CategoryType.CATEGORY_COSTS)
+            val entriesProfitPieChart = getEntriesForPieChart(CategoryType.CATEGORY_PROFIT)
+
             state.value = state.value?.copy(
-                entriesCommonChart = entriesCommonChart,
-                entriesRestChart = entriesRestChart
+                entriesGeneralBarChart = entriesGeneralBarChart,
+                entriesProfitLossBarChart = entriesProfitLossBarChart,
+                entriesCostsPieChart = entriesCostsPieChart,
+                entriesProfitPieChart = entriesProfitPieChart
             )
         }
     }
@@ -55,6 +65,20 @@ class GeneralStatisticsViewModel(
     enum class ChartType {
         COMMON_CHART,
         REST_CHART
+    }
+
+    private suspend fun getEntriesForPieChart(categoryType: CategoryType): List<PieEntry> {
+        return withContext(Dispatchers.IO) {
+            val pieEntries = mutableListOf<PieEntry>()
+            for (pair in StatisticsAccessor.getListCategoryWithSum(categoryType)) {
+                val value = pair.second.toFloat()
+                if (value != 0f) {
+                    val pieEntry = PieEntry(value, pair.first)
+                    pieEntries.add(pieEntry)
+                }
+            }
+            pieEntries
+        }
     }
 
     private suspend fun getEntriesForChart(chartType: ChartType): List<BarEntry> {
@@ -65,19 +89,19 @@ class GeneralStatisticsViewModel(
 
                 var counter = 1
                 for (year in yearsOfUse) {
-                    val months = recordRepository.getMonthsInYear(year).first()
+                    val months = StatisticsAccessor.getListMonthsInYear(year)
                     println(months)
                     for (month in months) {
-                        val profitValue = recordRepository.getMonthlyAmount(
+                        val profitValue = StatisticsAccessor.getMonthlySumByRecordType(
                             recordType = RecordType.PROFITS,
                             month = month,
                             year = year
-                        ).first() ?: 0
-                        val costsValue = recordRepository.getMonthlyAmount(
+                        )
+                        val costsValue = StatisticsAccessor.getMonthlySumByRecordType(
                             recordType = RecordType.COSTS,
                             month = month,
                             year = year
-                        ).first() ?: 0
+                        )
 
                         if (profitValue != 0 || costsValue != 0) {
                             val barEntry = when (chartType) {

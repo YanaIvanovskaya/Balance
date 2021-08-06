@@ -18,9 +18,8 @@ import com.example.balance.presentation.HomeState
 import com.example.balance.presentation.HomeViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
-import com.example.balance.ui.recycler_view.HomeAdapter
+import com.example.balance.ui.recycler_view.adapter.HomeAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import timber.log.Timber
 
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -45,36 +44,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     ): View {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         mBinding = binding
-        homeRecyclerView = binding.homeRecyclerView
         mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
+        homeRecyclerView = binding.homeRecyclerView
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         homeAdapter = HomeAdapter(
             onLongItemClickListener = { recordId ->
                 showRecordMenu(recordId)
                 true
             }
         )
-
-        mViewModel.state.observe(viewLifecycleOwner, ::render)
-        initRecyclerView()
-        binding.floatingButtonCreateNewRecord.setOnClickListener { onAddRecordClick() }
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         mViewModel.allHomeRecords.observe(viewLifecycleOwner) { list ->
             homeAdapter.dataSet = list.toMutableList()
             homeAdapter.notifyDataSetChanged()
+            mViewModel.setContentLoaded(list.isNotEmpty())
         }
-        println("onViewCreated")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        println("Resume")
-        mBinding?.splash?.visibility = View.GONE
-        mBinding?.floatingButtonCreateNewRecord?.isVisible = true
+        mViewModel.state.observe(viewLifecycleOwner, ::render)
+        initRecyclerView()
+        mBinding?.floatingButtonCreateNewRecord?.setOnClickListener { onAddRecordClick() }
     }
 
     private fun showRecordMenu(recordId: Int) {
@@ -102,9 +92,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun render(state: HomeState) {
-        Timber.d("Render state")
-        Timber.d(state.toString())
         homeAdapter.updateBalance(state.cash.toString(), state.cards.toString())
+        mBinding?.preloaderHome?.visibility =
+            if (state.isContentLoaded) View.GONE
+            else View.VISIBLE
+        mBinding?.floatingButtonCreateNewRecord?.isVisible = state.isContentLoaded
     }
 
     private fun initRecyclerView() {

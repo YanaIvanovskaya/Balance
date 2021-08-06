@@ -28,7 +28,7 @@ data class HistoryState(
     val allRecords: List<Item>,
     val costsRecords: List<Item>,
     val profitRecords: List<Item>,
-    val importantRecords: List<Item>,
+    val importantRecords: List<Item>
 ) {
 
     companion object {
@@ -42,7 +42,6 @@ data class HistoryState(
     }
 
 }
-
 
 class HistoryViewModel(
     val recordRepository: RecordRepository,
@@ -64,13 +63,6 @@ class HistoryViewModel(
             }
             .launchIn(viewModelScope)
     }
-
-//    init {
-//        recordRepository.allRecords
-//            .map { newRecordList -> mapItems(newRecordList) }
-//            .onEach(allHistoryRecords::setValue)
-//            .launchIn(viewModelScope)
-//    }
 
     fun saveCurrentChip(chipNumber: Int) {
         state.value = state.value?.copy(

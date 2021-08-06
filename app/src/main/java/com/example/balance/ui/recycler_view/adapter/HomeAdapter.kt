@@ -1,8 +1,8 @@
-package com.example.balance.ui.recycler_view
+package com.example.balance.ui.recycler_view.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.example.balance.ui.recycler_view.ViewHolderFactory
 import com.example.balance.ui.recycler_view.item.BalanceItem
 import com.example.balance.ui.recycler_view.item.Item
 import com.example.balance.ui.recycler_view.item.RecordItem
