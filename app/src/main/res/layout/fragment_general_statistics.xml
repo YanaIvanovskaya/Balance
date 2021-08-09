@@ -5,6 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#9575CD"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButton"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:button="@drawable/circle_radio_button"
+            android:textColorLink="#7986CB" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content" />
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content" />
+
+        <RadioButton
+            android:id="@+id/radioButton4"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content" />
+    </RadioGroup>
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_general_stat"
         android:layout_width="match_parent"
@@ -12,59 +45,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ScrollView
-        android:id="@+id/scroll_general"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    </androidx.viewpager2.widget.ViewPager2>
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pie_chart"
-                android:layout_width="match_parent"
-                android:layout_height="500dp">
-
-            </com.github.mikephil.charting.charts.PieChart>
-
-            <TextView
-                android:id="@+id/description_chart_common"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/common_chart"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_margin="5dp">
-
-            </com.github.mikephil.charting.charts.BarChart>
-
-            <TextView
-                android:id="@+id/description_chart_rest"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/rest_chart"
-                android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_margin="5dp">
-
-            </com.github.mikephil.charting.charts.BarChart>
-
-
-        </LinearLayout>
-    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

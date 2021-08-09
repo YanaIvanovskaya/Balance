@@ -26,7 +26,6 @@ class HomeAdapter(
                 holder as ViewHolderFactory.RecordViewHolder
             recordViewHolder.layout.setOnLongClickListener {
                 onLongItemClickListener(recordItem.id)
-                println(position)
                 true
             }
         }

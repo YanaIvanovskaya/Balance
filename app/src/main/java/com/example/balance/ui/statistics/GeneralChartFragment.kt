@@ -33,16 +33,15 @@ class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
             recordRepository = BalanceApp.recordRepository
         )
     }
-    private val onCommonChartValueSelectedListener = object : OnChartValueSelectedListener {
+
+    private val onValueSelectedListener = object : OnChartValueSelectedListener {
         override fun onValueSelected(e: Entry?, h: Highlight?) {
             if (e is BarEntry) {
-                val month = getMonthName(e.data as Int, Case.IN)
+                val month = getMonthName(e.data as Int, Case.NONE).uppercase()
                 val sumMoney = e.yVals[h!!.stackIndex].toInt()
-                val message =
-                    "В $month ${if (sumMoney > 0) "получено" else "потрачено"} ${abs(sumMoney)} P"
-//                mBinding?.descriptionChartCommon?.text = message
+                val message = "$month  $sumMoney P"
+                mBinding?.resumeGeneralChart?.text = message
             }
-
         }
 
         override fun onNothingSelected() {}
@@ -63,7 +62,10 @@ class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
         super.onViewCreated(view, savedInstanceState)
         createGeneralBarChart()
         mViewModel.state.observe(viewLifecycleOwner, {
-            updateGeneralBarChart(it.entriesGeneralBarChart)
+            val entries = it.entriesGeneralBarChart
+            updateGeneralBarChart(entries)
+            if (entries.isNotEmpty() || (!it.haveCosts && !it.haveProfits))
+                mBinding?.preloaderGeneralChart?.visibility = View.GONE
         })
     }
 
@@ -73,7 +75,7 @@ class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
     }
 
     private fun createGeneralBarChart() {
-        mGeneralBarChart.setOnChartValueSelectedListener(onCommonChartValueSelectedListener)
+        mGeneralBarChart.setOnChartValueSelectedListener(onValueSelectedListener)
         mGeneralBarChart.setDrawGridBackground(false)
         mGeneralBarChart.description.isEnabled = false
         mGeneralBarChart.setFitBars(true)
@@ -95,12 +97,7 @@ class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
         xAxis.textSize = 12f
         xAxis.granularity = 1f
         xAxis.valueFormatter = XAxisFormatter(mGeneralBarChart)
-
-        val l: Legend = mGeneralBarChart.legend
-        l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
-        l.formSize = 8f
-        l.formToTextSpace = 4f
-        l.xEntrySpace = 6f
+        mGeneralBarChart.legend.isEnabled = false
     }
 
     private fun updateGeneralBarChart(barEntries: List<BarEntry>) {

@@ -46,7 +46,13 @@ class ProfitPieChartFragment : Fragment(R.layout.fragment_profit_pie_chart) {
         super.onViewCreated(view, savedInstanceState)
         createProfitPieChart()
         mViewModel.state.observe(viewLifecycleOwner, {
-            updateProfitPieChart(it.entriesProfitPieChart)
+            mBinding?.resumeProfitPieChart?.text =
+                if (it.haveProfits) "Больше всего получено по категории \"${it.maxProfitCategory}\""
+                else ""
+            val entries = it.entriesProfitPieChart
+            updateProfitPieChart(entries)
+            if (entries.isNotEmpty())
+                mBinding?.preloaderProfitPieChart?.visibility = View.GONE
         })
     }
 
@@ -60,14 +66,10 @@ class ProfitPieChartFragment : Fragment(R.layout.fragment_profit_pie_chart) {
         mProfitPieChart.description.isEnabled = false
         mProfitPieChart.setExtraOffsets(5f, 10f, 5f, 5f)
         mProfitPieChart.dragDecelerationFrictionCoef = 0.95f
-        mProfitPieChart.centerText = "Доходы"
         mProfitPieChart.isDrawHoleEnabled = true
-        mProfitPieChart.setHoleColor(Color.WHITE)
-        mProfitPieChart.setTransparentCircleColor(Color.WHITE)
-        mProfitPieChart.setTransparentCircleAlpha(110)
-        mProfitPieChart.holeRadius = 58f
-        mProfitPieChart.transparentCircleRadius = 61f
-        mProfitPieChart.setDrawCenterText(true)
+        mProfitPieChart.setHoleColor(Color.TRANSPARENT)
+        mProfitPieChart.holeRadius = 25f
+        mProfitPieChart.transparentCircleRadius = 0f
         mProfitPieChart.rotationAngle = 0f
         mProfitPieChart.isRotationEnabled = true
         mProfitPieChart.isHighlightPerTapEnabled = true
@@ -82,10 +84,9 @@ class ProfitPieChartFragment : Fragment(R.layout.fragment_profit_pie_chart) {
         l.xEntrySpace = 7f
         l.textSize = 12f
         l.yEntrySpace = 0f
-        l.yOffset = 0f
+        l.yOffset = 5f
 
-        mProfitPieChart.setEntryLabelColor(Color.WHITE)
-        mProfitPieChart.setEntryLabelTextSize(12f)
+        mProfitPieChart.setDrawEntryLabels(false)
     }
 
     private fun updateProfitPieChart(pieEntries: List<PieEntry>) {
@@ -99,22 +100,21 @@ class ProfitPieChartFragment : Fragment(R.layout.fragment_profit_pie_chart) {
         dataSet.iconsOffset = MPPointF(0f, 40f)
         dataSet.selectionShift = 5f
 
-        val colors = java.util.ArrayList<Int>()
-        for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
+        val colors = mutableListOf<Int>()
         for (c in ColorTemplate.JOYFUL_COLORS) colors.add(c)
-        for (c in ColorTemplate.COLORFUL_COLORS) colors.add(c)
         for (c in ColorTemplate.LIBERTY_COLORS) colors.add(c)
+        for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
         for (c in ColorTemplate.PASTEL_COLORS) colors.add(c)
+        for (c in ColorTemplate.COLORFUL_COLORS) colors.add(c)
         colors.add(ColorTemplate.getHoloBlue())
-        dataSet.colors = colors
+        dataSet.colors = colors.shuffled()
 
         val data = PieData(dataSet)
         data.setValueFormatter(PercentFormatter())
-        data.setValueTextSize(11f)
-        data.setValueTextColor(Color.WHITE)
+        data.setValueTextSize(12f)
+        data.setValueTextColor(Color.BLACK)
 
         mProfitPieChart.data = data
-        mProfitPieChart.highlightValues(null)
         mProfitPieChart.invalidate()
     }
 }

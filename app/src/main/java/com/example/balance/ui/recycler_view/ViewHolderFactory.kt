@@ -66,8 +66,8 @@ object ViewHolderFactory {
         val dateText: TextView = itemView.findViewById(R.id.date)
         val moneyTypeText: ImageView = itemView.findViewById(R.id.image_MoneyType)
         val layout: ConstraintLayout = itemView.findViewById(R.id.record_layout)
-        val buttonShowComment: Button = itemView.findViewById(R.id.button_show_comment)
-        val comment: MultiAutoCompleteTextView = itemView.findViewById(R.id.comment)
+        val buttonShowComment: ImageButton = itemView.findViewById(R.id.button_show_comment)
+        val comment: TextView = itemView.findViewById(R.id.comment)
         val imageImportant: ImageView = itemView.findViewById(R.id.image_important)
     }
 
@@ -106,15 +106,12 @@ object ViewHolderFactory {
         val sumGeneralCosts: TextView = itemView.findViewById(R.id.sum_general_costs)
         val sumAvgMonthlyCosts: TextView = itemView.findViewById(R.id.sum_avg_monthly_costs)
         val amountMonthlyPurchases: TextView = itemView.findViewById(R.id.amount_purchases)
-        val percentAvgMonthlyCosts: TextView = itemView.findViewById(R.id.percent_montly_costs)
     }
 
     class ProfitStatInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val sumGeneralProfit: TextView = itemView.findViewById(R.id.sum_general_profits)
         val sumAvgMonthlyProfit: TextView = itemView.findViewById(R.id.sum_avg_monthly_profit)
         val sumAvgMonthlyBalance: TextView = itemView.findViewById(R.id.amount_balance)
-        val percentAvgMonthlyProfit: TextView =
-            itemView.findViewById(R.id.percent_montly_pure_profit)
     }
 
 }

@@ -56,16 +56,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/sum_avg_monthly_profit" />
 
             <TextView
-                android:id="@+id/percent_montly_pure_profit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="1dp"
-                android:text="30%"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/amount_balance" />
-
-            <TextView
                 android:id="@+id/text_stat_general_costs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,17 +87,6 @@
                 android:textColor="#838383"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_stat_average_profit_month" />
-
-            <TextView
-                android:id="@+id/text_stat_avg_pure_profit_month_percent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="Средний процент чистого дохода в месяц"
-                android:textColor="#838383"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_stat_average_balance" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

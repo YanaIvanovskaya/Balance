@@ -7,19 +7,25 @@ import com.example.balance.data.StatisticsAccessor
 import com.example.balance.data.category.CategoryType
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
+import com.example.balance.toUpperFirst
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
 data class GeneralStatisticsState(
     val yearsOfUse: List<Int>,
+    val maxProfitCategory: String,
+    val maxCostsCategory: String,
     val entriesGeneralBarChart: List<BarEntry>,
     val entriesProfitLossBarChart: List<BarEntry>,
     val entriesCostsPieChart: List<PieEntry>,
-    val entriesProfitPieChart: List<PieEntry>
+    val entriesProfitPieChart: List<PieEntry>,
+    val haveCosts: Boolean,
+    val haveProfits: Boolean
 ) {
 
     companion object {
@@ -28,7 +34,11 @@ data class GeneralStatisticsState(
             entriesGeneralBarChart = mutableListOf(),
             entriesProfitLossBarChart = mutableListOf(),
             entriesCostsPieChart = mutableListOf(),
-            entriesProfitPieChart = mutableListOf()
+            entriesProfitPieChart = mutableListOf(),
+            maxProfitCategory = "",
+            maxCostsCategory = "",
+            haveCosts = true,
+            haveProfits = true
         )
     }
 
@@ -43,22 +53,40 @@ class GeneralStatisticsViewModel(
     init {
         viewModelScope.launch {
             val yearsOfUse = StatisticsAccessor.getListYearsOfUse()
+            if (yearsOfUse.isNotEmpty()) {
+                val haveCosts =
+                    withContext(Dispatchers.IO) {
+                        recordRepository.getRecordsByType(RecordType.COSTS).first()
+                    }.isNotEmpty()
+                val haveProfits =
+                    withContext(Dispatchers.IO) {
+                        recordRepository.getRecordsByType(RecordType.PROFITS).first()
+                    }.isNotEmpty()
 
-            state.value = state.value?.copy(
-                yearsOfUse = yearsOfUse
-            )
+                state.value = state.value?.copy(
+                    yearsOfUse = yearsOfUse,
+                    haveCosts = haveCosts,
+                    haveProfits = haveProfits
+                )
 
-            val entriesGeneralBarChart = getEntriesForChart(ChartType.COMMON_CHART)
-            val entriesProfitLossBarChart = getEntriesForChart(ChartType.REST_CHART)
-            val entriesCostsPieChart = getEntriesForPieChart(CategoryType.CATEGORY_COSTS)
-            val entriesProfitPieChart = getEntriesForPieChart(CategoryType.CATEGORY_PROFIT)
+                val entriesGeneralBarChart = getEntriesForChart(ChartType.COMMON_CHART)
+                val entriesProfitLossBarChart = getEntriesForChart(ChartType.REST_CHART)
+                val entriesCostsPieChart = getEntriesForPieChart(CategoryType.CATEGORY_COSTS)
+                val entriesProfitPieChart = getEntriesForPieChart(CategoryType.CATEGORY_PROFIT)
 
-            state.value = state.value?.copy(
-                entriesGeneralBarChart = entriesGeneralBarChart,
-                entriesProfitLossBarChart = entriesProfitLossBarChart,
-                entriesCostsPieChart = entriesCostsPieChart,
-                entriesProfitPieChart = entriesProfitPieChart
-            )
+                state.value = state.value?.copy(
+                    entriesGeneralBarChart = entriesGeneralBarChart,
+                    entriesProfitLossBarChart = entriesProfitLossBarChart,
+                    entriesCostsPieChart = entriesCostsPieChart,
+                    entriesProfitPieChart = entriesProfitPieChart
+                )
+            } else {
+                state.value = state.value?.copy(
+                    haveCosts = false,
+                    haveProfits = false
+                )
+            }
+
         }
     }
 
@@ -70,10 +98,20 @@ class GeneralStatisticsViewModel(
     private suspend fun getEntriesForPieChart(categoryType: CategoryType): List<PieEntry> {
         return withContext(Dispatchers.IO) {
             val pieEntries = mutableListOf<PieEntry>()
-            for (pair in StatisticsAccessor.getListCategoryWithSum(categoryType)) {
+            val listCategoryWithSum = StatisticsAccessor.getListCategoryWithSum(categoryType)
+            val maxSumCategory: Pair<String, Int>? = listCategoryWithSum.maxByOrNull { it.second }
+            withContext(Dispatchers.Main) {
+                if (maxSumCategory != null) {
+                    state.value = when (categoryType) {
+                        CategoryType.CATEGORY_COSTS -> state.value?.copy(maxCostsCategory = maxSumCategory.first)
+                        else -> state.value?.copy(maxProfitCategory = maxSumCategory.first)
+                    }
+                }
+            }
+            for (pair in listCategoryWithSum) {
                 val value = pair.second.toFloat()
                 if (value != 0f) {
-                    val pieEntry = PieEntry(value, pair.first)
+                    val pieEntry = PieEntry(value, pair.first.toUpperFirst())
                     pieEntries.add(pieEntry)
                 }
             }

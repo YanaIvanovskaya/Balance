@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/record_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:layout_marginBottom="3dp"
-    android:background="#E3ABAB"
-    android:padding="5dp">
+    android:background="@color/grey_100"
+    android:paddingLeft="15dp"
+    android:paddingTop="7dp"
+    android:paddingRight="15dp"
+    android:paddingBottom="7dp">
 
     <TextView
         android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:text="wwwwwwwwwwwrdfd"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,80 +25,65 @@
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="dr 21 ctyynz,hz w2021"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="8dp"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/category" />
 
     <TextView
         android:id="@+id/sum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:text="123456898"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/category" />
+        app:layout_constraintBottom_toBottomOf="@+id/category"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/category"
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/image_MoneyType"
-        android:layout_width="39dp"
-        android:layout_height="31dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toEndOf="@+id/sum"
-        app:layout_constraintTop_toBottomOf="@+id/category"
-        app:srcCompat="@drawable/coins" />
+        app:layout_constraintBottom_toBottomOf="@+id/category"
+        app:layout_constraintStart_toEndOf="@+id/category"
+        app:layout_constraintTop_toTopOf="@+id/category"
+        app:srcCompat="@drawable/ic_cash" />
 
     <ImageView
         android:id="@+id/image_important"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/image_MoneyType"
-        app:layout_constraintTop_toBottomOf="@+id/category"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
-
-    <MultiAutoCompleteTextView
-        android:id="@+id/comment"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="5dp"
-        android:text="MultiAutoCompleteTextView"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/category"
+        app:layout_constraintStart_toEndOf="@+id/image_MoneyType"
+        app:layout_constraintTop_toTopOf="@+id/category"
+        app:srcCompat="@drawable/ic_star" />
+
+    <ImageButton
+        android:id="@+id/button_show_comment"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:background="@drawable/ic_down_arrow"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="TextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTeTextViewTextViewTextViewTextViewTextViewTexTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewtViewTextViewTextViewxtViewTextViewTextView"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.555"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_show_comment" />
-
-    <Button
-        android:id="@+id/button_show_comment"
-        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
-        android:layout_width="250dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:padding="0dp"
-        android:text="Комментарий"
-        android:textSize="12sp"
-        android:visibility="gone"
-        app:icon="@android:drawable/arrow_down_float"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sum" />
+        app:layout_constraintTop_toBottomOf="@+id/date" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,4 +12,21 @@
     <color name="app_nav_bar">#F06292</color>
     <color name="app_money">#2F9371</color>
 
+
+    <color name="grey_50">#FAFAFA</color>
+    <color name="grey_100">#F5F5F5</color>
+    <color name="grey_300">#E0E0E0</color>
+    <color name="grey_700">#616161</color>
+    <color name="grey_800">#424242</color>
+
+
+    <color name="red_300">#E57373</color>
+    <color name="red_400">#EF5350</color>
+
+    <color name="green_300">#81C784</color>
+    <color name="green_400">#66BB6A</color>
+
+    <color name="yellow_300">#FFF176</color>
+    <color name="blue_300">#64B5F6</color>
+
 </resources>

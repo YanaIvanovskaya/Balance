@@ -7,7 +7,10 @@ import com.example.balance.Case
 import com.example.balance.data.category.Category
 import com.example.balance.data.category.CategoryType
 import com.example.balance.getMonthName
+import com.example.balance.toUpperFirst
 import com.example.balance.ui.recycler_view.ViewHolderFactory
+import com.example.balance.ui.statistics.XAxisFormatter
+import com.example.balance.ui.statistics.YAxisFormatter
 import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis.AxisDependency
@@ -35,9 +38,7 @@ class CategoryChartItem(
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
         val statisticsViewHolder = viewHolder as ViewHolderFactory.CategoryChartViewHolder
-        statisticsViewHolder.nameCategoryText.text = category.name.mapIndexed { i, char ->
-            if (i == 0) char.uppercase() else char
-        }.joinToString(separator = "")
+        statisticsViewHolder.nameCategoryText.text = category.name.toUpperFirst()
 
         val colors: MutableList<Int> = ArrayList()
         val green = Color.rgb(110, 190, 102)
@@ -56,43 +57,6 @@ class CategoryChartItem(
 
         val chart = statisticsViewHolder.categoryChart
 
-        val xAxisFormatter: ValueFormatter = object : ValueFormatter() {
-
-            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                val currentEntry = chart.data.dataSets[0].getEntriesForXValue(value)[0]
-                return getMonthName(currentEntry.data as Int, Case.SHORT).uppercase()
-            }
-
-        }
-
-        val yAxisFormatter: ValueFormatter = object : ValueFormatter() {
-
-            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-                return if (abs(value) < 1000f) {
-                    "${value.toInt()}"
-                } else "${(value / 1000).toInt()}K"
-            }
-
-            override fun getFormattedValue(value: Float): String {
-                return getAxisLabel(value, null)
-            }
-
-        }
-
-        val onRestChartValueSelectedListener = object : OnChartValueSelectedListener {
-            override fun onValueSelected(e: Entry?, h: Highlight?) {
-                val onValueSelectedRectF = RectF()
-                if (e == null) return
-                val bounds: RectF = onValueSelectedRectF
-                chart.getBarBounds(e as BarEntry?, bounds)
-                val position: MPPointF = chart.getPosition(e, AxisDependency.LEFT)
-                MPPointF.recycleInstance(position)
-            }
-
-            override fun onNothingSelected() {}
-        }
-
-        chart.setOnChartValueSelectedListener(onRestChartValueSelectedListener)
         chart.setDrawValueAboveBar(true)
         chart.description.isEnabled = false
         chart.setDrawGridBackground(false)
@@ -105,7 +69,7 @@ class CategoryChartItem(
         chart.axisLeft.setDrawZeroLine(true)
         chart.axisLeft.setLabelCount(7, false)
         chart.axisLeft.textSize = 12f
-        chart.axisLeft.valueFormatter = yAxisFormatter
+        chart.axisLeft.valueFormatter = YAxisFormatter()
 
         val xAxis = chart.xAxis
         xAxis.position = XAxis.XAxisPosition.TOP
@@ -113,7 +77,7 @@ class CategoryChartItem(
         xAxis.setDrawAxisLine(false)
         xAxis.textSize = 11f
         xAxis.granularity = 1f
-        xAxis.valueFormatter = xAxisFormatter
+        xAxis.valueFormatter = XAxisFormatter(chart)
         chart.legend.isEnabled = false
 
         barEntries.forEach { _ ->

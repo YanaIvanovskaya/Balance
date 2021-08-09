@@ -1,7 +1,11 @@
 package com.example.balance
 
+import com.example.balance.data.record.Record
+import org.threeten.bp.Duration
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
+import org.threeten.bp.temporal.ChronoUnit
 
 enum class Case {
     NONE, // январь
@@ -11,9 +15,8 @@ enum class Case {
 }
 
 fun getTime(time: String): String {
-//    val timeOffset = 3
     val timeObj = LocalTime.parse(time)
-    val currentHour = timeObj.hour //+ timeOffset
+    val currentHour = timeObj.hour
     val currentMinute = if (timeObj.minute < 10) "0${timeObj.minute}" else timeObj.minute.toString()
     return "$currentHour:$currentMinute"
 }
@@ -29,6 +32,48 @@ fun getWeekDay(dayNumber: Int): String {
         7 -> "вс"
         else -> ""
     }
+}
+
+fun getTimeLabel(record: Record, isHistory: Boolean): String {
+    val currentTime = LocalTime.now()
+    val currentDate = LocalDate.now()
+    val recordTime = LocalTime.parse(record.time)
+    val recordDate = LocalDate.of(record.year, record.month, record.day)
+    return when (ChronoUnit.DAYS.between(currentDate, recordDate) * -1) {
+        0L -> {
+            var diffTime = Duration.between(currentTime, recordTime)
+            val hours: Long = diffTime.toHours() * -1
+            diffTime = diffTime.minusHours(hours)
+            val minutes: Long = diffTime.toMinutes() * -1
+            diffTime = diffTime.minusMinutes(minutes)
+            val seconds: Long = diffTime.seconds * -1
+            when (hours) {
+                0L -> {
+                    if (minutes == 0L)
+                        "$seconds сек назад"
+                    else
+                        "$minutes мин назад"
+                }
+                else -> "$hours час назад"
+            }
+        }
+        1L -> "вчера"
+        else -> {
+            if (isHistory) {
+                getTime(record.time)
+            } else {
+                "${record.day} " +
+                        "${getMonthName(record.month, Case.OF)} " +
+                        "${record.year}"
+            }
+        }
+    }
+}
+
+fun String.toUpperFirst(): String {
+    return this.mapIndexed { i, char ->
+        if (i == 0) char.uppercase() else char
+    }.joinToString(separator = "")
 }
 
 fun getMonthName(monthNumber: Int, case: Case): String {

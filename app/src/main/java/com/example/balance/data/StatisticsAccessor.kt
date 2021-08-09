@@ -63,7 +63,7 @@ class StatisticsAccessor {
 
         suspend fun getGeneralCountOfCosts(): Int {
             return withContext(Dispatchers.IO) {
-                recordRepository.getSum(RecordType.PROFITS).first()
+                recordRepository.getRecordsByType(RecordType.COSTS).first().size
             }
         }
 

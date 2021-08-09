@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
 import com.example.balance.data.record.MoneyType
 import com.example.balance.data.record.RecordType
+import com.example.balance.toUpperFirst
 import com.example.balance.ui.recycler_view.ViewHolderFactory
 
 class RecordItem(
@@ -28,44 +29,50 @@ class RecordItem(
         val recordViewHolder = viewHolder as ViewHolderFactory.RecordViewHolder
 
         recordViewHolder.dateText.text = time
-        recordViewHolder.sumText.text = sumMoney.toString()
-        recordViewHolder.categoryText.text = category
+        recordViewHolder.categoryText.text = category.toUpperFirst()
 
         val resources = viewHolder.itemView.resources
 
         val imageCash =
-            ResourcesCompat.getDrawable(resources, R.drawable.coins, null)
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_cash, null)
         val imageCards =
-            ResourcesCompat.getDrawable(resources, R.drawable.credit_card, null)
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_card, null)
 
         val costsColor =
-            ResourcesCompat.getDrawable(resources, android.R.color.holo_red_light, null)
-        val profitsColor = ResourcesCompat.getDrawable(resources, R.color.teal_700, null)
+            ResourcesCompat.getColor(resources, R.color.red_300, null)
+        val profitsColor = ResourcesCompat.getColor(resources, R.color.green_300, null)
 
         when (moneyType) {
             MoneyType.CASH -> recordViewHolder.moneyTypeText.setImageDrawable(imageCash)
             MoneyType.CARDS -> recordViewHolder.moneyTypeText.setImageDrawable(imageCards)
         }
 
-        when (recordType) {
-            RecordType.COSTS -> recordViewHolder.layout.background = costsColor
-            RecordType.PROFITS -> recordViewHolder.layout.background = profitsColor
+
+        val prefix = when (recordType) {
+            RecordType.COSTS -> {
+                recordViewHolder.sumText.setTextColor(costsColor)
+                "- "
+            }
+            else -> {
+                recordViewHolder.sumText.setTextColor(profitsColor)
+                "+ "
+            }
         }
+        val sumOfMoney = "$prefix $sumMoney ₽"
+        recordViewHolder.sumText.text = sumOfMoney
 
         recordViewHolder.imageImportant.isVisible = isImportant
 
         if (comment.isNotEmpty()) {
             recordViewHolder.buttonShowComment.visibility = View.VISIBLE
-            recordViewHolder.comment.setText(comment)
-        }
-
-        recordViewHolder.buttonShowComment.setOnClickListener {
-            when (recordViewHolder.comment.visibility) {
-                View.VISIBLE -> recordViewHolder.comment.visibility = View.GONE
-                else -> recordViewHolder.comment.visibility = View.VISIBLE
+            recordViewHolder.comment.text = comment
+            recordViewHolder.layout.setOnClickListener {
+                when (recordViewHolder.comment.visibility) {
+                    View.VISIBLE -> recordViewHolder.comment.visibility = View.GONE
+                    else -> recordViewHolder.comment.visibility = View.VISIBLE
+                }
             }
         }
-
     }
 
 }

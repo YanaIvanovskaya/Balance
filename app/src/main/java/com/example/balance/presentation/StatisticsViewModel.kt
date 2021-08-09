@@ -81,14 +81,12 @@ class StatisticsViewModel(
                 val statCostsInfoItem = StatCostsInfoItem(
                     sumGeneralCosts = sumGeneralCosts,
                     sumAvgMonthlyCosts = sumAvgMonthlyCosts,
-                    amountMonthlyPurchases = amountMonthlyPurchases,
-                    percentAvgMonthlyCosts = 0
+                    amountMonthlyPurchases = amountMonthlyPurchases
                 )
                 val statProfitInfoItem = StatProfitInfoItem(
                     sumGeneralProfit = sumGeneralProfit,
                     sumAvgMonthlyProfit = sumAvgMonthlyProfit,
-                    sumAvgMonthlyBalance = sumAvgMonthlyBalance,
-                    percentAvgMonthlyProfit = 0
+                    sumAvgMonthlyBalance = sumAvgMonthlyBalance
                 )
 
                 val costItems = mutableListOf<Item>(statCostsInfoItem)

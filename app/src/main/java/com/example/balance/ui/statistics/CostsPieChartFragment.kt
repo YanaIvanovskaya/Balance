@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.motion.utils.Easing
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentCostsPieChartBinding
@@ -15,7 +15,6 @@ import com.example.balance.presentation.getViewModel
 import com.github.mikephil.charting.animation.Easing.EaseInOutQuad
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -23,11 +22,12 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
 
+
 class CostsPieChartFragment : Fragment(R.layout.fragment_costs_pie_chart) {
 
     private lateinit var mCostsPieChart: PieChart
     private var mBinding: FragmentCostsPieChartBinding? = null
-    private val mViewModel by getViewModel {
+    private val mGeneralViewModel by getViewModel {
         GeneralStatisticsViewModel(
             recordRepository = BalanceApp.recordRepository
         )
@@ -47,8 +47,14 @@ class CostsPieChartFragment : Fragment(R.layout.fragment_costs_pie_chart) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createCostsPieChart()
-        mViewModel.state.observe(viewLifecycleOwner, {
-            updateCostsPieChart(it.entriesCostsPieChart)
+        mGeneralViewModel.state.observe(viewLifecycleOwner, {
+            mBinding?.resumeCostsPieChart?.text =
+                if (it.haveCosts) "Больше всего потрачено на категорию \"${it.maxCostsCategory}\""
+                else ""
+            val entries = it.entriesCostsPieChart
+            updateCostsPieChart(entries)
+            if (entries.isNotEmpty() || !it.haveCosts)
+                mBinding?.preloaderCostsPieChart?.visibility = View.GONE
         })
     }
 
@@ -62,14 +68,10 @@ class CostsPieChartFragment : Fragment(R.layout.fragment_costs_pie_chart) {
         mCostsPieChart.description.isEnabled = false
         mCostsPieChart.setExtraOffsets(5f, 10f, 5f, 5f)
         mCostsPieChart.dragDecelerationFrictionCoef = 0.95f
-        mCostsPieChart.centerText = "Расходы"
         mCostsPieChart.isDrawHoleEnabled = true
-        mCostsPieChart.setHoleColor(Color.WHITE)
-        mCostsPieChart.setTransparentCircleColor(Color.WHITE)
-        mCostsPieChart.setTransparentCircleAlpha(110)
-        mCostsPieChart.holeRadius = 58f
-        mCostsPieChart.transparentCircleRadius = 61f
-        mCostsPieChart.setDrawCenterText(true)
+        mCostsPieChart.setHoleColor(Color.TRANSPARENT)
+        mCostsPieChart.holeRadius = 25f
+        mCostsPieChart.transparentCircleRadius = 0f
         mCostsPieChart.rotationAngle = 0f
         mCostsPieChart.isRotationEnabled = true
         mCostsPieChart.isHighlightPerTapEnabled = true
@@ -84,39 +86,36 @@ class CostsPieChartFragment : Fragment(R.layout.fragment_costs_pie_chart) {
         l.xEntrySpace = 7f
         l.textSize = 12f
         l.yEntrySpace = 0f
-        l.yOffset = 0f
+        l.yOffset = 5f
 
-        mCostsPieChart.setEntryLabelColor(Color.WHITE)
-        mCostsPieChart.setEntryLabelTextSize(12f)
+        mCostsPieChart.setDrawEntryLabels(false)
     }
 
     private fun updateCostsPieChart(pieEntries: List<PieEntry>) {
         if (pieEntries.isNullOrEmpty()) {
             return
         }
-
         val dataSet = PieDataSet(pieEntries, "")
         dataSet.setDrawIcons(false)
         dataSet.sliceSpace = 3f
         dataSet.iconsOffset = MPPointF(0f, 40f)
         dataSet.selectionShift = 5f
 
-        val colors = java.util.ArrayList<Int>()
-        for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
-        for (c in ColorTemplate.JOYFUL_COLORS) colors.add(c)
+        val colors = mutableListOf<Int>()
         for (c in ColorTemplate.COLORFUL_COLORS) colors.add(c)
         for (c in ColorTemplate.LIBERTY_COLORS) colors.add(c)
+        for (c in ColorTemplate.VORDIPLOM_COLORS) colors.add(c)
         for (c in ColorTemplate.PASTEL_COLORS) colors.add(c)
+        for (c in ColorTemplate.JOYFUL_COLORS) colors.add(c)
         colors.add(ColorTemplate.getHoloBlue())
-        dataSet.colors = colors
+        dataSet.colors = colors.shuffled()
 
         val data = PieData(dataSet)
         data.setValueFormatter(PercentFormatter())
-        data.setValueTextSize(11f)
-        data.setValueTextColor(Color.WHITE)
+        data.setValueTextSize(12f)
+        data.setValueTextColor(Color.BLACK)
 
         mCostsPieChart.data = data
-        mCostsPieChart.highlightValues(null)
         mCostsPieChart.invalidate()
     }
 }

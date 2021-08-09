@@ -12,6 +12,7 @@ import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.getMonthName
+import com.example.balance.getTimeLabel
 import com.example.balance.ui.recycler_view.item.BalanceItem
 import com.example.balance.ui.recycler_view.item.Item
 import com.example.balance.ui.recycler_view.item.RecordItem
@@ -22,6 +23,7 @@ import kotlinx.coroutines.withContext
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
+import org.threeten.bp.temporal.ChronoUnit
 import timber.log.Timber
 
 
@@ -138,48 +140,15 @@ class HomeViewModel(
                 )
             )
 
-            val currentDate = LocalDate.now()
-
-            val currentTime = LocalTime.now()
-
-            val recentlyRecords = when (items.size) {
-                in 1..15 -> items
-                else -> items.subList(0, 15)
+            val recentlyRecords = items.filter {
+                ChronoUnit.DAYS.between(LocalDate.of(it.year,it.month,it.day),LocalDate.now() ) <= 3
             }
 
             recentlyRecords.forEach { record ->
-                val recordDate = LocalDate.of(record.year, record.month, record.day)
-                val recordTime = LocalTime.parse(record.time)
-                var diff = Duration.between(currentTime,recordTime)
-                val hours: Long = diff.toHours()
-                diff = diff.minusHours(hours)
-                val minutes: Long = diff.toMinutes()
-                diff = diff.minusMinutes(minutes)
-                val seconds: Long = diff.getSeconds()
-
-
-                val timeOfRecord = if (currentDate == recordDate) {
-                    String.format(
-                        "%d:%02d:%02d",
-                        hours,
-                        minutes,
-                        seconds
-                    )
-                } else if (currentDate.minusDays(1) == recordDate) {
-                    "yesterday"
-                } else {
-                    "${record.day} ${getMonthName(record.month, Case.OF)} ${record.year}"
-                }
-
-//                if (currentDateTime.dayOfMonth == record.day
-//                    && currentDateTime.month.value == record.month
-//                    && currentDateTime.year == record.year
-//                )
-
                 allHomeRecords.add(
                     RecordItem(
                         id = record.id,
-                        time = timeOfRecord,
+                        time = getTimeLabel(record,isHistory = false),
                         sumMoney = record.sumOfMoney,
                         recordType = record.recordType,
                         moneyType = record.moneyType,

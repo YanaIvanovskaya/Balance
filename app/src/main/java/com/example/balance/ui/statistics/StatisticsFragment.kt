@@ -25,7 +25,7 @@ class XAxisFormatter(
 
     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
         val currentEntry = chart.data.dataSets[0].getEntriesForXValue(value)[0]
-        return getMonthName(currentEntry.data as Int, Case.SHORT)
+        return getMonthName(currentEntry.data as Int, Case.SHORT).uppercase()
     }
 
 }
@@ -33,19 +33,33 @@ class XAxisFormatter(
 class YAxisFormatter : ValueFormatter() {
 
     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
-        return if (abs(value) < 1000f) {
-            "${value.toInt()}"
-        } else "${(value / 1000).toInt()}K"
+        return when (abs(value)) {
+            in 0f..999f -> "${value.toInt()}"
+            else -> {
+                if (value.mod(1000f) == 0.0f) {
+                    "${(value / 1000).toInt()}K"
+                } else if (value.mod(100f) == 0.0f) {
+                    "${value / 1000}K"
+                } else ""
+            }
+        }
     }
 
 }
 
-class BarValueFormatter() : ValueFormatter() {
+class BarValueFormatter : ValueFormatter() {
 
     override fun getFormattedValue(value: Float): String {
-        return if (abs(value) < 1000f) {
-            "${value.toInt()}"
-        } else "${(value / 1000).toInt()}K"
+        return when (abs(value)) {
+            in 0f..999f -> "${value.toInt()}"
+            else -> {
+                if (value.mod(1000f) == 0.0f) {
+                    "${(value / 1000).toInt()}K"
+                } else if (value.mod(100f) == 0.0f) {
+                    "${value / 1000}K"
+                } else ""
+            }
+        }
     }
 
 }

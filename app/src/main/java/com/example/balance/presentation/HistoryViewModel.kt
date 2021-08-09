@@ -10,7 +10,8 @@ import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.getMonthName
-import com.example.balance.getTime
+import com.example.balance.getTimeLabel
+import com.example.balance.getWeekDay
 import com.example.balance.ui.recycler_view.item.DateItem
 import com.example.balance.ui.recycler_view.item.Item
 import com.example.balance.ui.recycler_view.item.RecordItem
@@ -95,7 +96,7 @@ class HistoryViewModel(
             items.reversed().forEach { record ->
                 val isRecordValid = if (recordType != null) {
                     record.recordType == recordType
-                } else if (recordType == null && onlyImportant == true) {
+                } else if (onlyImportant == true) {
                     record.isImportant
                 } else true
 
@@ -105,7 +106,12 @@ class HistoryViewModel(
                     if (currentDate.isEmpty() || currentDate != recordDate) {
                         val dateItem = DateItem(
                             date =
-                            "${record.day} ${getMonthName(record.month, Case.OF)}"
+                            "${getWeekDay(record.weekDay)} ${record.day} ${
+                                getMonthName(
+                                    record.month,
+                                    Case.OF
+                                )
+                            }"
                         )
                         allHistoryRecords.add(dateItem)
                     }
@@ -114,11 +120,11 @@ class HistoryViewModel(
                     allHistoryRecords.add(
                         RecordItem(
                             id = record.id,
-                            time = getTime(record.time),
+                            time = getTimeLabel(record, isHistory = true),
                             sumMoney = sumRecord,
                             recordType = record.recordType,
                             moneyType = record.moneyType,
-                            category = runBlocking {
+                            category = withContext(Dispatchers.IO) {
                                 categoryRepository.getNameById(record.categoryId).first()
                             },
                             comment = record.comment,
