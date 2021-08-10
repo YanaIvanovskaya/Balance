@@ -19,7 +19,7 @@
             android:id="@+id/radioButton"
             android:layout_width="30dp"
             android:layout_height="wrap_content"
-            android:button="@drawable/circle_radio_button"
+            android:button="@drawable/ic_circle_radio"
             android:textColorLink="#7986CB" />
 
         <RadioButton
@@ -40,13 +40,16 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_general_stat"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:animateLayoutChanges="true"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </androidx.viewpager2.widget.ViewPager2>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

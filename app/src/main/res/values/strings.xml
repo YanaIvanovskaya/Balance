@@ -29,16 +29,13 @@
     <string name="costs">Расходы</string>
     <string name="cash">Наличные</string>
     <string name="card">Карта</string>
-    <string name="create_record">Create!</string>
+    <string name="create_record">Сохранить</string>
     <string name="new_record">Новая запись</string>
     <string name="hint_sum_of_operation">Сумма</string>
-    <string name="hint_kind_of_operation">Вид операции</string>
-    <string name="hint_kind_of_money">Средства</string>
     <string name="error_msg_sum_of_money">Введите целое число</string>
     <string name="balance_title">Баланс</string>
     <string name="change">Изменить</string>
     <string name="use_template">По шаблону</string>
-    <string name="category">Категория</string>
     <string name="mark_as_important">Отметить как важную</string>
     <string name="save_as_template">Сохранить как шаблон</string>
     <string name="comment">comment</string>
@@ -46,5 +43,8 @@
     <string name="text_stat_general_costs">Всего потрачено</string>
     <string name="text_stat_average_costs_month">Средний расход в месяц</string>
     <string name="text_stat_average_purchase">Среднее количество покупок в месяц</string>
-    <string name="text_stat_avg_costs_month_percent">Средний процент расхода в месяц</string>
+    <string name="without_template">Без шаблона</string>
+    <string name="category">Категория</string>
+    <string name="extra_widgets">Дополнительно</string>
+    <string name="name_template">Название шаблона</string>
 </resources>

@@ -6,9 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.balance.BalanceApp
 import com.example.balance.Case
 import com.example.balance.R
+import com.example.balance.data.StatisticsAccessor
+import com.example.balance.data.record.RecordType
 import com.example.balance.databinding.FragmentProfitLossChartBinding
 import com.example.balance.getMonthName
 import com.example.balance.presentation.GeneralStatisticsViewModel
@@ -21,15 +26,85 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+data class ProfitLossChartState(
+    val selectedBar: Int,
+    val entries: List<BarEntry>
+) {
+
+    companion object {
+        fun default() = ProfitLossChartState(
+            selectedBar = 0,
+            entries = listOf()
+        )
+    }
+
+}
+
+class ProfitLossChartViewModel : ViewModel() {
+
+    val state = MutableLiveData(GeneralChartState.default())
+
+    init {
+        viewModelScope.launch {
+            val entries = getEntries()
+            state.value = state.value?.copy(
+                entries = entries
+            )
+        }
+    }
+
+    private suspend fun getEntries(): List<BarEntry> {
+        return withContext(Dispatchers.IO) {
+            val entries = mutableListOf<BarEntry>()
+            val yearsOfUse = StatisticsAccessor.getListYearsOfUse()
+
+            if (!yearsOfUse.isNullOrEmpty()) {
+                var counter = 1
+
+                yearsOfUse.forEach { year ->
+                    val months = StatisticsAccessor.getListMonthsInYear(year)
+                    months.forEach { month ->
+                        val profitValue = StatisticsAccessor.getMonthlySumByRecordType(
+                            recordType = RecordType.PROFITS,
+                            month = month,
+                            year = year
+                        )
+                        val costsValue = StatisticsAccessor.getMonthlySumByRecordType(
+                            recordType = RecordType.COSTS,
+                            month = month,
+                            year = year
+                        )
+                        if (profitValue != 0 || costsValue != 0) {
+                            entries.add(
+                                BarEntry(
+                                    counter.toFloat(),
+                                    (profitValue - costsValue).toFloat(),
+                                    month
+                                )
+                            )
+                        }
+                        counter++
+                    }
+                }
+            }
+            entries
+        }
+    }
+
+
+}
+
 
 class ProfitLossChartFragment : Fragment(R.layout.fragment_profit_loss_chart) {
 
     private lateinit var mProfitLossBarChart: BarChart
     private var mBinding: FragmentProfitLossChartBinding? = null
     private val mViewModel by getViewModel {
-        GeneralStatisticsViewModel(
-            recordRepository = BalanceApp.recordRepository
-        )
+        ProfitLossChartViewModel()
     }
     private val onValueSelectedListener = object : OnChartValueSelectedListener {
         override fun onValueSelected(e: Entry?, h: Highlight?) {
@@ -59,10 +134,9 @@ class ProfitLossChartFragment : Fragment(R.layout.fragment_profit_loss_chart) {
         super.onViewCreated(view, savedInstanceState)
         createProfitLossBarChart()
         mViewModel.state.observe(viewLifecycleOwner, {
-            val entries = it.entriesProfitLossBarChart
-            updateProfitLossChart(entries)
-            if (entries.isNotEmpty() || (!it.haveCosts && !it.haveProfits))
-                mBinding?.preloaderProfitLossChart?.visibility = View.GONE
+            updateProfitLossChart(it.entries)
+//            if (entries.isNotEmpty() || (!it.haveCosts && !it.haveProfits))
+//                mBinding?.preloaderProfitLossChart?.visibility = View.GONE
         })
     }
 

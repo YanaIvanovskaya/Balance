@@ -6,12 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.balance.BalanceApp
 import com.example.balance.R
+import com.example.balance.data.StatisticsAccessor
+import com.example.balance.data.category.CategoryType
 import com.example.balance.databinding.FragmentCostsPieChartBinding
 import com.example.balance.presentation.GeneralStatisticsViewModel
 import com.example.balance.presentation.getViewModel
+import com.example.balance.toUpperFirst
 import com.github.mikephil.charting.animation.Easing.EaseInOutQuad
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
@@ -21,16 +26,68 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+data class CostsPieChartState(
+    val selectedBar: Int,
+    val entries: List<PieEntry>,
+    val maxCostsCategory: String
+) {
+
+    companion object {
+        fun default() = CostsPieChartState(
+            selectedBar = 0,
+            entries = listOf(),
+            maxCostsCategory = ""
+        )
+    }
+
+}
+
+class CostsPieChartViewModel : ViewModel() {
+
+    val state = MutableLiveData(CostsPieChartState.default())
+
+    init {
+        viewModelScope.launch {
+            val entries = getEntries()
+            state.value = state.value?.copy(
+                entries = entries
+            )
+        }
+    }
+
+    private suspend fun getEntries(): List<PieEntry> {
+        return withContext(Dispatchers.IO) {
+            val pieEntries = mutableListOf<PieEntry>()
+            val listCategoryWithSum =
+                StatisticsAccessor.getListCategoryWithSum(CategoryType.CATEGORY_COSTS)
+            val maxSumCategory: Pair<String, Int>? = listCategoryWithSum.maxByOrNull { it.second }
+            withContext(Dispatchers.Main) {
+                state.value = state.value?.copy(maxCostsCategory = maxSumCategory?.first ?: "")
+            }
+            for (pair in listCategoryWithSum) {
+                val value = pair.second.toFloat()
+                if (value != 0f) {
+                    val pieEntry = PieEntry(value, pair.first.toUpperFirst())
+                    pieEntries.add(pieEntry)
+                }
+            }
+            pieEntries
+        }
+    }
+
+}
 
 
 class CostsPieChartFragment : Fragment(R.layout.fragment_costs_pie_chart) {
 
     private lateinit var mCostsPieChart: PieChart
     private var mBinding: FragmentCostsPieChartBinding? = null
-    private val mGeneralViewModel by getViewModel {
-        GeneralStatisticsViewModel(
-            recordRepository = BalanceApp.recordRepository
-        )
+    private val mViewModel by getViewModel {
+        CostsPieChartViewModel()
     }
 
     override fun onCreateView(
@@ -47,14 +104,14 @@ class CostsPieChartFragment : Fragment(R.layout.fragment_costs_pie_chart) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createCostsPieChart()
-        mGeneralViewModel.state.observe(viewLifecycleOwner, {
+        mViewModel.state.observe(viewLifecycleOwner, {
+            val entries = it.entries
             mBinding?.resumeCostsPieChart?.text =
-                if (it.haveCosts) "Больше всего потрачено на категорию \"${it.maxCostsCategory}\""
+                if (entries.isNotEmpty()) "Больше всего потрачено на категорию \"${it.maxCostsCategory}\""
                 else ""
-            val entries = it.entriesCostsPieChart
             updateCostsPieChart(entries)
-            if (entries.isNotEmpty() || !it.haveCosts)
-                mBinding?.preloaderCostsPieChart?.visibility = View.GONE
+//            if (entries.isNotEmpty() || !it.haveCosts)
+//                mBinding?.preloaderCostsPieChart?.visibility = View.GONE
         })
     }
 

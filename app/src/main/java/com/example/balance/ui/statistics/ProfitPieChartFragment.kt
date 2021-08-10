@@ -6,29 +6,89 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.balance.BalanceApp
 import com.example.balance.R
+import com.example.balance.data.StatisticsAccessor
+import com.example.balance.data.category.CategoryType
 import com.example.balance.databinding.FragmentProfitPieChartBinding
 import com.example.balance.presentation.GeneralStatisticsViewModel
 import com.example.balance.presentation.getViewModel
+import com.example.balance.toUpperFirst
 import com.github.mikephil.charting.animation.Easing.EaseInOutQuad
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.utils.MPPointF
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
+data class ProfitPieChartState(
+    val selectedBar: Int,
+    val entries: List<PieEntry>,
+    val maxProfitCategory: String
+) {
+
+    companion object {
+        fun default() = ProfitPieChartState(
+            selectedBar = 0,
+            entries = listOf(),
+            maxProfitCategory = ""
+        )
+    }
+
+}
+
+class ProfitPieChartViewModel : ViewModel() {
+
+    val state = MutableLiveData(ProfitPieChartState.default())
+
+    init {
+        viewModelScope.launch {
+            val entries = getEntries()
+            state.value = state.value?.copy(
+                entries = entries
+            )
+        }
+    }
+
+    private suspend fun getEntries(): List<PieEntry> {
+        return withContext(Dispatchers.IO) {
+            val pieEntries = mutableListOf<PieEntry>()
+            val listCategoryWithSum =
+                StatisticsAccessor.getListCategoryWithSum(CategoryType.CATEGORY_PROFIT)
+            val maxSumCategory: Pair<String, Int>? = listCategoryWithSum.maxByOrNull { it.second }
+            withContext(Dispatchers.Main) {
+                state.value = state.value?.copy(maxProfitCategory = maxSumCategory?.first ?: "")
+            }
+            for (pair in listCategoryWithSum) {
+                val value = pair.second.toFloat()
+                if (value != 0f) {
+                    val pieEntry = PieEntry(value, pair.first.toUpperFirst())
+                    pieEntries.add(pieEntry)
+                }
+            }
+            pieEntries
+        }
+    }
+
+}
+
 
 class ProfitPieChartFragment : Fragment(R.layout.fragment_profit_pie_chart) {
 
     private lateinit var mProfitPieChart: PieChart
     private var mBinding: FragmentProfitPieChartBinding? = null
     private val mViewModel by getViewModel {
-        GeneralStatisticsViewModel(
-            recordRepository = BalanceApp.recordRepository
-        )
+        ProfitPieChartViewModel()
     }
 
     override fun onCreateView(
@@ -46,13 +106,13 @@ class ProfitPieChartFragment : Fragment(R.layout.fragment_profit_pie_chart) {
         super.onViewCreated(view, savedInstanceState)
         createProfitPieChart()
         mViewModel.state.observe(viewLifecycleOwner, {
+            val entries = it.entries
             mBinding?.resumeProfitPieChart?.text =
-                if (it.haveProfits) "Больше всего получено по категории \"${it.maxProfitCategory}\""
+                if (entries.isNotEmpty()) "Больше всего получено по категории \"${it.maxProfitCategory}\""
                 else ""
-            val entries = it.entriesProfitPieChart
             updateProfitPieChart(entries)
-            if (entries.isNotEmpty())
-                mBinding?.preloaderProfitPieChart?.visibility = View.GONE
+//            if (entries.isNotEmpty())
+//                mBinding?.preloaderProfitPieChart?.visibility = View.GONE
         })
     }
 

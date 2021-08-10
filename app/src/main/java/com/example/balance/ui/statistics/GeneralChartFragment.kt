@@ -6,13 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.balance.BalanceApp
 import com.example.balance.Case
 import com.example.balance.R
+import com.example.balance.data.StatisticsAccessor
+import com.example.balance.data.record.RecordType
 import com.example.balance.databinding.FragmentGeneralChartBinding
 import com.example.balance.getMonthName
 import com.example.balance.presentation.GeneralStatisticsViewModel
 import com.example.balance.presentation.getViewModel
+import com.example.balance.ui.recycler_view.item.Item
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -22,16 +28,89 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.abs
 
-class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
+
+data class GeneralChartState(
+    val selectedBar: Int,
+    val entries: List<BarEntry>
+) {
+
+    companion object {
+        fun default() = GeneralChartState(
+            selectedBar = 0,
+            entries = listOf()
+        )
+    }
+
+}
+
+class GeneralChartViewModel : ViewModel() {
+
+    val state = MutableLiveData(GeneralChartState.default())
+
+    init {
+        viewModelScope.launch {
+            val entries = getEntries()
+            state.value = state.value?.copy(
+                entries = entries
+            )
+        }
+    }
+
+    private suspend fun getEntries(): List<BarEntry> {
+        return withContext(Dispatchers.IO) {
+            val entries = mutableListOf<BarEntry>()
+            val yearsOfUse = StatisticsAccessor.getListYearsOfUse()
+
+            if (!yearsOfUse.isNullOrEmpty()) {
+                var counter = 1
+
+                yearsOfUse.forEach { year ->
+                    val months = StatisticsAccessor.getListMonthsInYear(year)
+                    months.forEach { month ->
+                        val profitValue = StatisticsAccessor.getMonthlySumByRecordType(
+                            recordType = RecordType.PROFITS,
+                            month = month,
+                            year = year
+                        )
+                        val costsValue = StatisticsAccessor.getMonthlySumByRecordType(
+                            recordType = RecordType.COSTS,
+                            month = month,
+                            year = year
+                        )
+                        if (profitValue != 0 || costsValue != 0) {
+                            entries.add(
+                                BarEntry(
+                                    counter.toFloat(),
+                                    floatArrayOf(
+                                        costsValue.toFloat() * -1,
+                                        profitValue.toFloat()
+                                    ),
+                                    month
+                                )
+                            )
+                        }
+                        counter++
+                    }
+                }
+            }
+            entries
+        }
+    }
+
+}
+
+class GeneralChartFragment() :
+    Fragment(R.layout.fragment_general_chart) {
 
     private lateinit var mGeneralBarChart: BarChart
     private var mBinding: FragmentGeneralChartBinding? = null
     private val mViewModel by getViewModel {
-        GeneralStatisticsViewModel(
-            recordRepository = BalanceApp.recordRepository
-        )
+        GeneralChartViewModel()
     }
 
     private val onValueSelectedListener = object : OnChartValueSelectedListener {
@@ -62,10 +141,7 @@ class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
         super.onViewCreated(view, savedInstanceState)
         createGeneralBarChart()
         mViewModel.state.observe(viewLifecycleOwner, {
-            val entries = it.entriesGeneralBarChart
-            updateGeneralBarChart(entries)
-            if (entries.isNotEmpty() || (!it.haveCosts && !it.haveProfits))
-                mBinding?.preloaderGeneralChart?.visibility = View.GONE
+            updateGeneralBarChart(it.entries)
         })
     }
 

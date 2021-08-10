@@ -309,8 +309,10 @@ class RecordCreationViewModel(
         updateLists()
         if (categoryType == CategoryType.CATEGORY_PROFIT && state.value?.recordType == RecordType.PROFITS ||
             categoryType == CategoryType.CATEGORY_COSTS && state.value?.recordType == RecordType.COSTS
-        )
+        ) {
             onCategorySelected(categoryName)
+            checkAndSaveValid()
+        }
     }
 
     fun getProfitCategoryNames(): List<String> {

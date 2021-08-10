@@ -34,7 +34,11 @@ class YAxisFormatter : ValueFormatter() {
 
     override fun getAxisLabel(value: Float, axis: AxisBase?): String {
         return when (abs(value)) {
-            in 0f..999f -> "${value.toInt()}"
+            in 0f..999f -> {
+                if (value.mod(10f) == 0.0f) {
+                    "${value.toInt()}"
+                } else ""
+            }
             else -> {
                 if (value.mod(1000f) == 0.0f) {
                     "${(value / 1000).toInt()}K"
@@ -51,7 +55,8 @@ class BarValueFormatter : ValueFormatter() {
 
     override fun getFormattedValue(value: Float): String {
         return when (abs(value)) {
-            in 0f..999f -> "${value.toInt()}"
+            in 0f..999f ->
+                "${value.toInt()}"
             else -> {
                 if (value.mod(1000f) == 0.0f) {
                     "${(value / 1000).toInt()}K"

@@ -31,7 +31,7 @@
         android:fadeScrollbars="false"
         android:forceDarkAllowed="false"
         android:scaleType="center"
-        android:src="@drawable/icon_add"
+        android:src="@drawable/ic_add"
         android:visibility="visible"
         app:backgroundTint="@color/green_400"
         app:ensureMinTouchTargetSize="true"

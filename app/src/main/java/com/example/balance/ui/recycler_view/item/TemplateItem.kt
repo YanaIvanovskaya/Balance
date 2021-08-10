@@ -32,9 +32,9 @@ class TemplateItem(
         val resources = viewHolder.itemView.resources
 
         val imageCash =
-            ResourcesCompat.getDrawable(resources, R.drawable.coins, null)
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_cash, null)
         val imageCards =
-            ResourcesCompat.getDrawable(resources, R.drawable.credit_card, null)
+            ResourcesCompat.getDrawable(resources, R.drawable.ic_card, null)
 
         val costsColor =
             ResourcesCompat.getDrawable(resources, android.R.color.holo_red_light, null)

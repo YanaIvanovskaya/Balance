@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.size
@@ -61,6 +62,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initWidgets()
         initTextEdits()
         initButtons()
         initRadioButtons()
@@ -96,7 +98,6 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
 
     private fun render(state: RecordCreationState) {
         renderTemplates(state)
-        mBinding?.errorMsgSumOfMoney?.isVisible = state.sumRecord.isEmpty()
 
         mBinding?.editTextSumMoney?.setText(state.sumRecord)
         mBinding?.editTextNameTemplate?.setText(state.templateName)
@@ -110,12 +111,15 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             MoneyType.CASH -> mBinding?.radioButtonCash?.isChecked = true
             MoneyType.CARDS -> mBinding?.radioButtonCards?.isChecked = true
         }
-        mBinding?.chipCategory?.text = state.selectedCategory
+        mBinding?.categoryName?.setText(state.selectedCategory)
 
         mBinding?.switchIsImportantRecord?.isChecked = state.isImportant
         mBinding?.switchIsTemplate?.isChecked = state.isTemplate
+
+        mBinding?.nameTemplateTextInputLayout?.isVisible = state.isTemplate
         mBinding?.editTextNameTemplate?.isVisible = state.isTemplate
-        mBinding?.errorMsgTemplateName?.isVisible = state.isTemplate && !state.isValidTemplateName
+
+//        mBinding?.errorMsgTemplateName?.isVisible = state.isTemplate && !state.isValidTemplateName
 
         mBinding?.buttonCreateAndSaveNewRecord?.isEnabled = state.canSave
     }
@@ -124,10 +128,8 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         val templates = state.templates
 
         val templateNames = templates.map { it.name }
-            .toMutableList()
-            .apply { add(0, "Без шаблона") }
 
-        if (templateNames.size == 1) {
+        if (templateNames.isEmpty()) {
             return
         }
 
@@ -176,19 +178,27 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
 
     private fun initRadioButtons() {
         mBinding?.radioButtonCash?.setOnCheckedChangeListener { btn, isChecked ->
-            if (btn.isShown && isChecked) mViewModel.onCashSelected()
+            if (btn.isShown && isChecked) {
+                mViewModel.onCashSelected()
+            }
         }
 
         mBinding?.radioButtonCards?.setOnCheckedChangeListener { btn, isChecked ->
-            if (btn.isShown && isChecked) mViewModel.onCardsSelected()
+            if (btn.isShown && isChecked) {
+                mViewModel.onCardsSelected()
+            }
         }
 
         mBinding?.radioButtonCosts?.setOnCheckedChangeListener { btn, isChecked ->
-            if (btn.isShown && isChecked) mViewModel.onCostsSelected()
+            if (btn.isShown && isChecked) {
+                mViewModel.onCostsSelected()
+            }
         }
 
         mBinding?.radioButtonProfits?.setOnCheckedChangeListener { btn, isChecked ->
-            if (btn.isShown && isChecked) mViewModel.onProfitSelected()
+            if (btn.isShown && isChecked) {
+                mViewModel.onProfitSelected()
+            }
         }
     }
 
@@ -228,6 +238,25 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mBinding?.switchIsTemplate?.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isShown)
                 mViewModel.onChangeTemplateSwitch(isChecked)
+        }
+    }
+
+    private fun initWidgets() {
+        mBinding?.extraConstraintLayout?.setOnClickListener {
+            val imageDownArrow =
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_down_arrow, null)
+            val imageUpArrow = ResourcesCompat.getDrawable(resources, R.drawable.ic_up_arrow, null)
+
+            if (mBinding?.switchIsTemplate?.isVisible == true) {
+                mBinding?.switchIsTemplate?.visibility = View.GONE
+                mBinding?.nameTemplateTextInputLayout?.visibility = View.GONE
+                mBinding?.switchIsImportantRecord?.visibility = View.GONE
+                mBinding?.extraArrowImageView?.setImageDrawable(imageDownArrow)
+            } else {
+                mBinding?.switchIsTemplate?.visibility = View.VISIBLE
+                mBinding?.switchIsImportantRecord?.visibility = View.VISIBLE
+                mBinding?.extraArrowImageView?.setImageDrawable(imageUpArrow)
+            }
         }
     }
 

@@ -12,7 +12,7 @@ import com.example.balance.R
 
 abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
 
-    private val deleteIcon : Drawable = ContextCompat.getDrawable(context, R.drawable.credit_card)!!
+    private val deleteIcon : Drawable = ContextCompat.getDrawable(context, R.drawable.ic_card)!!
     private val intrinsicWidth = deleteIcon.intrinsicWidth
     private val intrinsicHeight = deleteIcon.intrinsicHeight
     private val background = ColorDrawable()
