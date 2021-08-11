@@ -160,6 +160,7 @@ class RecordCreationViewModel(
 
     fun onCategorySelected(category: String) {
         state.value = state.value?.copy(selectedCategory = category)
+        checkAndSaveValid()
     }
 
     fun onChangeComment(newComment: String) {
@@ -193,16 +194,16 @@ class RecordCreationViewModel(
         val categories = state.value?.costsCategories
         state.value = state.value?.copy(
             recordType = RecordType.COSTS,
-            selectedCategory = if (categories?.isNotEmpty() == true) categories[0].name else ""
         )
+        onCategorySelected(if (categories?.isNotEmpty() == true) categories[0].name else "")
     }
 
     fun onProfitSelected() {
         val categories = state.value?.profitCategories
         state.value = state.value?.copy(
             recordType = RecordType.PROFITS,
-            selectedCategory = if (categories?.isNotEmpty() == true) categories[0].name else ""
         )
+        onCategorySelected(if (categories?.isNotEmpty() == true) categories[0].name else "")
     }
 
     fun onCashSelected() {

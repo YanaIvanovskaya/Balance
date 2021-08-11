@@ -9,6 +9,8 @@ import com.example.balance.data.record.MoneyType
 import com.example.balance.data.record.RecordType
 import com.example.balance.toUpperFirst
 import com.example.balance.ui.recycler_view.ViewHolderFactory
+import java.text.NumberFormat
+import java.util.*
 
 class RecordItem(
     val id: Int,
@@ -42,6 +44,11 @@ class RecordItem(
             ResourcesCompat.getColor(resources, R.color.red_300, null)
         val profitsColor = ResourcesCompat.getColor(resources, R.color.green_300, null)
 
+        val costsBg =
+            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_costs, null)
+        val profitBg =
+            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_profit, null)
+
         when (moneyType) {
             MoneyType.CASH -> recordViewHolder.moneyTypeText.setImageDrawable(imageCash)
             MoneyType.CARDS -> recordViewHolder.moneyTypeText.setImageDrawable(imageCards)
@@ -51,25 +58,38 @@ class RecordItem(
         val prefix = when (recordType) {
             RecordType.COSTS -> {
                 recordViewHolder.sumText.setTextColor(costsColor)
+                recordViewHolder.layout.background = costsBg
                 "- "
             }
             else -> {
                 recordViewHolder.sumText.setTextColor(profitsColor)
+                recordViewHolder.layout.background = profitBg
                 "+ "
             }
         }
-        val sumOfMoney = "$prefix $sumMoney ₽"
-        recordViewHolder.sumText.text = sumOfMoney
 
+        val formatter: NumberFormat = NumberFormat.getInstance(Locale("ru", "RU"))
+        val sumOfMoney = "$prefix ${formatter.format(sumMoney)} ₽"
+        recordViewHolder.sumText.text = sumOfMoney
         recordViewHolder.imageImportant.isVisible = isImportant
 
         if (comment.isNotEmpty()) {
             recordViewHolder.buttonShowComment.visibility = View.VISIBLE
             recordViewHolder.comment.text = comment
             recordViewHolder.layout.setOnClickListener {
+                val imageDownArrow =
+                    ResourcesCompat.getDrawable(resources, R.drawable.ic_down_arrow, null)
+                val imageUpArrow =
+                    ResourcesCompat.getDrawable(resources, R.drawable.ic_up_arrow, null)
                 when (recordViewHolder.comment.visibility) {
-                    View.VISIBLE -> recordViewHolder.comment.visibility = View.GONE
-                    else -> recordViewHolder.comment.visibility = View.VISIBLE
+                    View.VISIBLE -> {
+                        recordViewHolder.comment.visibility = View.GONE
+                        recordViewHolder.buttonShowComment.background = imageDownArrow
+                    }
+                    else -> {
+                        recordViewHolder.comment.visibility = View.VISIBLE
+                        recordViewHolder.buttonShowComment.background = imageUpArrow
+                    }
                 }
             }
         }

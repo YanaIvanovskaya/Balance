@@ -1,7 +1,6 @@
 package com.example.balance.ui.home
 
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +27,7 @@ import com.example.balance.presentation.getViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 
 class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
@@ -87,6 +87,8 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             mBinding?.buttonCreateAndSaveNewRecord?.text = "Сохранить изменения"
             mBinding?.switchIsTemplate?.isVisible = false
             mBinding?.switchIsImportantRecord?.isVisible = false
+            mBinding?.horizontalScrollView?.visibility = View.GONE
+            mBinding?.extraConstraintLayout?.visibility = View.GONE
         }
     }
 
@@ -119,34 +121,43 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mBinding?.nameTemplateTextInputLayout?.isVisible = state.isTemplate
         mBinding?.editTextNameTemplate?.isVisible = state.isTemplate
 
-//        mBinding?.errorMsgTemplateName?.isVisible = state.isTemplate && !state.isValidTemplateName
-
         mBinding?.buttonCreateAndSaveNewRecord?.isEnabled = state.canSave
     }
 
     private fun renderTemplates(state: RecordCreationState) {
         val templates = state.templates
 
-        val templateNames = templates.map { it.name }
+        val templateNames =
+            templates.map { it.name }
+                .toMutableList()
+                .apply {
+                    add(0, "Без шаблона")
+                }
 
-        if (templateNames.isEmpty()) {
+        if (templateNames.size == 1) {
             return
         }
 
         val chipGroup = mBinding?.templatesGroup
 
-        if (chipGroup?.size != templateNames.size) {
+        if (templateNames.size > chipGroup?.size ?: 0) {
             templateNames.forEachIndexed { index, s ->
-                val chip = Chip(requireContext())
-                chip.text = s
-                chip.isCheckable = true
-                chip.isChecked = index == 0
-                chip.setOnCheckedChangeListener { buttonView, isChecked ->
-                    if (isChecked) {
-                        mViewModel.onApplyTemplate(index)
+                val view = layoutInflater.inflate(R.layout.view_chip_checkable, null)
+                if (view is Chip) {
+                    view.text = s
+                    view.isCheckable = true
+
+                    if (index == 0) {
+                        view.isChecked = true
+                    } else {
+                        view.setOnCheckedChangeListener { _, isChecked ->
+                            if (isChecked) {
+                                mViewModel.onApplyTemplate(index)
+                            }
+                        }
                     }
+                    chipGroup?.addView(view)
                 }
-                chipGroup?.addView(chip)
             }
         }
 
@@ -261,7 +272,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
     }
 
     private fun showChangeCategoryBottomSheet() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_selection)
         val listView = bottomSheetDialog.findViewById<ListView>(R.id.list_view)
 
@@ -293,7 +304,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
     }
 
     private fun showAddCategoryBottomSheet() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
 
         val profitCategoryNames = mViewModel.getProfitCategoryNames()
@@ -305,9 +316,9 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_profit)
         val categoryName =
             bottomSheetDialog.findViewById<TextInputEditText>(R.id.text_category_name)
-        val errorText = bottomSheetDialog.findViewById<TextView>(R.id.error_category_creation)
         val buttonSave = bottomSheetDialog.findViewById<Button>(R.id.button_save_category)
-
+        val textInputLayout =
+            bottomSheetDialog.findViewById<TextInputLayout>(R.id.text_input_layout)
         when (mViewModel.state.value?.recordType) {
             RecordType.PROFITS -> categoryProfit?.isChecked = true
             RecordType.COSTS -> categoryCosts?.isChecked = true
@@ -319,14 +330,14 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             if ((categoryCosts?.isChecked == true && it.toString().trim() in costsCategoryNames) ||
                 (categoryProfit?.isChecked == true && it.toString().trim() in profitCategoryNames)
             ) {
-                errorText?.isVisible = true
+                textInputLayout?.helperText = "Такая категория уже существует"
                 buttonSave?.isEnabled = false
 
             } else if (categoryName.text?.trim()?.isEmpty() == true) {
-                errorText?.isVisible = false
+                textInputLayout?.helperText = "Пустое название категории"
                 buttonSave?.isEnabled = false
             } else {
-                errorText?.isVisible = false
+                textInputLayout?.helperText = " "
                 buttonSave?.isEnabled = true
             }
         }

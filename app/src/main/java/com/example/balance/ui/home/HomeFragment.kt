@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -52,8 +54,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         homeAdapter = HomeAdapter(
-            onLongItemClickListener = { recordId ->
-                showRecordMenu(recordId)
+            onLongItemClickListener = { recordId, isImportant ->
+                showRecordMenu(recordId, isImportant)
                 true
             }
         )
@@ -67,8 +69,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         mBinding?.floatingButtonCreateNewRecord?.setOnClickListener { onAddRecordClick() }
     }
 
-    private fun showRecordMenu(recordId: Int) {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
+    private fun showRecordMenu(recordId: Int, isImportant: Boolean) {
+        val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_record_menu)
         val unpin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)
         val edit = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_templates)
@@ -84,8 +86,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             mViewModel.removeRecord(recordId)
             bottomSheetDialog.dismiss()
         }
+
+        if (isImportant) {
+            bottomSheetDialog.findViewById<TextView>(R.id.label_important)?.text =
+                "Удалить из избранного"
+            bottomSheetDialog.findViewById<TextView>(R.id.image_important)?.background =
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_no_star, null)
+        }
+
         unpin?.setOnClickListener {
-            mViewModel.onUnpinClick(recordId)
+             mViewModel.onSetImportant(recordId, isImportant)
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()

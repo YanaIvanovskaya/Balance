@@ -1,68 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/li"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linear"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_menu"
+    android:padding="10dp"
+    android:paddingLeft="10dp"
+    android:paddingTop="10dp"
+    android:paddingRight="10dp">
 
     <TextView
         android:id="@+id/textView5"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Новая категория" />
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginRight="9dp"
+        android:paddingLeft="10dp"
+        android:paddingTop="8dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="8dp"
+        android:text="@string/new_category"
+        android:textColor="@color/grey_700"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/radioGroup3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/text_input_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
 
         <RadioButton
             android:id="@+id/radioButton_category_profit"
+            style="@style/FlatRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Доходы" />
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_costs_radio"
+            android:minHeight="48dp"
+            android:text="@string/costs"
+            android:textColor="@color/red_300"
+            app:useMaterialThemeColors="false" />
 
         <RadioButton
             android:id="@+id/radioButton_category_costs"
+            style="@style/FlatRadioButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_profit_radio"
             android:checked="false"
-            android:text="Расходы" />
+            android:minHeight="48dp"
+            android:text="@string/profits"
+            android:textColor="@color/green_300" />
     </RadioGroup>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/text_input_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:helperText=" "
+        app:helperTextEnabled="true"
+        app:helperTextTextColor="@color/red_300"
+        app:layout_constraintBottom_toTopOf="@+id/button_save_category"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup3">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_category_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Название"
+            android:background="@drawable/bg_comment"
+            android:hint="@string/name_category"
             android:maxLength="15" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/error_category_creation"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/button_save_category"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Такая категория уже существует"
-        android:textColor="#F46A6A"
-        android:visibility="invisible" />
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/selector_save_button_bg"
+        android:enabled="false"
+        android:text="@string/save"
+        android:textColor="@drawable/selector_save_button_text"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_input_layout" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="clip_horizontal|center|end"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_save_category"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:enabled="false"
-            android:text="Сохранить" />
-    </LinearLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

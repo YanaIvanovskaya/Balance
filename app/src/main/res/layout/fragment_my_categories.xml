@@ -9,6 +9,8 @@
         android:id="@+id/chip_group_categories"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_my_categories"
@@ -20,21 +22,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Все" />
+            android:text="@string/all"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/profit_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Доходы" />
+            android:text="@string/profits"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/costs_categories"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Расходы" />
+            android:text="@string/costs"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
     </com.google.android.material.chip.ChipGroup>
 
@@ -51,21 +62,25 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingButton_create_new_category"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
         android:layout_marginRight="44dp"
         android:layout_marginBottom="48dp"
         android:contentDescription="TODO"
-        app:backgroundTint="#81C784"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="@color/green_300"
+        app:fabCustomSize="70dp"
+        app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_my_categories"
-        android:layout_width="407dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/grey_50"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"

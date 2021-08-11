@@ -10,7 +10,7 @@ import timber.log.Timber
 
 class HomeAdapter(
     var dataSet: MutableList<Item> = mutableListOf(),
-    private val onLongItemClickListener: (recordId: Int) -> Boolean
+    private val onLongItemClickListener: (recordId: Int,isImportant:Boolean) -> Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()
@@ -25,7 +25,7 @@ class HomeAdapter(
             val recordViewHolder: ViewHolderFactory.RecordViewHolder =
                 holder as ViewHolderFactory.RecordViewHolder
             recordViewHolder.layout.setOnLongClickListener {
-                onLongItemClickListener(recordItem.id)
+                onLongItemClickListener(recordItem.id, recordItem.isImportant)
                 true
             }
         }
@@ -35,7 +35,6 @@ class HomeAdapter(
     override fun getItemCount(): Int = dataSet.size
 
     fun updateBalance(cash: String, cards: String) {
-        Timber.d("Cash: $cash, Cards: $cards")
         if (dataSet.isNotEmpty()) {
             val item = dataSet[0]
             if (item is BalanceItem) {

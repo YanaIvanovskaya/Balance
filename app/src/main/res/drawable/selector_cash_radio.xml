@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/bg_cash_checked" android:state_checked="true" />
-    <item android:drawable="@drawable/bg_cash_unchecked" />
+
+    <item android:state_checked="true">
+        <shape>
+            <solid android:color="@color/yellow_100" />
+            <corners android:bottomLeftRadius="10dp" android:bottomRightRadius="0dp" android:topLeftRadius="10dp" android:topRightRadius="0dp" />
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/ic_empty" />
+
 </selector>

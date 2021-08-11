@@ -5,19 +5,19 @@
     android:id="@+id/record_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
-    android:layout_marginBottom="3dp"
-    android:background="@color/grey_100"
+    android:background="@drawable/selector_record_profit"
     android:paddingLeft="15dp"
-    android:paddingTop="7dp"
+    android:paddingTop="10dp"
     android:paddingRight="15dp"
-    android:paddingBottom="7dp">
+    android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:text="category678"
+        android:textColor="@color/grey_800"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,7 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:textSize="15sp"
+        android:text="12:56"
+        android:textColor="@color/grey_600"
+        android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/category" />
 
@@ -34,6 +36,7 @@
         android:id="@+id/sum"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="- 123 890 P"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/category"
@@ -66,12 +69,13 @@
 
     <ImageButton
         android:id="@+id/button_show_comment"
-        android:layout_width="18dp"
-        android:layout_height="18dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginTop="12dp"
         android:background="@drawable/ic_down_arrow"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sum" />
 
     <TextView
         android:id="@+id/comment"
@@ -79,6 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="TextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewTeTextViewTextViewTextViewTextViewTextViewTexTextViewTextViewTextViewTextViewTextViewTextViewTextViewTextViewtViewTextViewTextViewxtViewTextViewTextView"
+        android:textStyle="italic"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

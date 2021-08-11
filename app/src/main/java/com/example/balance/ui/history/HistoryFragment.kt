@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
@@ -111,12 +113,9 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     }
 
     private fun showRecordMenu(recordId: Int, isImportant: Boolean) {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_record_menu)
-        val pin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)
-        bottomSheetDialog.findViewById<TextView>(R.id.label_no_category)?.text =
-            "Закрепить на главном экране"
-        if (isImportant) pin?.isEnabled = false
+        val unpin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)
         val edit = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_templates)
         val delete = bottomSheetDialog.findViewById<LinearLayout>(R.id.delete_record)
 
@@ -130,8 +129,18 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
             mViewModel.removeRecord(recordId)
             bottomSheetDialog.dismiss()
         }
-        pin?.setOnClickListener {
-            mViewModel.onPinClick(recordId)
+
+        if (isImportant) {
+            bottomSheetDialog.findViewById<TextView>(R.id.label_important)?.text =
+                "Удалить из избранного"
+            println(bottomSheetDialog.findViewById<ImageView>(R.id.image_important)?.background)
+            bottomSheetDialog.findViewById<ImageView>(R.id.image_important)?.background =
+                ResourcesCompat.getDrawable(resources, R.drawable.ic_no_star, null)
+            println(bottomSheetDialog.findViewById<ImageView>(R.id.image_important)?.background)
+        }
+
+        unpin?.setOnClickListener {
+            mViewModel.onSetImportant(recordId, isImportant)
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()

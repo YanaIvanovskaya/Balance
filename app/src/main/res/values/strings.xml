@@ -38,7 +38,7 @@
     <string name="use_template">По шаблону</string>
     <string name="mark_as_important">Отметить как важную</string>
     <string name="save_as_template">Сохранить как шаблон</string>
-    <string name="comment">comment</string>
+    <string name="comment">Комментарий</string>
     <string name="extra">Еще</string>
     <string name="text_stat_general_costs">Всего потрачено</string>
     <string name="text_stat_average_costs_month">Средний расход в месяц</string>
@@ -47,4 +47,14 @@
     <string name="category">Категория</string>
     <string name="extra_widgets">Дополнительно</string>
     <string name="name_template">Название шаблона</string>
+    <string name="new_category">Новая категория</string>
+    <string name="name_category">Название категории</string>
+    <string name="save">Сохранить</string>
+    <string name="choose_a_category">Выберите категорию</string>
+    <string name="all">Все</string>
+    <string name="favorites">Избранное</string>
+    <string name="common">Общая</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
 </resources>

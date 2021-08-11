@@ -22,6 +22,9 @@
         android:id="@+id/chipGroup2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/history_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,28 +38,40 @@
             android:layout_height="wrap_content"
             android:checkable="true"
             android:checked="true"
-            android:text="Все" />
+            android:text="@string/all"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_profit_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Доходы" />
+            android:text="@string/profits"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_costs_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Расходы" />
+            android:text="@string/costs"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg"/>
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_important_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Избранное" />
+            android:text="@string/favorites"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg"/>
     </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -74,9 +89,20 @@
         android:id="@+id/preloader_history"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#F37474"
+        android:background="@color/grey_50"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup2" />
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup2" >
+
+        <ProgressBar
+            android:id="@+id/progressBar3"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

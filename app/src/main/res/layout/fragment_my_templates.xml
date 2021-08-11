@@ -10,6 +10,8 @@
         android:id="@+id/chip_group_templates"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         app:checkedChip="@id/common_templates"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,24 +24,30 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:checked="true"
-            android:text="Все"
-            app:checkedIconEnabled="true"
-            app:checkedIconVisible="true" />
+            android:text="@string/all"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/profit_templates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Доходы" />
+            android:text="@string/profits"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/costs_templates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Расходы" />
+            android:text="@string/costs"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
     </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -54,9 +62,9 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_my_templates"
-        android:layout_width="407dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="@color/grey_50"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"

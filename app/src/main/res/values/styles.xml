@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="OutlineRadioButton" parent="@style/Widget.AppCompat.CompoundButton.RadioButton">
+    <style name="FlatRadioButton" parent="@style/Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:gravity">center</item>
         <item name="android:button">@drawable/ic_empty</item>
         <item name="android:textAllCaps">true</item>
@@ -9,17 +9,12 @@
         <item name="android:layout_weight">1</item>
     </style>
 
-    <style name="InputValid" parent="@style/Widget.AppCompat.EditText">
-        <item name="android:background">@drawable/bg_text_edit_valid</item>
+    <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/bottomSheetStyleWrapper</item>
     </style>
 
-    <style name="InputInvalid" parent="@style/Widget.AppCompat.EditText">
-        <item name="android:background">@drawable/bg_text_edit_valid</item>
+    <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
     </style>
-
-    <style name="SaveButton" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="android:background">@drawable/bg_save_button</item>
-    </style>
-
 
 </resources>

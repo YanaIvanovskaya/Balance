@@ -72,20 +72,21 @@ object ViewHolderFactory {
     }
 
     class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val date: TextView = itemView.findViewById(R.id.usage_template)
+        val date: TextView = itemView.findViewById(R.id.date_item)
     }
 
     class BalanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val balanceSum: TextView = itemView.findViewById(R.id.balance_sum_balance)
         val cashSum: TextView = itemView.findViewById(R.id.balance_sum_cash)
         val cardsSum: TextView = itemView.findViewById(R.id.balance_sum_cards)
+        val balanceTitle: TextView = itemView.findViewById(R.id.balance_title)
     }
 
     class TemplateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameTemplateText: TextView = itemView.findViewById(R.id.name_template)
         val categoryText: TextView = itemView.findViewById(R.id.category_template)
         val sumText: TextView = itemView.findViewById(R.id.sum_template)
-        val usageText: TextView = itemView.findViewById(R.id.usage_template)
+        val usageText: TextView = itemView.findViewById(R.id.date_item)
         val moneyTypeText: ImageView = itemView.findViewById(R.id.image_money_type_template)
         val layout: ConstraintLayout = itemView.findViewById(R.id.template_layout)
     }

@@ -14,7 +14,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="?attr/actionModeCloseDrawable"
-        app:title="@string/new_record" />
+        app:title="@string/new_record"
+        app:titleTextColor="@color/grey_700" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -41,10 +42,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="8dp"
                     android:scrollbarAlwaysDrawHorizontalTrack="false"
                     android:scrollbars="none"
+                    app:layout_constraintBottom_toTopOf="@+id/sum_textInputLayout"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.15"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -59,17 +61,7 @@
                             android:layout_height="match_parent"
                             app:selectionRequired="true"
                             app:singleLine="true"
-                            app:singleSelection="true">
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chip6"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@color/grey_300"
-                                android:checkable="true"
-                                android:checked="true"
-                                android:text="@string/without_template" />
-                        </com.google.android.material.chip.ChipGroup>
+                            app:singleSelection="true" />
                     </LinearLayout>
                 </HorizontalScrollView>
 
@@ -82,14 +74,19 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
+                    android:background="@null"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView">
+                    app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_sum_money"
+                        style="@null"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/bg_comment"
                         android:digits="0987654321"
                         android:hint="@string/hint_sum_of_operation"
                         android:inputType="numberSigned|number"
@@ -130,7 +127,7 @@
 
                             <RadioButton
                                 android:id="@+id/radioButton_costs"
-                                style="@style/OutlineRadioButton"
+                                style="@style/FlatRadioButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/selector_costs_radio"
@@ -140,7 +137,7 @@
 
                             <RadioButton
                                 android:id="@+id/radioButton_profits"
-                                style="@style/OutlineRadioButton"
+                                style="@style/FlatRadioButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/selector_profit_radio"
@@ -185,7 +182,7 @@
 
                             <RadioButton
                                 android:id="@+id/radioButton_cash"
-                                style="@style/OutlineRadioButton"
+                                style="@style/FlatRadioButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/selector_cash_radio"
@@ -194,7 +191,7 @@
 
                             <RadioButton
                                 android:id="@+id/radioButton_cards"
-                                style="@style/OutlineRadioButton"
+                                style="@style/FlatRadioButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/selector_card_radio"
@@ -224,16 +221,20 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/button_change_category"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent">
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/category_name"
                             style="@android:style/Widget.DeviceDefault.Light.EditText"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="@drawable/ic_empty"
                             android:focusable="false"
                             android:focusableInTouchMode="false"
                             android:hint="@string/category"
+                            android:inputType="textNoSuggestions"
                             android:textColor="@color/grey_800"
                             android:textColorHint="@color/grey_800" />
 
@@ -277,7 +278,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:background="@color/grey_300"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -291,6 +291,7 @@
                         android:layout_marginLeft="16dp"
                         android:padding="5dp"
                         android:text="@string/extra_widgets"
+                        android:textColor="@color/grey_800"
                         android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -301,6 +302,7 @@
                         android:layout_height="18dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginLeft="8dp"
+                        app:tint="@color/grey_800"
                         app:layout_constraintBottom_toBottomOf="@+id/textView8"
                         app:layout_constraintStart_toEndOf="@+id/textView8"
                         app:layout_constraintTop_toTopOf="@+id/textView8"
@@ -318,6 +320,7 @@
                         android:paddingTop="15dp"
                         android:paddingBottom="15dp"
                         android:text="Добавить в избранное"
+                        android:textColor="@color/grey_800"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -336,6 +339,7 @@
                         android:paddingTop="15dp"
                         android:paddingBottom="15dp"
                         android:text="Сохранить как шаблон"
+                        android:textColor="@color/grey_800"
                         android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -350,6 +354,8 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginRight="16dp"
                         android:visibility="gone"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
                         app:helperTextEnabled="false"
                         app:layout_constraintBottom_toTopOf="@+id/switch_is_important_record"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -358,10 +364,13 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_name_template"
-                            style="@style/InputInvalid"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="@string/name_template" />
+                            android:background="@drawable/bg_comment"
+                            android:hint="@string/name_template"
+                            android:maxLength="15"
+                            android:singleLine="true"
+                            android:textColor="@color/grey_800" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -393,6 +402,7 @@
 
     <Button
         android:id="@+id/button_create_and_save_new_record"
+        style="@style/Widget.MaterialComponents.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -401,11 +411,12 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/selector_outline_button"
+        android:background="@drawable/selector_save_button_bg"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:text="@string/create_record"
-        android:textColor="@color/grey_700"
+        android:textColor="@drawable/selector_save_button_text"
+        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

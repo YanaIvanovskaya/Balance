@@ -19,6 +19,8 @@
         android:id="@+id/chipGroup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,22 +34,32 @@
             android:layout_height="wrap_content"
             android:checkable="true"
             android:checked="true"
-            android:text="Общая" />
+            android:text="@string/common"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_costs"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Расходы"
-            android:textAllCaps="false" />
+            android:text="@string/costs"
+            android:textAllCaps="false"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_profit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checkable="true"
-            android:text="Доходы" />
+            android:text="@string/profits"
+            android:textColor="@drawable/selector_chip_text_color"
+            app:checkedIconEnabled="false"
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
+
     </com.google.android.material.chip.ChipGroup>
 
     <FrameLayout

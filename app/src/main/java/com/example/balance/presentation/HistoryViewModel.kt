@@ -78,9 +78,9 @@ class HistoryViewModel(
         }
     }
 
-    fun onPinClick(recordId: Int) {
+    fun onSetImportant(recordId: Int, isImportant: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            recordRepository.setImportance(recordId, isImportant = true)
+            recordRepository.setImportance(recordId, isImportant = !isImportant)
         }
     }
 

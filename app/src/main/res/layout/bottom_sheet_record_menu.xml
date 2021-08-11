@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/li"
+    android:id="@+id/linear"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_menu"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <LinearLayout
         android:id="@+id/view_my_categories"
@@ -14,18 +16,20 @@
         android:padding="8dp">
 
         <ImageView
+            android:id="@+id/important_image"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-            />
+            android:background="@drawable/ic_star" />
 
         <TextView
-            android:id="@+id/label_no_category"
+            android:id="@+id/label_important"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="8dp"
-            android:text="Открепить от главного экрана" />
+            android:text="@string/add_to_favorites"
+            android:textColor="@color/grey_800" />
     </LinearLayout>
 
     <LinearLayout
@@ -40,14 +44,15 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-             />
+            android:background="@drawable/ic_edit" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="8dp"
-            android:text="Редактировать" />
+            android:text="@string/edit"
+            android:textColor="@color/grey_800" />
 
     </LinearLayout>
 
@@ -63,14 +68,15 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-             />
+            android:background="@drawable/ic_trash" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="8dp"
-            android:text="Удалить" />
+            android:text="@string/delete"
+            android:textColor="@color/red_300" />
 
     </LinearLayout>
 

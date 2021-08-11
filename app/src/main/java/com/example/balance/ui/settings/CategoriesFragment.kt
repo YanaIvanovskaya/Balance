@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.data.category.CategoryType
+import com.example.balance.data.record.RecordType
 import com.example.balance.databinding.FragmentMyCategoriesBinding
 import com.example.balance.presentation.CategoriesViewModel
 import com.example.balance.presentation.CategoryState
@@ -28,6 +29,7 @@ import com.example.balance.ui.recycler_view.adapter.CategoryAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 
 
 class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
@@ -127,6 +129,56 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
 
     }
 
+//    private fun showAddCategoryBottomSheet() {
+//        val bottomSheetDialog = BottomSheetDialog(requireContext())
+//        bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
+//
+//        val profitCategoryNames = mViewModel.getProfitCategoryNames()
+//        val costsCategoryNames = mViewModel.getCostsCategoryNames()
+//
+//        val categoryCosts =
+//            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_costs)
+//        val categoryProfit =
+//            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_profit)
+//        val categoryName =
+//            bottomSheetDialog.findViewById<TextInputEditText>(R.id.text_category_name)
+//        val errorText = bottomSheetDialog.findViewById<TextView>(R.id.error_category_creation)
+//        val buttonSave = bottomSheetDialog.findViewById<Button>(R.id.button_save_category)
+//
+//        when (mViewModel.state.value?.currentChip) {
+//            1 -> categoryProfit?.isChecked = true
+//            else -> categoryCosts?.isChecked = true
+//        }
+//
+//        var currentCategoryName = ""
+//        categoryName?.doAfterTextChanged {
+//            currentCategoryName = it.toString().trim()
+//            if ((categoryCosts?.isChecked == true && it.toString().trim() in costsCategoryNames) ||
+//                (categoryProfit?.isChecked == true && it.toString().trim() in profitCategoryNames)
+//            ) {
+//                errorText?.isVisible = true
+//                buttonSave?.isEnabled = false
+//
+//            } else if (categoryName.text?.trim()?.isEmpty() == true) {
+//                errorText?.isVisible = false
+//                buttonSave?.isEnabled = false
+//            } else {
+//                errorText?.isVisible = false
+//                buttonSave?.isEnabled = true
+//            }
+//        }
+//
+//        buttonSave?.setOnClickListener {
+//            val type = when (categoryCosts?.isChecked ?: false) {
+//                true -> CategoryType.CATEGORY_COSTS
+//                false -> CategoryType.CATEGORY_PROFIT
+//            }
+//            mViewModel.onSaveNewCategory(currentCategoryName, type)
+//            bottomSheetDialog.dismiss()
+//        }
+//        bottomSheetDialog.show()
+//    }
+
     private fun showAddCategoryBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
@@ -140,8 +192,8 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
             bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_profit)
         val categoryName =
             bottomSheetDialog.findViewById<TextInputEditText>(R.id.text_category_name)
-        val errorText = bottomSheetDialog.findViewById<TextView>(R.id.error_category_creation)
         val buttonSave = bottomSheetDialog.findViewById<Button>(R.id.button_save_category)
+        val textInputLayout = bottomSheetDialog.findViewById<TextInputLayout>(R.id.text_input_layout)
 
         when (mViewModel.state.value?.currentChip) {
             1 -> categoryProfit?.isChecked = true
@@ -154,14 +206,14 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
             if ((categoryCosts?.isChecked == true && it.toString().trim() in costsCategoryNames) ||
                 (categoryProfit?.isChecked == true && it.toString().trim() in profitCategoryNames)
             ) {
-                errorText?.isVisible = true
+                textInputLayout?.helperText = "Такая категория уже существует"
                 buttonSave?.isEnabled = false
 
             } else if (categoryName.text?.trim()?.isEmpty() == true) {
-                errorText?.isVisible = false
+                textInputLayout?.helperText = "Пустое название категории"
                 buttonSave?.isEnabled = false
             } else {
-                errorText?.isVisible = false
+                textInputLayout?.helperText = " "
                 buttonSave?.isEnabled = true
             }
         }

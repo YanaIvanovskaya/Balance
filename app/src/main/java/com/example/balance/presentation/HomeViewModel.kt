@@ -124,9 +124,9 @@ class HomeViewModel(
         }
     }
 
-    fun onUnpinClick(recordId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            recordRepository.setImportance(recordId, isImportant = false)
+    fun onSetImportant(recordId: Int, isImportant: Boolean) {
+        viewModelScope.launch {
+            recordRepository.setImportance(recordId, isImportant = !isImportant)
         }
     }
 
