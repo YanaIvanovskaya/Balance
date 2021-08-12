@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
 import com.example.balance.data.record.MoneyType
 import com.example.balance.data.record.RecordType
+import com.example.balance.toUpperFirst
 import com.example.balance.ui.recycler_view.ViewHolderFactory
 
 class TemplateItem(
@@ -24,10 +25,9 @@ class TemplateItem(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
         val templateViewHolder = viewHolder as ViewHolderFactory.TemplateViewHolder
 
-        templateViewHolder.nameTemplateText.text = name
-        templateViewHolder.usageText.text = usage.toString()
+        templateViewHolder.nameTemplateText.text = name.toUpperFirst()
         templateViewHolder.sumText.text = sumMoney.toString()
-        templateViewHolder.categoryText.text = category
+        templateViewHolder.categoryText.text = category.toUpperFirst()
 
         val resources = viewHolder.itemView.resources
 
@@ -36,9 +36,9 @@ class TemplateItem(
         val imageCards =
             ResourcesCompat.getDrawable(resources, R.drawable.ic_card, null)
 
-        val costsColor =
-            ResourcesCompat.getDrawable(resources, android.R.color.holo_red_light, null)
-        val profitsColor = ResourcesCompat.getDrawable(resources, R.color.teal_700, null)
+        val costsBg =
+            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_costs, null)
+        val profitBg = ResourcesCompat.getDrawable(resources, R.drawable.selector_record_profit, null)
 
         when (moneyType) {
             MoneyType.CASH -> templateViewHolder.moneyTypeText.setImageDrawable(imageCash)
@@ -46,8 +46,8 @@ class TemplateItem(
         }
 
         when (recordType) {
-            RecordType.COSTS -> templateViewHolder.layout.background = costsColor
-            RecordType.PROFITS -> templateViewHolder.layout.background = profitsColor
+            RecordType.COSTS -> templateViewHolder.layout.background = costsBg
+            RecordType.PROFITS -> templateViewHolder.layout.background = profitBg
         }
 
     }

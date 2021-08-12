@@ -5,8 +5,8 @@
 
         <item name="colorPrimary">@color/grey_800</item> // кнопки, тулбары текст лайяут выбранный
 
-        <item name="colorPrimaryVariant">@color/app_background</item>
-        <item name="colorOnPrimary">@color/purple_200</item> // текст кнопок
+        <item name="colorPrimaryVariant">@color/grey_50</item>
+        <item name="colorOnPrimary">@color/grey_800</item> // текст кнопок
         <!-- Secondary brand color. -->
 
         <item name="colorSecondary">@color/green_300</item> // radio button выбранные и свитчи текстовые поля выбранные

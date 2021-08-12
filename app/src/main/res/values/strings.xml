@@ -57,4 +57,11 @@
     <string name="add_to_favorites">Добавить в избранное</string>
     <string name="edit">Редактировать</string>
     <string name="delete">Удалить</string>
+    <string name="my_templates">Мои шаблоны</string>
+    <string name="my_categories">Мои категории</string>
+    <string name="balance">Balance</string>
+    <string name="app">App</string>
+    <string name="make_passcode">Придумай пароль</string>
+    <string name="next">Продолжить</string>
+    <string name="passcode_do_not_matches">Пароль не совпадает</string>
 </resources>

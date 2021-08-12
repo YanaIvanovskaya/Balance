@@ -5,84 +5,102 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Время посчитать свои деньги)"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_balance_creation" />
+
+    <TextView
+        android:id="@+id/title_balance_creation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="Новый баланс"
+        android:textColor="@color/grey_800"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="32dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:helperText="Введите сумму наличных"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView14">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sumCash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_sum"
+            android:hint="Наличные"
+            android:maxLength="9"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:helperText="Введите сумму на картах"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+
+        <com.google.android.material.textfield.TextInputEditText
+
+            android:id="@+id/sumCards"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_sum"
+            android:hint="На картах"
+            android:maxLength="9"
+            android:singleLine="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/button_start_use"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="362dp"
-        android:layout_height="63dp"
-        android:layout_margin="20dp"
-        android:text="@string/continue_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:padding="15dp"
+        android:text="@string/next"
+        android:visibility="visible"
+        app:backgroundTint="@color/green_300"
+        app:cornerRadius="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/title_balance_creation"
-        android:layout_width="318dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="54dp"
-        android:text="@string/title_creation_balance"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout_cash"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.666"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout_cash"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout_cards"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title_balance_creation">
-
-        <TextView
-            android:id="@+id/cash_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/balance_cash" />
-
-        <EditText
-            android:id="@+id/sumCash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autofillHints="@string/_0"
-            android:ems="10"
-            android:inputType="numberSigned"
-            android:maxLength="9" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout_cards"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="413dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/button_start_use"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout_cash">
-
-        <TextView
-            android:id="@+id/cards_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/balance_cards" />
-
-        <EditText
-            android:id="@+id/sumCards"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:autofillHints="@string/_0"
-            android:ems="10"
-            android:inputType="numberSigned"
-            android:maxLength="9" />
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

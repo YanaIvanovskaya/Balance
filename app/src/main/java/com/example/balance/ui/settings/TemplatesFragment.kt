@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -68,7 +69,9 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
                 val deletedTemplate = templateAdapter.dataSet[position]
                 val undoSnackBar =
                     Snackbar.make(requireView(), "Шаблон удален", Snackbar.LENGTH_LONG)
-
+                undoSnackBar.setBackgroundTint(ResourcesCompat.getColor(resources,R.color.grey_400,null))
+                undoSnackBar.setActionTextColor(ResourcesCompat.getColor(resources,R.color.green_400,null))
+                undoSnackBar.setTextColor(ResourcesCompat.getColor(resources,R.color.grey_800,null))
                 undoSnackBar.setAction("Восстановить") {
                     viewHolder.itemView.visibility = View.VISIBLE
                     templateAdapter.notifyDataSetChanged()

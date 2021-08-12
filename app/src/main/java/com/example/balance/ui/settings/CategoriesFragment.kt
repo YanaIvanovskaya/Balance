@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
@@ -96,8 +97,11 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
                     categoryAdapter.removeAt(position)
 
                     val undoSnackBar =
-                        Snackbar.make(requireView(), "Категория удалена", Snackbar.LENGTH_LONG)
+                        Snackbar.make(requireView(), "Категория удалена", Snackbar.LENGTH_SHORT)
 
+                    undoSnackBar.setBackgroundTint(ResourcesCompat.getColor(resources,R.color.grey_400,null))
+                    undoSnackBar.setActionTextColor(ResourcesCompat.getColor(resources,R.color.green_400,null))
+                    undoSnackBar.setTextColor(ResourcesCompat.getColor(resources,R.color.grey_800,null))
                     undoSnackBar.setAction("Восстановить") {
                         categoryAdapter.insertAt(position,deletedCategory)
                         categoryAdapter.notifyDataSetChanged()
@@ -118,69 +122,11 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
         itemTouchHelper.attachToRecyclerView(categoryRecyclerView)
-
-        val swipeHandler2 = object : SwipeToEditCallback(requireContext()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                println("swiped")
-            }
-        }
-        val itemTouchHelper2 = ItemTouchHelper(swipeHandler2)
-        itemTouchHelper2.attachToRecyclerView(categoryRecyclerView)
-
     }
 
-//    private fun showAddCategoryBottomSheet() {
-//        val bottomSheetDialog = BottomSheetDialog(requireContext())
-//        bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
-//
-//        val profitCategoryNames = mViewModel.getProfitCategoryNames()
-//        val costsCategoryNames = mViewModel.getCostsCategoryNames()
-//
-//        val categoryCosts =
-//            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_costs)
-//        val categoryProfit =
-//            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_profit)
-//        val categoryName =
-//            bottomSheetDialog.findViewById<TextInputEditText>(R.id.text_category_name)
-//        val errorText = bottomSheetDialog.findViewById<TextView>(R.id.error_category_creation)
-//        val buttonSave = bottomSheetDialog.findViewById<Button>(R.id.button_save_category)
-//
-//        when (mViewModel.state.value?.currentChip) {
-//            1 -> categoryProfit?.isChecked = true
-//            else -> categoryCosts?.isChecked = true
-//        }
-//
-//        var currentCategoryName = ""
-//        categoryName?.doAfterTextChanged {
-//            currentCategoryName = it.toString().trim()
-//            if ((categoryCosts?.isChecked == true && it.toString().trim() in costsCategoryNames) ||
-//                (categoryProfit?.isChecked == true && it.toString().trim() in profitCategoryNames)
-//            ) {
-//                errorText?.isVisible = true
-//                buttonSave?.isEnabled = false
-//
-//            } else if (categoryName.text?.trim()?.isEmpty() == true) {
-//                errorText?.isVisible = false
-//                buttonSave?.isEnabled = false
-//            } else {
-//                errorText?.isVisible = false
-//                buttonSave?.isEnabled = true
-//            }
-//        }
-//
-//        buttonSave?.setOnClickListener {
-//            val type = when (categoryCosts?.isChecked ?: false) {
-//                true -> CategoryType.CATEGORY_COSTS
-//                false -> CategoryType.CATEGORY_PROFIT
-//            }
-//            mViewModel.onSaveNewCategory(currentCategoryName, type)
-//            bottomSheetDialog.dismiss()
-//        }
-//        bottomSheetDialog.show()
-//    }
 
     private fun showAddCategoryBottomSheet() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetDialog = BottomSheetDialog(requireContext(),R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
 
         val profitCategoryNames = mViewModel.getProfitCategoryNames()

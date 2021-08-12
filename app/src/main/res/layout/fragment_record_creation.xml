@@ -86,7 +86,7 @@
                         style="@null"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_comment"
+                        android:background="@drawable/bg_sum"
                         android:digits="0987654321"
                         android:hint="@string/hint_sum_of_operation"
                         android:inputType="numberSigned|number"

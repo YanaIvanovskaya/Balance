@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/grey_50">
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chip_group_categories"
@@ -83,10 +84,13 @@
         android:background="@color/grey_50"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
+        app:layout_constraintBottom_toTopOf="@+id/chip_group_categories"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="?attr/actionModeCloseDrawable"
-        app:title="Мои категории" />
+        app:navigationIcon="@drawable/ic_left_arrow"
+        app:subtitleTextColor="@color/grey_800"
+        app:title="Мои категории"
+        app:titleTextColor="@color/grey_800" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

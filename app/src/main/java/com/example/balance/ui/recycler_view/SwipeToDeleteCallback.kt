@@ -5,26 +5,19 @@ import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
 
-
 abstract class SwipeToDeleteCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-    private val deleteIcon : Drawable = ContextCompat.getDrawable(context, R.drawable.ic_launcher_foreground)!!
+    private val deleteIcon : Drawable = ContextCompat.getDrawable(context, R.drawable.ic_trash)!!
     private val intrinsicWidth = deleteIcon.intrinsicWidth
     private val intrinsicHeight = deleteIcon.intrinsicHeight
     private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#f44336")
+    private val backgroundColor = ResourcesCompat.getColor(context.resources,R.color.red_100,null)
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
-
-    override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
-    ): Int {
-        return super.getMovementFlags(recyclerView, viewHolder)
-    }
 
     override fun onMove(
         recyclerView: RecyclerView,

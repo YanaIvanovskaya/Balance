@@ -4,6 +4,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.R
 import com.example.balance.data.category.CategoryType
+import com.example.balance.toUpperFirst
 import com.example.balance.ui.recycler_view.ViewHolderFactory
 
 class CategoryItem(
@@ -20,18 +21,19 @@ class CategoryItem(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
         val categoryViewHolder = viewHolder as ViewHolderFactory.CategoryViewHolder
 
-        categoryViewHolder.nameCategoryText.text = name
+        categoryViewHolder.nameCategoryText.text = name.toUpperFirst()
+        val dateCreation = "создано $dateCreation"
         categoryViewHolder.dateCreationText.text = dateCreation
 
         val resources = viewHolder.itemView.resources
 
-        val costsColor =
-            ResourcesCompat.getDrawable(resources, android.R.color.holo_red_light, null)
-        val profitsColor = ResourcesCompat.getDrawable(resources, R.color.teal_700, null)
+        val costsBg =
+            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_costs, null)
+        val profitBg = ResourcesCompat.getDrawable(resources, R.drawable.selector_record_profit, null)
 
         when (categoryType) {
-            CategoryType.CATEGORY_COSTS -> categoryViewHolder.layout.background = costsColor
-            CategoryType.CATEGORY_PROFIT -> categoryViewHolder.layout.background = profitsColor
+            CategoryType.CATEGORY_COSTS -> categoryViewHolder.layout.background = costsBg
+            CategoryType.CATEGORY_PROFIT -> categoryViewHolder.layout.background = profitBg
         }
     }
 

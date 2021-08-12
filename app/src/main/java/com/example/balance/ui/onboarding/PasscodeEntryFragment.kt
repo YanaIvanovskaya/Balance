@@ -53,9 +53,6 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
         when (args.screenType) {
             PasscodeScreenType.AUTH -> {
                 mBinding?.buttonNext?.visibility = View.INVISIBLE
-                mBinding?.buttonShowPasscode?.visibility = View.GONE
-                mBinding?.editTextCreationPasscode?.visibility = View.GONE
-                mBinding?.passcodeChars?.visibility = View.VISIBLE
                 mBinding?.titlePasscodeEntry?.text =
                     context?.resources?.getString(R.string.greeting)
             }
@@ -67,7 +64,48 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
     }
 
     private fun render(state: PasscodeEntryState) {
-        mBinding?.editTextCreationPasscode?.setText(state.passcode)
+        val passcodeLength = state.passcode.length
+        println(state.passcode)
+        mBinding?.char1?.isChecked = passcodeLength >= 1
+
+        mBinding?.char2?.isPressed = passcodeLength == 1
+        mBinding?.char2?.isChecked = passcodeLength >= 2
+
+        mBinding?.char3?.isPressed = passcodeLength == 2
+        mBinding?.char3?.isChecked = passcodeLength >= 3
+
+        mBinding?.char4?.isPressed = passcodeLength == 3
+        mBinding?.char4?.isChecked = passcodeLength >= 4
+
+        mBinding?.char5?.isPressed = passcodeLength == 4
+        mBinding?.char5?.isChecked = passcodeLength == 5
+
+        println("mBinding?.char1?.isChecked")
+        println(mBinding?.char1?.isChecked)
+
+        println("mBinding?.char2?.isPressed")
+        println(mBinding?.char2?.isPressed)
+
+        println("mBinding?.char2?.isChecked")
+        println(mBinding?.char2?.isChecked)
+
+        println("mBinding?.char3?.isPressed")
+        println(mBinding?.char3?.isPressed)
+
+        println("Binding?.char3?.isChecked")
+        println(mBinding?.char3?.isChecked)
+
+        println("mBinding?.char4?.isPressed ")
+        println(mBinding?.char4?.isPressed)
+
+        println("mBinding?.char4?.isChecked")
+        println(mBinding?.char4?.isChecked)
+
+        println("mBinding?.char5?.isPressed")
+        println(mBinding?.char5?.isPressed)
+
+        println("mBinding?.char5?.isChecked")
+        println(mBinding?.char5?.isChecked)
 
         when (args.screenType) {
             PasscodeScreenType.ONBOARDING -> {
@@ -76,13 +114,6 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
             }
             PasscodeScreenType.AUTH -> {
                 mBinding?.errorMsgPasscode?.isVisible = state.canComplete && !state.isMatches
-
-                val passcodeLength = state.passcode.length
-                mBinding?.char1?.isChecked = passcodeLength >= 1
-                mBinding?.char2?.isChecked = passcodeLength >= 2
-                mBinding?.char3?.isChecked = passcodeLength >= 3
-                mBinding?.char4?.isChecked = passcodeLength >= 4
-                mBinding?.char5?.isChecked = passcodeLength == 5
 
                 if (state.canComplete and state.isMatches) {
                     mNavController.navigate(R.id.bottomNavigationFragment)

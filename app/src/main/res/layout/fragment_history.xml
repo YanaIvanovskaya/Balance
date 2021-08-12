@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@color/grey_50">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -16,7 +17,8 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="История" />
+        app:title="История"
+        app:titleTextColor="@color/grey_800" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/chipGroup2"
@@ -51,7 +53,7 @@
             android:text="@string/profits"
             android:textColor="@drawable/selector_chip_text_color"
             app:checkedIconEnabled="false"
-            app:chipBackgroundColor="@drawable/selector_chip_bg"/>
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_costs_history"
@@ -61,7 +63,7 @@
             android:text="@string/costs"
             android:textColor="@drawable/selector_chip_text_color"
             app:checkedIconEnabled="false"
-            app:chipBackgroundColor="@drawable/selector_chip_bg"/>
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chip_important_history"
@@ -71,7 +73,7 @@
             android:text="@string/favorites"
             android:textColor="@drawable/selector_chip_text_color"
             app:checkedIconEnabled="false"
-            app:chipBackgroundColor="@drawable/selector_chip_bg"/>
+            app:chipBackgroundColor="@drawable/selector_chip_bg" />
     </com.google.android.material.chip.ChipGroup>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -81,7 +83,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup2" >
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup2">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -93,7 +95,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chipGroup2" >
+        app:layout_constraintTop_toBottomOf="@+id/chipGroup2">
 
         <ProgressBar
             android:id="@+id/progressBar3"

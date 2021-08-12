@@ -9,7 +9,7 @@ inline fun <reified TViewModel : ViewModel> Fragment.getViewModel(
     crossinline constructor: () -> TViewModel
 ) = viewModels<TViewModel> {
     object : ViewModelProvider.NewInstanceFactory() {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             @Suppress("UNCHECKED_CAST")
             return constructor() as T
         }

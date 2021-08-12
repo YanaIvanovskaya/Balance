@@ -5,70 +5,50 @@
     android:id="@+id/template_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
-    android:layout_marginBottom="3dp"
-    android:background="#E3ABAB"
-    android:padding="5dp">
+    android:background="@drawable/selector_record_profit"
+    android:paddingLeft="15dp"
+    android:paddingTop="10dp"
+    android:paddingRight="15dp"
+    android:paddingBottom="10dp">
 
     <TextView
         android:id="@+id/name_template"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:text="wwwwwwwwwwwrdfd"
+        android:text="nametemplate"
+        android:textColor="@color/grey_800"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/date_item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="dr 21 ctyy"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/sum_template"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="123456898"
-        android:textSize="20sp"
+        android:text="- 123 890 P"
+        android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/name_template" />
+        app:layout_constraintBottom_toBottomOf="@+id/name_template"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/category" />
 
     <ImageView
         android:id="@+id/image_money_type_template"
-        android:layout_width="39dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toEndOf="@+id/sum_template"
-        app:layout_constraintTop_toBottomOf="@+id/name_template"
-         />
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sum_template"
+        app:srcCompat="@drawable/ic_cash" />
 
     <TextView
         android:id="@+id/category_template"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="TextViewrgrgrggr"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/date_item" />
+        android:layout_marginTop="8dp"
+        android:text="category"
+        android:textColor="@color/grey_800"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_template" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,9 +5,7 @@
     android:id="@+id/category_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
-    android:layout_marginBottom="3dp"
-    android:background="#E3ABAB"
+    android:background="@drawable/selector_record_profit"
     android:padding="5dp">
 
 
@@ -15,13 +13,13 @@
         android:id="@+id/date_creation_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="dr 21 ctyynz,hz w2021"
-        android:textSize="16sp"
+        android:text="cоздано 12 сентября 2021"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/name_category"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/name_category" />
 
     <TextView
         android:id="@+id/name_category"
@@ -31,7 +29,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:text="dr 21 ctyynz,hz w2021"
+        android:text="category"
+        android:textColor="@color/grey_700"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

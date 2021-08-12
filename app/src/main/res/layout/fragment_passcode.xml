@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#E69A9A">
+    android:layout_height="match_parent"
+    android:background="@color/grey_50">
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <ScrollView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="#D56060">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:isScrollContainer="true"
             android:orientation="vertical"
             android:paddingLeft="15dp"
@@ -28,8 +28,14 @@
                 android:id="@+id/title_passcode_entry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="50dp"
                 android:gravity="center"
-                android:text="@string/enter_the_passcode"
+                android:text="@string/make_passcode"
+                android:textColor="@color/grey_800"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/passcode_chars"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -37,48 +43,37 @@
             <LinearLayout
                 android:id="@+id/passcode_chars"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="60dp"
                 android:gravity="center"
                 android:orientation="horizontal"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_passcode_entry">
 
                 <RadioButton
                     android:id="@+id/char1"
-                    style="@android:style/Widget.Holo.CompoundButton.RadioButton"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
+                    style="@style/Point"
                     android:checked="false"
-                    android:enabled="false"
-                    android:textSize="14sp" />
+                    android:enabled="true" />
 
                 <RadioButton
                     android:id="@+id/char2"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:enabled="false" />
+                    style="@style/Point" />
 
                 <RadioButton
                     android:id="@+id/char3"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:enabled="false" />
+                    style="@style/Point" />
 
                 <RadioButton
                     android:id="@+id/char4"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:enabled="false" />
+                    style="@style/Point" />
 
                 <RadioButton
                     android:id="@+id/char5"
-                    android:layout_width="30dp"
-                    android:layout_height="wrap_content"
-                    android:enabled="false" />
+                    style="@style/Point" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -87,7 +82,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="24dp"
                 android:orientation="horizontal"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -122,17 +117,15 @@
 
             <TableLayout
                 android:id="@+id/tableLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="150dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                app:layout_constraintBottom_toTopOf="@+id/button_next"
+                android:layout_marginTop="130dp"
+                android:layout_marginBottom="32dp"
+                android:gravity="center"
+                android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_passcode_entry">
+                app:layout_constraintTop_toBottomOf="@+id/passcode_chars">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -141,30 +134,18 @@
 
                     <Button
                         android:id="@+id/button1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_1"
-                        android:textSize="24sp"
-                        app:cornerRadius="10dp" />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_1" />
 
                     <Button
                         android:id="@+id/button2"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_2"
-                        android:textSize="24sp"
-                      />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_2" />
 
                     <Button
                         android:id="@+id/button3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_3"
-                        android:textSize="24sp" />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_3" />
 
                 </TableRow>
 
@@ -175,28 +156,18 @@
 
                     <Button
                         android:id="@+id/button4"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_4"
-                        android:textSize="24sp" />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_4" />
 
                     <Button
                         android:id="@+id/button5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_5"
-                        android:textSize="24sp" />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_5" />
 
                     <Button
                         android:id="@+id/button6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_6"
-                        android:textSize="24sp" />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_6" />
 
                 </TableRow>
 
@@ -207,31 +178,18 @@
 
                     <Button
                         android:id="@+id/button7"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_7"
-                        android:textSize="24sp"
-                     />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_7" />
 
                     <Button
                         android:id="@+id/button8"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_8"
-                        android:textSize="24sp" />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_8" />
 
                     <Button
                         android:id="@+id/button9"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_9"
-                        android:textSize="24sp" />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_9" />
 
                 </TableRow>
 
@@ -242,66 +200,66 @@
 
                     <Button
                         android:id="@+id/button00"
-                        style="?android:attr/buttonBarButtonStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
+                        android:layout_margin="10dp"
                         android:textSize="24sp"
                         android:visibility="invisible" />
 
                     <Button
                         android:id="@+id/button0"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:text="@string/_0"
-                        android:textSize="24sp"
-                    />
+                        style="@style/KeyBoardButton"
+                        android:text="@string/_0" />
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/button_clear_passcode"
-                        style="?android:attr/buttonBarButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:textSize="24sp"
-                        app:icon="@android:drawable/ic_input_delete"
-                        app:iconSize="35dp" />
+                        style="@style/KeyBoardButton"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_delete" />
 
                 </TableRow>
 
             </TableLayout>
 
-            <Button
-                android:id="@+id/button_next"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/next_btn"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
-
             <TextView
                 android:id="@+id/error_msg_passcode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginRight="24dp"
-                android:text="Пароль не совпадает"
+                android:layout_marginBottom="39dp"
+                android:gravity="center"
+                android:text="@string/passcode_do_not_matches"
+                android:textColor="@color/red_300"
                 android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@+id/tableLayout"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+                app:layout_constraintTop_toBottomOf="@+id/passcode_chars"
+                app:layout_constraintVertical_bias="0.206" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
-</ScrollView>
+    <Button
+        android:id="@+id/button_next"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:padding="15dp"
+        android:text="@string/next"
+        android:visibility="visible"
+        app:backgroundTint="@color/green_300"
+        app:cornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
