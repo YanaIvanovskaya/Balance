@@ -31,6 +31,7 @@
         <item name="android:layout_margin">7dp</item>
         <item name="android:enabled">false</item>
         <item name="android:button">@drawable/selector_passcode_char</item>
+        <item name="useMaterialThemeColors">false</item>
     </style>
 
 </resources>

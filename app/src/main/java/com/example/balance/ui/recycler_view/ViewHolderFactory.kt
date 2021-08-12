@@ -114,4 +114,8 @@ object ViewHolderFactory {
         val sumAvgMonthlyBalance: TextView = itemView.findViewById(R.id.amount_balance)
     }
 
+    class NoRecentlyRecordsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//        val date: TextView = itemView.findViewById(R.id.usage_template)
+    }
+
 }

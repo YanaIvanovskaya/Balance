@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
 class BalanceRepository(
-    val datastore: UserDataStore
+    private val datastore: UserDataStore
 ) {
 
     var sumCash: Int = 0

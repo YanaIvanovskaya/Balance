@@ -56,7 +56,7 @@
                     android:id="@+id/char1"
                     style="@style/Point"
                     android:checked="false"
-                    android:enabled="true" />
+                    android:enabled="false" />
 
                 <RadioButton
                     android:id="@+id/char2"
@@ -72,7 +72,10 @@
 
                 <RadioButton
                     android:id="@+id/char5"
-                    style="@style/Point" />
+                    style="@style/Point"
+                    android:background="@null"
+                    app:buttonTint="@null"
+                    app:useMaterialThemeColors="false" />
 
             </LinearLayout>
 

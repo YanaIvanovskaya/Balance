@@ -104,9 +104,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun render(state: HomeState) {
         homeAdapter.updateBalance(state.cash.toString(), state.cards.toString())
         mBinding?.preloaderHome?.visibility =
-            if (state.isContentLoaded) View.GONE
+            if (state.isContentLoaded && state.isSumLoaded) View.GONE
             else View.VISIBLE
         mBinding?.floatingButtonCreateNewRecord?.isVisible = state.isContentLoaded
+        if (state.hasNoRecords) {
+            mBinding?.homeRecyclerView?.visibility = View.GONE
+        }
+
     }
 
     private fun initRecyclerView() {
