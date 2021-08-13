@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -152,17 +153,20 @@ class GeneralChartFragment() :
 
     private fun createGeneralBarChart() {
         mGeneralBarChart.setOnChartValueSelectedListener(onValueSelectedListener)
+        mGeneralBarChart.setExtraOffsets(5f, 20f, 5f, 20f)
         mGeneralBarChart.setDrawGridBackground(false)
         mGeneralBarChart.description.isEnabled = false
         mGeneralBarChart.setFitBars(true)
         mGeneralBarChart.setDrawValueAboveBar(true)
         mGeneralBarChart.animateX(500)
         mGeneralBarChart.animateY(700)
+        mGeneralBarChart.setNoDataText("Пока тут ничего нет")
+        mGeneralBarChart.setNoDataTextColor(ResourcesCompat.getColor(resources,R.color.grey_800,null))
 
         mGeneralBarChart.axisRight.isEnabled = false
         mGeneralBarChart.axisLeft.setDrawGridLines(false)
         mGeneralBarChart.axisLeft.setDrawZeroLine(true)
-        mGeneralBarChart.axisLeft.setLabelCount(7, false)
+        mGeneralBarChart.axisLeft.setLabelCount(7, true)
         mGeneralBarChart.axisLeft.textSize = 12f
         mGeneralBarChart.axisLeft.valueFormatter = YAxisFormatter()
 
@@ -180,22 +184,16 @@ class GeneralChartFragment() :
         if (barEntries.isNullOrEmpty()) {
             return
         }
-
         val set = BarDataSet(barEntries, "")
         set.setDrawIcons(false)
-        set.valueTextSize = 11f
+        set.valueTextSize = 12f
         set.valueFormatter = BarValueFormatter()
         set.setColors(
-            Color.rgb(255, 100, 100),
-            Color.rgb(100, 255, 100)
+            ResourcesCompat.getColor(resources,R.color.red_200,null),
+            ResourcesCompat.getColor(resources,R.color.green_200,null),
         )
-        set.stackLabels = arrayOf(
-            "Расходы", "Доходы"
-        )
-
         val data = BarData(set)
         mGeneralBarChart.data = data
-        println(data.dataSets)
         mGeneralBarChart.setVisibleXRangeMaximum(6f)
         mGeneralBarChart.invalidate()
     }

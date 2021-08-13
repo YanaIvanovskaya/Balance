@@ -13,7 +13,7 @@ import com.example.balance.data.template.TemplateRepository
 import com.example.balance.getTimeLabel
 import com.example.balance.ui.recycler_view.item.BalanceItem
 import com.example.balance.ui.recycler_view.item.Item
-import com.example.balance.ui.recycler_view.item.NoRecentlyRecordsItem
+import com.example.balance.ui.recycler_view.item.NoItemsItem
 import com.example.balance.ui.recycler_view.item.RecordItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -22,7 +22,6 @@ import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
 import timber.log.Timber
-
 
 data class HomeState(
     val sumCostsCash: Int,
@@ -42,8 +41,8 @@ data class HomeState(
             sumCostsCards = 0,
             sumProfitCash = 0,
             sumProfitCards = 0,
-            cash = -1,
-            cards = -1,
+            cash = 0,
+            cards = 0,
             isContentLoaded = false,
             isSumLoaded = false,
             hasNoRecords = true
@@ -70,6 +69,7 @@ class HomeViewModel(
         recordRepository.getCommonSum()
             .distinctUntilChanged()
             .onEach {
+                state.value = state.value?.copy(hasNoRecords = it == 0)
 
                 val sumCostsCash = withContext(Dispatchers.IO) {
                     recordRepository.getSum(
@@ -88,7 +88,7 @@ class HomeViewModel(
                 val sumCostsCards = withContext(Dispatchers.IO) {
                     recordRepository.getSum(
                         RecordType.COSTS,
-                        MoneyType.CASH
+                        MoneyType.CARDS
                     ).first()
                 }
 
@@ -105,7 +105,6 @@ class HomeViewModel(
                     sumProfitCash = sumProfitCash,
                     sumProfitCards = sumProfitCards,
                 )
-
                 measureBalance()
             }.launchIn(viewModelScope)
 
@@ -115,12 +114,7 @@ class HomeViewModel(
                     mapItems(newRecordList.reversed())
                 }
             }
-            .onEach {
-                allHomeRecords.value = it
-                state.value = state.value?.copy(
-                    hasNoRecords = it.isEmpty()
-                )
-            }
+            .onEach(allHomeRecords::setValue)
             .launchIn(viewModelScope)
 
     }
@@ -145,6 +139,7 @@ class HomeViewModel(
     private suspend fun mapItems(items: List<Record>): MutableList<Item> {
         return withContext(Dispatchers.IO) {
             val allHomeRecords: MutableList<Item> = mutableListOf()
+
             allHomeRecords.add(
                 BalanceItem(
                     sumCash = state.value?.cash.toString(),
@@ -175,27 +170,33 @@ class HomeViewModel(
 
                 }
             } else {
-                allHomeRecords.add(NoRecentlyRecordsItem())
+                allHomeRecords.add(NoItemsItem(message = "Пока у вас нет недавних записей"))
             }
-
-
             allHomeRecords
         }
     }
 
     private fun measureBalance() {
-        Timber.d("Measure: cash: $sumCash cars: $sumCards")
-        val cash = sumCash +
-                (state.value?.sumProfitCash ?: 0) -
-                (state.value?.sumCostsCash ?: 0)
+        val sumProfitCash = state.value?.sumProfitCash ?: 0
+        val sumCostsCash = state.value?.sumCostsCash ?: 0
+        val cash = sumCash + sumProfitCash - sumCostsCash
 
-        val cards = sumCards +
-                (state.value?.sumProfitCards ?: 0) -
-                (state.value?.sumCostsCards ?: 0)
+        val sumProfitCards = state.value?.sumProfitCards ?: 0
+        val sumCostsCards = state.value?.sumCostsCards ?: 0
+        val cards = sumCards + sumProfitCards - sumCostsCards
 
-        state.value = state.value?.copy(cash = cash, cards = cards)
-        val sumIsLoaded = (state.value?.cards != -1 && state.value?.cash != -1)
-        state.value = state.value?.copy(isSumLoaded = sumIsLoaded)
+        val isSumsLoaded =
+            !(sumProfitCash == 0
+                    && sumCostsCash == 0
+                    && sumProfitCards == 0
+                    && sumCostsCards == 0)
+
+        val balanceIsLoaded = state.value?.hasNoRecords == true || isSumsLoaded
+        state.value = state.value?.copy(isSumLoaded = balanceIsLoaded)
+
+        if (balanceIsLoaded) {
+            state.value = state.value?.copy(cash = cash, cards = cards)
+        }
     }
 
 }

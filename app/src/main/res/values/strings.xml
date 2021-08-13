@@ -64,4 +64,8 @@
     <string name="make_passcode">Придумай пароль</string>
     <string name="next">Продолжить</string>
     <string name="passcode_do_not_matches">Пароль не совпадает</string>
+    <string name="add">Добавить</string>
+    <string name="title_general_diagram">Диаграмма расходов и доходов по месяцам</string>
+    <string name="profit_structure">Структура доходов</string>
+    <string name="costs_structure">Структура расходов</string>
 </resources>

@@ -48,7 +48,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView5">
 
         <RadioButton
-            android:id="@+id/radioButton_category_profit"
+            android:id="@+id/radioButton_category_costs"
             style="@style/FlatRadioButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -59,7 +59,7 @@
             app:useMaterialThemeColors="false" />
 
         <RadioButton
-            android:id="@+id/radioButton_category_costs"
+            android:id="@+id/radioButton_category_profit"
             style="@style/FlatRadioButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -67,7 +67,9 @@
             android:checked="false"
             android:minHeight="48dp"
             android:text="@string/profits"
-            android:textColor="@color/green_300" />
+            android:textColor="@color/green_300"/>
+
+
     </RadioGroup>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -95,26 +97,18 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_comment"
             android:hint="@string/name_category"
-            android:maxLength="15" />
+            android:maxLength="15"
+            android:singleLine="true"
+            android:textColor="@color/grey_800"
+            android:textColorHint="@color/grey_800" />
+
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/button_save_category"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/selector_save_button_bg"
+        style="@style/ButtonSave"
         android:enabled="false"
-        android:text="@string/save"
-        android:textColor="@drawable/selector_save_button_text"
-        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

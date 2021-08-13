@@ -27,6 +27,7 @@ import com.example.balance.presentation.CategoryState
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.*
 import com.example.balance.ui.recycler_view.adapter.CategoryAdapter
+import com.example.balance.ui.recycler_view.item.CategoryItem
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -83,6 +84,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
             }
         }
         categoryAdapter.notifyDataSetChanged()
+
     }
 
     private fun initRecyclerView() {
@@ -93,17 +95,37 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (viewHolder is ViewHolderFactory.CategoryViewHolder) {
                     val position = viewHolder.bindingAdapterPosition
-                    val deletedCategory = categoryAdapter.dataSet[position]
+
+                    val deletedCategory = categoryAdapter.dataSet[position] as CategoryItem
+
                     categoryAdapter.removeAt(position)
 
                     val undoSnackBar =
                         Snackbar.make(requireView(), "Категория удалена", Snackbar.LENGTH_SHORT)
 
-                    undoSnackBar.setBackgroundTint(ResourcesCompat.getColor(resources,R.color.grey_400,null))
-                    undoSnackBar.setActionTextColor(ResourcesCompat.getColor(resources,R.color.green_400,null))
-                    undoSnackBar.setTextColor(ResourcesCompat.getColor(resources,R.color.grey_800,null))
+                    undoSnackBar.setBackgroundTint(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.grey_400,
+                            null
+                        )
+                    )
+                    undoSnackBar.setActionTextColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.green_400,
+                            null
+                        )
+                    )
+                    undoSnackBar.setTextColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.grey_800,
+                            null
+                        )
+                    )
                     undoSnackBar.setAction("Восстановить") {
-                        categoryAdapter.insertAt(position,deletedCategory)
+                        categoryAdapter.insertAt(position, deletedCategory)
                         categoryAdapter.notifyDataSetChanged()
                     }
 
@@ -126,7 +148,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
 
 
     private fun showAddCategoryBottomSheet() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext(),R.style.BottomSheetDialog)
+        val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
 
         val profitCategoryNames = mViewModel.getProfitCategoryNames()
@@ -139,7 +161,8 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
         val categoryName =
             bottomSheetDialog.findViewById<TextInputEditText>(R.id.text_category_name)
         val buttonSave = bottomSheetDialog.findViewById<Button>(R.id.button_save_category)
-        val textInputLayout = bottomSheetDialog.findViewById<TextInputLayout>(R.id.text_input_layout)
+        val textInputLayout =
+            bottomSheetDialog.findViewById<TextInputLayout>(R.id.text_input_layout)
 
         when (mViewModel.state.value?.currentChip) {
             1 -> categoryProfit?.isChecked = true

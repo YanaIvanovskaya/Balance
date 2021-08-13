@@ -20,6 +20,7 @@ import com.example.balance.presentation.TemplatesViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.SwipeToDeleteCallback
 import com.example.balance.ui.recycler_view.adapter.TemplateAdapter
+import com.example.balance.ui.recycler_view.item.TemplateItem
 import com.google.android.material.snackbar.Snackbar
 
 class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
@@ -66,7 +67,7 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
                 viewHolder.itemView.visibility = View.GONE
                 templateAdapter.notifyDataSetChanged()
 
-                val deletedTemplate = templateAdapter.dataSet[position]
+                val deletedTemplate = templateAdapter.dataSet[position] as TemplateItem
                 val undoSnackBar =
                     Snackbar.make(requireView(), "Шаблон удален", Snackbar.LENGTH_LONG)
                 undoSnackBar.setBackgroundTint(ResourcesCompat.getColor(resources,R.color.grey_400,null))

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -110,8 +111,6 @@ class CostsPieChartFragment : Fragment(R.layout.fragment_costs_pie_chart) {
                 if (entries.isNotEmpty()) "Больше всего потрачено на категорию \"${it.maxCostsCategory}\""
                 else ""
             updateCostsPieChart(entries)
-//            if (entries.isNotEmpty() || !it.haveCosts)
-//                mBinding?.preloaderCostsPieChart?.visibility = View.GONE
         })
     }
 
@@ -133,18 +132,20 @@ class CostsPieChartFragment : Fragment(R.layout.fragment_costs_pie_chart) {
         mCostsPieChart.isRotationEnabled = true
         mCostsPieChart.isHighlightPerTapEnabled = true
         mCostsPieChart.animateY(1400, EaseInOutQuad)
+        mCostsPieChart.setNoDataText("Пока тут ничего нет")
+        mCostsPieChart.setNoDataTextColor(ResourcesCompat.getColor(resources,R.color.grey_800,null))
 
         val l: Legend = mCostsPieChart.legend
         l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
         l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         l.orientation = Legend.LegendOrientation.HORIZONTAL
-        l.setDrawInside(true)
+        l.setDrawInside(false)
         l.isWordWrapEnabled = true
         l.xEntrySpace = 7f
-        l.textSize = 12f
-        l.yEntrySpace = 0f
-        l.yOffset = 5f
-
+        l.textSize = 14f
+        l.textColor = ResourcesCompat.getColor(resources,R.color.grey_800,null)
+        l.yEntrySpace = 2f
+        l.yOffset = 10f
         mCostsPieChart.setDrawEntryLabels(false)
     }
 

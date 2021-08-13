@@ -9,6 +9,7 @@ import com.example.balance.data.record.RecordType
 import com.example.balance.data.template.Template
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.ui.recycler_view.item.Item
+import com.example.balance.ui.recycler_view.item.NoItemsItem
 import com.example.balance.ui.recycler_view.item.TemplateItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -19,9 +20,9 @@ import kotlinx.coroutines.withContext
 
 data class TemplateState(
     val currentChip: Int,
-    val commonTemplates: MutableList<TemplateItem>,
-    val costsTemplates: MutableList<TemplateItem>,
-    val profitTemplates: MutableList<TemplateItem>
+    val commonTemplates: MutableList<Item>,
+    val costsTemplates: MutableList<Item>,
+    val profitTemplates: MutableList<Item>
 
 ) {
 
@@ -47,7 +48,6 @@ class TemplatesViewModel(
     init {
         templateRepository.allTemplates
             .onEach { newTemplateList ->
-//                mapItems(newTemplateList)
                 state.value = state.value?.copy(
                     commonTemplates = mapItems(newTemplateList),
                     costsTemplates = mapItems(newTemplateList, recordType = RecordType.COSTS),
@@ -72,8 +72,8 @@ class TemplatesViewModel(
     private suspend fun mapItems(
         items: List<Template>,
         recordType: RecordType? = null
-    ): MutableList<TemplateItem> {
-        val allTemplates: MutableList<TemplateItem> = mutableListOf()
+    ): MutableList<Item> {
+        val allTemplates: MutableList<Item> = mutableListOf()
 
         items.reversed().forEach { template ->
 
@@ -101,6 +101,21 @@ class TemplatesViewModel(
                     )
                 )
             }
+        }
+        if (allTemplates.isEmpty()) {
+            allTemplates.add(
+                when (recordType) {
+                    RecordType.COSTS -> NoItemsItem(
+                        message = "Здесь будут шаблоны по расходам",
+                        enableAdd = false
+                    )
+                    RecordType.PROFITS -> NoItemsItem(
+                        message = "здесь будут шаблоны по доходам",
+                        enableAdd = false
+                    )
+                    null -> NoItemsItem(message = "Здесь будут все ваши шаблоны", enableAdd = false)
+                }
+            )
         }
         return allTemplates
     }

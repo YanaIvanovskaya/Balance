@@ -5,12 +5,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.ui.recycler_view.ViewHolderFactory
 import com.example.balance.ui.recycler_view.item.BalanceItem
 import com.example.balance.ui.recycler_view.item.Item
+import com.example.balance.ui.recycler_view.item.NoItemsItem
 import com.example.balance.ui.recycler_view.item.RecordItem
 import timber.log.Timber
 
 class HomeAdapter(
     var dataSet: MutableList<Item> = mutableListOf(),
-    private val onLongItemClickListener: (recordId: Int,isImportant:Boolean) -> Boolean
+    private val onLongItemClickListener: (recordId: Int,isImportant:Boolean) -> Boolean,
+    private val onClickAddListener: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()
@@ -20,14 +22,25 @@ class HomeAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = dataSet[position]
-        if (item is RecordItem) {
-            val recordItem: RecordItem = item
-            val recordViewHolder: ViewHolderFactory.RecordViewHolder =
-                holder as ViewHolderFactory.RecordViewHolder
-            recordViewHolder.layout.setOnLongClickListener {
-                onLongItemClickListener(recordItem.id, recordItem.isImportant)
-                true
+
+        when (item) {
+            is RecordItem -> {
+                val recordItem: RecordItem = item
+                val recordViewHolder: ViewHolderFactory.RecordViewHolder =
+                    holder as ViewHolderFactory.RecordViewHolder
+                recordViewHolder.layout.setOnLongClickListener {
+                    onLongItemClickListener(recordItem.id, recordItem.isImportant)
+                    true
+                }
             }
+            is NoItemsItem -> {
+                val noItemViewHolder: ViewHolderFactory.NoItemsItemViewHolder =
+                    holder as ViewHolderFactory.NoItemsItemViewHolder
+                noItemViewHolder.buttonAdd.setOnClickListener {
+                    onClickAddListener()
+                }
+            }
+            else -> Unit
         }
         item.onBindViewHolder(holder)
     }

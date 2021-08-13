@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -111,8 +112,6 @@ class ProfitPieChartFragment : Fragment(R.layout.fragment_profit_pie_chart) {
                 if (entries.isNotEmpty()) "Больше всего получено по категории \"${it.maxProfitCategory}\""
                 else ""
             updateProfitPieChart(entries)
-//            if (entries.isNotEmpty())
-//                mBinding?.preloaderProfitPieChart?.visibility = View.GONE
         })
     }
 
@@ -134,18 +133,20 @@ class ProfitPieChartFragment : Fragment(R.layout.fragment_profit_pie_chart) {
         mProfitPieChart.isRotationEnabled = true
         mProfitPieChart.isHighlightPerTapEnabled = true
         mProfitPieChart.animateY(1400, EaseInOutQuad)
+        mProfitPieChart.setNoDataText("Пока тут ничего нет")
+        mProfitPieChart.setNoDataTextColor(ResourcesCompat.getColor(resources,R.color.grey_800,null))
 
         val l: Legend = mProfitPieChart.legend
         l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
         l.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
         l.orientation = Legend.LegendOrientation.HORIZONTAL
-        l.setDrawInside(true)
+        l.setDrawInside(false)
         l.isWordWrapEnabled = true
         l.xEntrySpace = 7f
-        l.textSize = 12f
-        l.yEntrySpace = 0f
-        l.yOffset = 5f
-
+        l.textSize = 14f
+        l.textColor = ResourcesCompat.getColor(resources,R.color.grey_800,null)
+        l.yEntrySpace = 2f
+        l.yOffset = 10f
         mProfitPieChart.setDrawEntryLabels(false)
     }
 

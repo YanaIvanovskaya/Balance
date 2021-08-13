@@ -79,7 +79,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
         historyAdapter.notifyDataSetChanged()
         mBinding?.preloaderHistory?.visibility =
-            if (historyAdapter.dataSet.isNotEmpty()) View.GONE
+            if (state.hasNoRecords || state.isContentLoaded) View.GONE
             else View.VISIBLE
     }
 

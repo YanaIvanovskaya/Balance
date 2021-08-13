@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.Dispatchers
@@ -135,8 +137,6 @@ class ProfitLossChartFragment : Fragment(R.layout.fragment_profit_loss_chart) {
         createProfitLossBarChart()
         mViewModel.state.observe(viewLifecycleOwner, {
             updateProfitLossChart(it.entries)
-//            if (entries.isNotEmpty() || (!it.haveCosts && !it.haveProfits))
-//                mBinding?.preloaderProfitLossChart?.visibility = View.GONE
         })
     }
 
@@ -147,24 +147,26 @@ class ProfitLossChartFragment : Fragment(R.layout.fragment_profit_loss_chart) {
 
     private fun createProfitLossBarChart() {
         mProfitLossBarChart.setOnChartValueSelectedListener(onValueSelectedListener)
+        mProfitLossBarChart.setExtraOffsets(5f, 20f, 5f, 20f)
         mProfitLossBarChart.setDrawValueAboveBar(true)
         mProfitLossBarChart.description.isEnabled = false
         mProfitLossBarChart.setDrawGridBackground(false)
         mProfitLossBarChart.setFitBars(true)
         mProfitLossBarChart.animateX(500)
         mProfitLossBarChart.animateY(700)
+        mProfitLossBarChart.setNoDataText("Пока тут ничего нет")
+        mProfitLossBarChart.setNoDataTextColor(ResourcesCompat.getColor(resources,R.color.grey_800,null))
 
         mProfitLossBarChart.axisRight.isEnabled = false
         mProfitLossBarChart.axisLeft.setDrawGridLines(false)
         mProfitLossBarChart.axisLeft.setDrawZeroLine(true)
-        mProfitLossBarChart.axisLeft.setLabelCount(7, false)
         mProfitLossBarChart.axisLeft.textSize = 12f
         mProfitLossBarChart.axisLeft.valueFormatter = YAxisFormatter()
 
         val xAxis = mProfitLossBarChart.xAxis
-        xAxis.position = XAxis.XAxisPosition.TOP_INSIDE
+        xAxis.position = XAxis.XAxisPosition.TOP
         xAxis.setDrawGridLines(false)
-        xAxis.setDrawAxisLine(false)
+        xAxis.setDrawAxisLine(true)
         xAxis.textSize = 12f
         xAxis.granularity = 1f
         xAxis.valueFormatter = XAxisFormatter(mProfitLossBarChart)
@@ -177,8 +179,8 @@ class ProfitLossChartFragment : Fragment(R.layout.fragment_profit_loss_chart) {
         }
 
         val colors: MutableList<Int> = ArrayList()
-        val green = Color.rgb(110, 190, 102)
-        val red = Color.rgb(211, 74, 88)
+        val green = ResourcesCompat.getColor(resources,R.color.green_200,null)
+        val red = ResourcesCompat.getColor(resources,R.color.red_200,null)
 
         barEntries.forEach {
             if (it.y <= 0) colors.add(red) else colors.add(green)
@@ -186,11 +188,13 @@ class ProfitLossChartFragment : Fragment(R.layout.fragment_profit_loss_chart) {
 
         val set = BarDataSet(barEntries, "")
         set.colors = colors
-        set.setValueTextColors(colors)
+        set.valueTextSize = 12f
+        set.colors = colors
+        set.valueFormatter = BarValueFormatter()
 
         val data = BarData(set)
-        data.setValueTextSize(13f)
         mProfitLossBarChart.data = data
+        mProfitLossBarChart.setVisibleXRangeMaximum(6f)
         mProfitLossBarChart.invalidate()
     }
 

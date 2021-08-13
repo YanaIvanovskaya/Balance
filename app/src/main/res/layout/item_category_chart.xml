@@ -6,17 +6,16 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:layout_marginBottom="3dp"
-    android:background="#F6F1E2">
+    android:background="@drawable/bg_chart">
 
     <TextView
         android:id="@+id/title_name_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingTop="10dp"
-        android:paddingRight="20dp"
+        android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:text="Категория"
+        android:textColor="@color/grey_800"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,20 +25,22 @@
         android:id="@+id/text_currency_chart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
         android:paddingLeft="3dp"
         android:paddingTop="15dp"
         android:paddingRight="3dp"
-        android:paddingBottom="5dp"
+        android:paddingBottom="8dp"
         android:text="P /мес"
+        android:textColor="@color/grey_800"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/sum_avg_monthly"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/sum_avg_monthly" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/category_chart"
         android:layout_width="match_parent"
         android:layout_height="350dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -59,7 +60,8 @@
         android:textColor="#EA8181"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/title_name_category"
         app:layout_constraintEnd_toStartOf="@+id/text_currency_chart"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/title_name_category" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

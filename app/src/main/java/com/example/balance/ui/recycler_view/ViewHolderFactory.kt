@@ -52,6 +52,11 @@ object ViewHolderFactory {
                     .inflate(R.layout.item_profit_stat_info, parent, false)
                 ProfitStatInfoViewHolder(profitStatTypeView)
             }
+            Item.NO_ITEMS_ITEM_TYPE -> {
+                val noItemsTypeView: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_no_items, parent, false)
+                NoItemsItemViewHolder(noItemsTypeView)
+            }
             else -> {
                 val dateTypeView: View = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_date, parent, false)
@@ -114,8 +119,10 @@ object ViewHolderFactory {
         val sumAvgMonthlyBalance: TextView = itemView.findViewById(R.id.amount_balance)
     }
 
-    class NoRecentlyRecordsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val date: TextView = itemView.findViewById(R.id.usage_template)
+    class NoItemsItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//        val image: ImageView = itemView.findViewById(R.id.image_no_items)
+        val message: TextView = itemView.findViewById(R.id.text_no_items)
+        val buttonAdd: TextView = itemView.findViewById(R.id.button_no_items)
     }
 
 }

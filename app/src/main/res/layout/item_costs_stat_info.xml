@@ -4,16 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stat_costs_cardView" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/stat_costs_cardView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="7dp"
-        android:layout_marginLeft="7dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        app:cardBackgroundColor="#FFDADA"
+        android:layout_margin="7dp"
+        app:cardBackgroundColor="@color/red_100"
         app:cardCornerRadius="10dp"
         app:cardElevation="10dp"
         app:cardMaxElevation="10dp"
@@ -35,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:padding="1dp"
                 android:text="999 999 Р"
+                android:textColor="@color/grey_800"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -45,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:padding="1dp"
                 android:text="999 999 Р"
+                android:textColor="@color/grey_800"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sum_general_costs" />
@@ -55,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:padding="1dp"
                 android:text="999"
+                android:textColor="@color/grey_800"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sum_avg_monthly_costs" />
@@ -66,7 +72,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="@string/text_stat_general_costs"
-                android:textColor="#838383"
+                android:textColor="@color/grey_800"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -77,7 +83,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="@string/text_stat_average_costs_month"
-                android:textColor="#838383"
+                android:textColor="@color/grey_800"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_stat_general_costs" />
 
@@ -88,7 +94,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="@string/text_stat_average_purchase"
-                android:textColor="#838383"
+                android:textColor="@color/grey_800"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_stat_average_costs_month" />
 

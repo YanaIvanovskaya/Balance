@@ -23,6 +23,7 @@ class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
     private lateinit var navController: NavController
     private val mViewModel by getViewModel {
         BalanceCreationViewModel(
+            balanceRepository = BalanceApp.balanceRepository,
             dataStore = BalanceApp.dataStore
         )
     }
@@ -65,6 +66,7 @@ class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
 
     private fun onNextClick() {
         mViewModel.onSaveBalance()
+
         navController.navigate(R.id.bottomNavigationFragment)
     }
 

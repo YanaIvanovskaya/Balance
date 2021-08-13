@@ -12,6 +12,7 @@ import com.example.balance.Case
 import com.example.balance.R
 import com.example.balance.databinding.FragmentStatisticsBinding
 import com.example.balance.getMonthName
+import com.example.balance.presentation.StatisticsState
 import com.example.balance.presentation.StatisticsViewModel
 import com.example.balance.presentation.getViewModel
 import com.github.mikephil.charting.charts.BarChart
@@ -128,7 +129,7 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        mViewModel.state.observe(viewLifecycleOwner, ::render)
         mBinding?.frame?.let {
             childFragmentManager.beginTransaction()
                 .add(it.id, mGeneralStatisticsFragment)
@@ -136,6 +137,21 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
                 .commit()
         }
 
+    }
+
+    private fun render(state: StatisticsState) {
+        when (state.hasNoRecords) {
+            true -> {
+                mBinding?.frameNoStatistics?.visibility = View.VISIBLE
+                mBinding?.chipGroup?.visibility = View.GONE
+                mBinding?.frame?.visibility = View.GONE
+            }
+            false -> {
+                mBinding?.frameNoStatistics?.visibility = View.GONE
+                mBinding?.chipGroup?.visibility = View.VISIBLE
+                mBinding?.frame?.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onDestroyView() {

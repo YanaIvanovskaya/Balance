@@ -14,6 +14,7 @@ import com.example.balance.getTimeLabel
 import com.example.balance.getWeekDay
 import com.example.balance.ui.recycler_view.item.DateItem
 import com.example.balance.ui.recycler_view.item.Item
+import com.example.balance.ui.recycler_view.item.NoItemsItem
 import com.example.balance.ui.recycler_view.item.RecordItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -29,7 +30,9 @@ data class HistoryState(
     val allRecords: List<Item>,
     val costsRecords: List<Item>,
     val profitRecords: List<Item>,
-    val importantRecords: List<Item>
+    val importantRecords: List<Item>,
+    val isContentLoaded: Boolean,
+    val hasNoRecords: Boolean
 ) {
 
     companion object {
@@ -38,7 +41,9 @@ data class HistoryState(
             allRecords = listOf(),
             costsRecords = listOf(),
             profitRecords = listOf(),
-            importantRecords = listOf()
+            importantRecords = listOf(),
+            isContentLoaded = false,
+            hasNoRecords = true
         )
     }
 
@@ -56,11 +61,18 @@ class HistoryViewModel(
         recordRepository.allRecords
             .onEach { newRecordList ->
                 state.value = state.value?.copy(
-                    allRecords = mapItems(newRecordList),
+                    hasNoRecords = newRecordList.isEmpty()
+                )
+                val allRecords = mapItems(newRecordList)
+
+                state.value = state.value?.copy(
+                    allRecords = allRecords,
+                    isContentLoaded = allRecords.isNotEmpty(),
                     costsRecords = mapItems(newRecordList, recordType = RecordType.COSTS),
                     profitRecords = mapItems(newRecordList, recordType = RecordType.PROFITS),
                     importantRecords = mapItems(newRecordList, onlyImportant = true)
                 )
+
             }
             .launchIn(viewModelScope)
     }
@@ -133,6 +145,33 @@ class HistoryViewModel(
                     )
                     currentDate = recordDate
                 }
+            }
+
+            if (allHistoryRecords.isEmpty()) {
+                allHistoryRecords.add(
+                    when (recordType) {
+                        RecordType.COSTS -> NoItemsItem(
+                            message = "Здесь будет история ваших расходов",
+                            enableAdd = false
+                        )
+                        RecordType.PROFITS -> NoItemsItem(
+                            message = "Здесь будет история ваших доходов",
+                            enableAdd = false
+                        )
+                        null -> {
+                            when (onlyImportant) {
+                                true -> NoItemsItem(
+                                    message = "Здесь будет история ваших избранных записей",
+                                    enableAdd = false
+                                )
+                                else -> NoItemsItem(
+                                    message = "Здесь будет общая история ваших записей",
+                                    enableAdd = false
+                                )
+                            }
+                        }
+                    }
+                )
             }
             allHistoryRecords
         }

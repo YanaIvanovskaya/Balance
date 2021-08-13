@@ -9,6 +9,7 @@ import com.example.balance.data.category.CategoryType
 import com.example.balance.getMonthName
 import com.example.balance.toUpperFirst
 import com.example.balance.ui.recycler_view.ViewHolderFactory
+import com.example.balance.ui.statistics.BarValueFormatter
 import com.example.balance.ui.statistics.XAxisFormatter
 import com.example.balance.ui.statistics.YAxisFormatter
 import com.github.mikephil.charting.components.AxisBase
@@ -53,7 +54,8 @@ class CategoryChartItem(
                 "+ "
             }
         }
-        statisticsViewHolder.sumAvgMonthly.text = "$sign$sumAverageMonth"
+        val sumAvgMonthly = "$sign$sumAverageMonth"
+        statisticsViewHolder.sumAvgMonthly.text = sumAvgMonthly
 
         val chart = statisticsViewHolder.categoryChart
 
@@ -67,7 +69,6 @@ class CategoryChartItem(
         chart.axisRight.isEnabled = false
         chart.axisLeft.setDrawGridLines(false)
         chart.axisLeft.setDrawZeroLine(true)
-        chart.axisLeft.setLabelCount(7, false)
         chart.axisLeft.textSize = 12f
         chart.axisLeft.valueFormatter = YAxisFormatter()
 
@@ -89,10 +90,10 @@ class CategoryChartItem(
 
         val set = BarDataSet(barEntries, "")
         set.colors = colors
-        set.setValueTextColors(colors)
+        set.valueFormatter = BarValueFormatter()
 
         val data = BarData(set)
-        data.setValueTextSize(13f)
+        data.setValueTextSize(12f)
         chart.data = data
         chart.invalidate()
 

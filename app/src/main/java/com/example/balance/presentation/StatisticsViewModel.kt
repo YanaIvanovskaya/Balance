@@ -8,7 +8,6 @@ import com.example.balance.data.category.Category
 import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.category.CategoryType
 import com.example.balance.data.record.RecordRepository
-import com.example.balance.data.record.RecordType
 import com.example.balance.ui.recycler_view.item.CategoryChartItem
 import com.example.balance.ui.recycler_view.item.Item
 import com.example.balance.ui.recycler_view.item.StatCostsInfoItem
@@ -23,7 +22,8 @@ data class StatisticsState(
     val yearsOfUse: List<Int>,
     val profitStatItems: List<Item>,
     val costsStatItems: List<Item>,
-    val mapCategoryAvgSum: Map<Int, Int>
+    val mapCategoryAvgSum: Map<Int, Int>,
+    val hasNoRecords: Boolean
 ) {
 
     companion object {
@@ -31,7 +31,8 @@ data class StatisticsState(
             yearsOfUse = listOf(),
             profitStatItems = mutableListOf(),
             costsStatItems = mutableListOf(),
-            mapCategoryAvgSum = mutableMapOf()
+            mapCategoryAvgSum = mutableMapOf(),
+            hasNoRecords = true
         )
     }
 
@@ -49,7 +50,10 @@ class StatisticsViewModel(
             val yearsOfUse = StatisticsAccessor.getListYearsOfUse()
 
             if (yearsOfUse.isNotEmpty()) {
-                state.value = state.value?.copy(yearsOfUse = yearsOfUse)
+                state.value = state.value?.copy(
+                    yearsOfUse = yearsOfUse,
+                    hasNoRecords = false
+                )
 
                 val generalAmountOfMonths = StatisticsAccessor.getAmountMonthsOfUse()
 

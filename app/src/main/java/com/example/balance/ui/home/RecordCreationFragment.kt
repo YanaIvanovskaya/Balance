@@ -24,6 +24,7 @@ import com.example.balance.databinding.FragmentRecordCreationBinding
 import com.example.balance.presentation.RecordCreationState
 import com.example.balance.presentation.RecordCreationViewModel
 import com.example.balance.presentation.getViewModel
+import com.example.balance.toUpperFirst
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
@@ -113,7 +114,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             MoneyType.CASH -> mBinding?.radioButtonCash?.isChecked = true
             MoneyType.CARDS -> mBinding?.radioButtonCards?.isChecked = true
         }
-        mBinding?.categoryName?.setText(state.selectedCategory)
+        mBinding?.categoryName?.setText(state.selectedCategory.toUpperFirst())
 
         mBinding?.switchIsImportantRecord?.isChecked = state.isImportant
         mBinding?.switchIsTemplate?.isChecked = state.isTemplate

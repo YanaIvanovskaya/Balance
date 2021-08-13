@@ -4,9 +4,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.ui.recycler_view.item.CategoryItem
 import com.example.balance.ui.recycler_view.ViewHolderFactory
+import com.example.balance.ui.recycler_view.item.Item
+import com.example.balance.ui.recycler_view.item.NoItemsItem
+import com.example.balance.ui.recycler_view.item.RecordItem
 
 class CategoryAdapter(
-    var dataSet: MutableList<CategoryItem> = mutableListOf()
+    var dataSet: MutableList<Item> = mutableListOf(),
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()
@@ -24,8 +27,8 @@ class CategoryAdapter(
         notifyDataSetChanged()
     }
 
-    fun insertAt(position: Int,item: CategoryItem) {
-        dataSet.add(position,item)
+    fun insertAt(position: Int, item: CategoryItem) {
+        dataSet.add(position, item)
         notifyDataSetChanged()
     }
 

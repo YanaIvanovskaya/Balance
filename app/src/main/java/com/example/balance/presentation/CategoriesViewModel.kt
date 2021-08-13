@@ -12,6 +12,7 @@ import com.example.balance.data.template.TemplateRepository
 import com.example.balance.getMonthName
 import com.example.balance.ui.recycler_view.item.CategoryItem
 import com.example.balance.ui.recycler_view.item.Item
+import com.example.balance.ui.recycler_view.item.NoItemsItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -21,9 +22,9 @@ import kotlinx.coroutines.launch
 
 data class CategoryState(
     val currentChip: Int,
-    val commonCategories: MutableList<CategoryItem>,
-    val costsCategories: MutableList<CategoryItem>,
-    val profitCategories: MutableList<CategoryItem>
+    val commonCategories: MutableList<Item>,
+    val costsCategories: MutableList<Item>,
+    val profitCategories: MutableList<Item>
 ) {
 
     companion object {
@@ -71,13 +72,13 @@ class CategoriesViewModel(
     }
 
     fun getProfitCategoryNames(): List<String> {
-        return state.value?.profitCategories?.map {
+        return state.value?.profitCategories?.filterIsInstance<CategoryItem>()?.map {
             it.name
         } ?: listOf()
     }
 
     fun getCostsCategoryNames(): List<String> {
-        return state.value?.costsCategories?.map {
+        return state.value?.costsCategories?.filterIsInstance<CategoryItem>()?.map {
             it.name
         } ?: listOf()
     }
@@ -106,22 +107,14 @@ class CategoriesViewModel(
                     templateRepository.deleteTemplateById(it.id)
                 }
             }
-//
-//            ) {
-//                if (recordRepository.getRecordById(template.recordId)
-//                        .first().categoryId == categoryId
-//                ) {
-//                    templateRepository.deleteTemplateById(template.id)
-//                }
-//            }
         }
     }
 
-    private suspend fun mapItems(
+    private fun mapItems(
         items: List<Category>,
         categoryType: CategoryType? = null
-    ): MutableList<CategoryItem> {
-        val allCategories: MutableList<CategoryItem> = mutableListOf()
+    ): MutableList<Item> {
+        val allCategories: MutableList<Item> = mutableListOf()
 
         items.reversed().forEach { category ->
 
@@ -144,6 +137,15 @@ class CategoriesViewModel(
                     )
                 )
             }
+        }
+        if (allCategories.isEmpty()) {
+            allCategories.add(
+                when (categoryType) {
+                    CategoryType.CATEGORY_COSTS -> NoItemsItem(message = "Здесь будут категории расходов",enableAdd = false)
+                    CategoryType.CATEGORY_PROFIT -> NoItemsItem(message = "Здесь будут категории доходов",enableAdd = false)
+                    null -> NoItemsItem(message = "Здесь будут все ваши категории",enableAdd = false)
+                }
+            )
         }
         return allCategories
     }

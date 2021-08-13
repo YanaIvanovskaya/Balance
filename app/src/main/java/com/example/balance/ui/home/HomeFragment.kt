@@ -57,7 +57,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             onLongItemClickListener = { recordId, isImportant ->
                 showRecordMenu(recordId, isImportant)
                 true
-            }
+            },
+            onClickAddListener = { onAddRecordClick() }
         )
         mViewModel.allHomeRecords.observe(viewLifecycleOwner) { list ->
             homeAdapter.dataSet = list.toMutableList()
@@ -95,22 +96,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         unpin?.setOnClickListener {
-             mViewModel.onSetImportant(recordId, isImportant)
+            mViewModel.onSetImportant(recordId, isImportant)
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()
     }
 
     private fun render(state: HomeState) {
-        homeAdapter.updateBalance(state.cash.toString(), state.cards.toString())
         mBinding?.preloaderHome?.visibility =
-            if (state.isContentLoaded && state.isSumLoaded) View.GONE
-            else View.VISIBLE
-        mBinding?.floatingButtonCreateNewRecord?.isVisible = state.isContentLoaded
-        if (state.hasNoRecords) {
-            mBinding?.homeRecyclerView?.visibility = View.GONE
-        }
-
+            if (state.isContentLoaded && state.isSumLoaded) {
+                homeAdapter.updateBalance(state.cash.toString(), state.cards.toString())
+                View.GONE
+            }
+            else {
+                View.VISIBLE
+            }
+        mBinding?.floatingButtonCreateNewRecord?.isVisible = !state.hasNoRecords
     }
 
     private fun initRecyclerView() {
