@@ -88,8 +88,12 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
     }
 
     private fun initRecyclerView() {
+        categoryRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)?.let {
+            DividerItemDecoration(it)
+        }?.let { categoryRecyclerView.addItemDecoration(it) }
         categoryRecyclerView.adapter = categoryAdapter
-        categoryRecyclerView.layoutManager = LinearLayoutManager(context)
 
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

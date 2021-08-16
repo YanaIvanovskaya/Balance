@@ -60,4 +60,25 @@
         <item name="backgroundTint">@null</item>
     </style>
 
+    <style name="SingleLineEditText" parent="@style/Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/grey_800</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColorHint">@color/grey_800</item>
+    </style>
+
+    <style name="SumEditText" parent="SingleLineEditText">
+        <item name="android:background">@drawable/bg_sum</item>
+        <item name="android:inputType">numberSigned|number</item>
+        <item name="android:digits">0987654321</item>
+        <item name="android:maxLength">9</item>
+    </style>
+
+    <style name="AppEditText" parent="SingleLineEditText">
+        <item name="android:background">@drawable/bg_comment</item>
+        <item name="android:maxLength">15</item>
+        <item name="android:inputType">textCapSentences</item>
+    </style>
+
 </resources>

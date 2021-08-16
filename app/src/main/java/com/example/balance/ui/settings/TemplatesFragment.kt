@@ -18,6 +18,7 @@ import com.example.balance.databinding.FragmentMyTemplatesBinding
 import com.example.balance.presentation.TemplateState
 import com.example.balance.presentation.TemplatesViewModel
 import com.example.balance.presentation.getViewModel
+import com.example.balance.ui.recycler_view.DividerItemDecoration
 import com.example.balance.ui.recycler_view.SwipeToDeleteCallback
 import com.example.balance.ui.recycler_view.adapter.TemplateAdapter
 import com.example.balance.ui.recycler_view.item.TemplateItem
@@ -58,8 +59,11 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
     }
 
     private fun initRecyclerView() {
+        templateRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)?.let {
+            DividerItemDecoration(it)
+        }?.let { templateRecyclerView.addItemDecoration(it) }
         templateRecyclerView.adapter = templateAdapter
-        templateRecyclerView.layoutManager = LinearLayoutManager(context)
 
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {

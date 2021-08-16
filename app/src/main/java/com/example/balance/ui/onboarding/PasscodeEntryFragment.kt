@@ -1,10 +1,10 @@
 package com.example.balance.ui.onboarding
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioButton
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -35,12 +35,14 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         val binding = FragmentPasscodeBinding.inflate(inflater, container, false)
         mBinding = binding
         mNavController = NavHostFragment.findNavController(this)
         mViewModel.state.observe(viewLifecycleOwner, ::render)
         applyScreenType()
         initButtons()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         return binding.root
     }
 
@@ -78,15 +80,28 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
 
         when (args.screenType) {
             PasscodeScreenType.ONBOARDING -> {
-                mBinding?.buttonNext?.isVisible = state.canComplete
-                mBinding?.editTextCreationPasscode?.inputType = state.passcodeMode
+                mBinding?.buttonNext?.visibility = when (state.canComplete) {
+                    true -> View.VISIBLE
+                    false -> View.INVISIBLE
+                }
             }
             PasscodeScreenType.AUTH -> {
-                mBinding?.errorMsgPasscode?.isVisible = state.canComplete && !state.isMatches
-
-                if (state.canComplete and state.isMatches) {
-                    mNavController.navigate(R.id.bottomNavigationFragment)
+                val incorrectPasscode = state.canComplete && !state.isMatches
+                mBinding?.errorMsgPasscode?.visibility = when (incorrectPasscode) {
+                    true -> View.VISIBLE
+                    false -> View.INVISIBLE
                 }
+                mBinding?.char1?.isActivated = incorrectPasscode
+                mBinding?.char2?.isActivated = incorrectPasscode
+                mBinding?.char3?.isActivated = incorrectPasscode
+                mBinding?.char4?.isActivated = incorrectPasscode
+                mBinding?.char5?.isActivated = incorrectPasscode
+
+                mBinding?.progressBar4?.visibility =
+                    if (state.canComplete and state.isMatches) {
+                        mNavController.navigate(R.id.bottomNavigationFragment)
+                        View.VISIBLE
+                    } else View.INVISIBLE
             }
             else -> Unit
         }
@@ -98,7 +113,6 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
     }
 
     private fun initButtons() {
-        mBinding?.buttonShowPasscode?.setOnClickListener { mViewModel.onShowPasscode() }
         mBinding?.buttonClearPasscode?.setOnClickListener { mViewModel.onClickClear() }
         mBinding?.buttonNext?.setOnClickListener { onNextClick() }
 

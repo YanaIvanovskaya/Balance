@@ -63,7 +63,7 @@ class StartingAppViewModel(
     private fun fillDatabase() {
         viewModelScope.launch(Dispatchers.IO) {
             var date = LocalDate.of(2021, 1, 1)
-            for (i in 1..20) {
+            for (i in 1..40) {
                 val newDate = date.plusDays((1..3).random().toLong())
                 date = newDate
                 for (n in 1..(1..3).random()) {
@@ -77,7 +77,7 @@ class StartingAppViewModel(
                         sumOfMoney = (1..100).random(),
                         recordType = recordType,
                         moneyType = if ((0..1).random() == 1) MoneyType.CASH else MoneyType.CARDS,
-                        categoryId = if (recordType == RecordType.PROFITS) (11..12).random() else (9..10).random(),
+                        categoryId = if (recordType == RecordType.PROFITS) (8..10).random() else (5..7).random(),
                         comment = ""
                     )
                     BalanceApp.recordRepository.insert(record)
@@ -95,8 +95,6 @@ class StartingAppViewModel(
 //            withContext(Dispatchers.IO) {
 //                fillDatabase()
 //            }
-
-//            println(BalanceApp.recordRepository.getcc().first())
 
             val passcode = withContext(Dispatchers.IO) {
                 dataStore.passcode.first()

@@ -44,10 +44,10 @@ class RecordItem(
             ResourcesCompat.getColor(resources, R.color.red_300, null)
         val profitsColor = ResourcesCompat.getColor(resources, R.color.green_300, null)
 
-        val costsBg =
-            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_costs, null)
-        val profitBg =
-            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_profit, null)
+//        val costsBg =
+//            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_costs, null)
+//        val profitBg =
+//            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_profit, null)
 
         when (moneyType) {
             MoneyType.CASH -> recordViewHolder.moneyTypeText.setImageDrawable(imageCash)
@@ -58,12 +58,12 @@ class RecordItem(
         val prefix = when (recordType) {
             RecordType.COSTS -> {
                 recordViewHolder.sumText.setTextColor(costsColor)
-                recordViewHolder.layout.background = costsBg
+//                recordViewHolder.layout.background = costsBg
                 "- "
             }
             else -> {
                 recordViewHolder.sumText.setTextColor(profitsColor)
-                recordViewHolder.layout.background = profitBg
+//                recordViewHolder.layout.background = profitBg
                 "+ "
             }
         }

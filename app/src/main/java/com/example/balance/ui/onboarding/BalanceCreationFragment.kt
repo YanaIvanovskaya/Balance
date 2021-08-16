@@ -66,7 +66,6 @@ class BalanceCreationFragment : Fragment(R.layout.fragment_balance_creation) {
 
     private fun onNextClick() {
         mViewModel.onSaveBalance()
-
         navController.navigate(R.id.bottomNavigationFragment)
     }
 

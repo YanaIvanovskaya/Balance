@@ -23,9 +23,6 @@
         <action
             android:id="@+id/action_passcodeCreationFragment_to_creatingBalanceFragment"
             app:destination="@id/balanceCreationFragment" />
-        <action
-            android:id="@+id/action_passcodeCreationFragment_to_greetingNewUserFragment"
-            app:destination="@id/greetingNewUserFragment" />
 
         <argument
             android:name="screenType"

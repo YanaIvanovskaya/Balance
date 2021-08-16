@@ -21,6 +21,7 @@ import com.example.balance.presentation.HistoryViewModel
 import com.example.balance.presentation.TemplateState
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
+import com.example.balance.ui.recycler_view.DividerItemDecoration
 import com.example.balance.ui.recycler_view.adapter.HistoryAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -84,7 +85,10 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     }
 
     private fun initRecyclerView() {
-        historyRecyclerView.layoutManager = LinearLayoutManager(context)
+        historyRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)?.let {
+            DividerItemDecoration(it)
+        }?.let { historyRecyclerView.addItemDecoration(it) }
         historyRecyclerView.adapter = historyAdapter
     }
 

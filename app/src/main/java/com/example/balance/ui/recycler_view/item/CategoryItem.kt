@@ -27,14 +27,16 @@ class CategoryItem(
 
         val resources = viewHolder.itemView.resources
 
-        val costsBg =
-            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_costs, null)
-        val profitBg = ResourcesCompat.getDrawable(resources, R.drawable.selector_record_profit, null)
+        val costsColor =
+            ResourcesCompat.getColor(resources, R.color.red_300, null)
+        val profitsColor = ResourcesCompat.getColor(resources, R.color.green_300, null)
 
-        when (categoryType) {
-            CategoryType.CATEGORY_COSTS -> categoryViewHolder.layout.background = costsBg
-            CategoryType.CATEGORY_PROFIT -> categoryViewHolder.layout.background = profitBg
-        }
+        categoryViewHolder.nameCategoryText.setTextColor(
+            when (categoryType) {
+                CategoryType.CATEGORY_COSTS -> costsColor
+                CategoryType.CATEGORY_PROFIT -> profitsColor
+            }
+        )
     }
 
 }

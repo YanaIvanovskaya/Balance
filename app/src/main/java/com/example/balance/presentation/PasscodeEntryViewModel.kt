@@ -1,6 +1,5 @@
 package com.example.balance.presentation
 
-import android.text.InputType
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,6 @@ import kotlinx.coroutines.launch
 data class PasscodeEntryState(
     val passcode: String,
     val canComplete: Boolean,
-    val passcodeMode: Int,
     val isMatches: Boolean,
     val screenType: PasscodeScreenType
 ) {
@@ -20,11 +18,10 @@ data class PasscodeEntryState(
     companion object {
         fun default() = PasscodeEntryState(
             passcode = "",
-            passcodeMode = PasscodeEntryViewModel.PASSCODE_INVISIBLE_MODE,
 
             // для входа в приложение без ввода пароля
-            canComplete = true,
-            isMatches = true,
+            canComplete = false,
+            isMatches = false,
 
             screenType = PasscodeScreenType.ONBOARDING
         )
@@ -49,11 +46,6 @@ class PasscodeEntryViewModel(
 
     companion object {
         const val PASSCODE_LENGTH = 5
-        const val PASSCODE_VISIBLE_MODE =
-            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
-        const val PASSCODE_INVISIBLE_MODE =
-            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-
     }
 
     private fun savePasscodeState(newPasscode: String) {
@@ -96,17 +88,6 @@ class PasscodeEntryViewModel(
         else
             passcode.dropLast(1)
         savePasscodeState(newPasscode)
-    }
-
-    fun onShowPasscode() {
-        val oldPasscodeMode = state.value?.passcodeMode
-        val newPasscodeMode = if (oldPasscodeMode == PASSCODE_INVISIBLE_MODE)
-            PASSCODE_VISIBLE_MODE
-        else
-            PASSCODE_INVISIBLE_MODE
-        state.value = state.value?.copy(
-            passcodeMode = newPasscodeMode
-        )
     }
 
 }

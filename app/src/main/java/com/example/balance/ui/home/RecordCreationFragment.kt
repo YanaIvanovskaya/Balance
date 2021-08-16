@@ -120,8 +120,10 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mBinding?.switchIsTemplate?.isChecked = state.isTemplate
 
         mBinding?.nameTemplateTextInputLayout?.isVisible = state.isTemplate
-        mBinding?.editTextNameTemplate?.isVisible = state.isTemplate
 
+        mBinding?.nameTemplateTextInputLayout?.visibility = if (state.isTemplate) {
+            View.VISIBLE
+        } else View.GONE
         mBinding?.buttonCreateAndSaveNewRecord?.isEnabled = state.canSave
     }
 
@@ -250,8 +252,15 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         mBinding?.switchIsTemplate?.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isShown)
                 mViewModel.onChangeTemplateSwitch(isChecked)
+            if (isChecked)
+                scrollDown()
         }
     }
+
+    private fun scrollDown() {
+        mBinding?.scrollView2?.post { mBinding?.scrollView2?.fullScroll(View.FOCUS_DOWN) }
+    }
+
 
     private fun initWidgets() {
         mBinding?.extraConstraintLayout?.setOnClickListener {
@@ -266,11 +275,15 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
                 mBinding?.extraArrowImageView?.setImageDrawable(imageDownArrow)
             } else {
                 mBinding?.switchIsTemplate?.visibility = View.VISIBLE
+                mBinding?.nameTemplateTextInputLayout?.visibility =
+                    if (mBinding?.switchIsTemplate?.isChecked == true) View.VISIBLE else View.GONE
                 mBinding?.switchIsImportantRecord?.visibility = View.VISIBLE
                 mBinding?.extraArrowImageView?.setImageDrawable(imageUpArrow)
+                scrollDown()
             }
         }
     }
+
 
     private fun showChangeCategoryBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)

@@ -68,4 +68,5 @@
     <string name="title_general_diagram">Диаграмма расходов и доходов по месяцам</string>
     <string name="profit_structure">Структура доходов</string>
     <string name="costs_structure">Структура расходов</string>
+    <string name="title_profit_loss_chart">Диаграмма денежного остатка по месяцам</string>
 </resources>

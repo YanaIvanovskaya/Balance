@@ -5,7 +5,7 @@
     android:id="@+id/template_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_record_profit"
+    android:background="@color/grey_50"
     android:paddingLeft="15dp"
     android:paddingTop="10dp"
     android:paddingRight="15dp"

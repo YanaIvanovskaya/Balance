@@ -7,6 +7,8 @@ import com.example.balance.data.record.MoneyType
 import com.example.balance.data.record.RecordType
 import com.example.balance.toUpperFirst
 import com.example.balance.ui.recycler_view.ViewHolderFactory
+import java.text.NumberFormat
+import java.util.*
 
 class TemplateItem(
     val id: Int,
@@ -36,20 +38,29 @@ class TemplateItem(
         val imageCards =
             ResourcesCompat.getDrawable(resources, R.drawable.ic_card, null)
 
-        val costsBg =
-            ResourcesCompat.getDrawable(resources, R.drawable.selector_record_costs, null)
-        val profitBg = ResourcesCompat.getDrawable(resources, R.drawable.selector_record_profit, null)
+        val costsColor =
+            ResourcesCompat.getColor(resources, R.color.red_300, null)
+        val profitsColor = ResourcesCompat.getColor(resources, R.color.green_300, null)
 
         when (moneyType) {
             MoneyType.CASH -> templateViewHolder.moneyTypeText.setImageDrawable(imageCash)
             MoneyType.CARDS -> templateViewHolder.moneyTypeText.setImageDrawable(imageCards)
         }
 
-        when (recordType) {
-            RecordType.COSTS -> templateViewHolder.layout.background = costsBg
-            RecordType.PROFITS -> templateViewHolder.layout.background = profitBg
+        val prefix = when (recordType) {
+            RecordType.COSTS -> {
+                templateViewHolder.sumText.setTextColor(costsColor)
+                "- "
+            }
+            else -> {
+                templateViewHolder.sumText.setTextColor(profitsColor)
+                "+ "
+            }
         }
 
+        val formatter: NumberFormat = NumberFormat.getInstance(Locale("ru", "RU"))
+        val sumOfMoney = "$prefix ${formatter.format(sumMoney)} ₽"
+        templateViewHolder.sumText.text = sumOfMoney
     }
 
 }

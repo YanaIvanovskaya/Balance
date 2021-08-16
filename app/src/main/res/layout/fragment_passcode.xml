@@ -1,251 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_50">
 
-    <ScrollView
-        android:layout_width="0dp"
+
+    <TextView
+        android:id="@+id/title_passcode_entry"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="@string/make_passcode"
+        android:textColor="@color/grey_800"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_passcode_entry">
+
+        <ProgressBar
+            android:id="@+id/progressBar4"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/error_msg_passcode" />
+
+        <TextView
+            android:id="@+id/error_msg_passcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:isScrollContainer="true"
-            android:orientation="vertical"
-            android:paddingLeft="15dp"
-            android:paddingTop="20dp"
-            android:paddingRight="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="@string/passcode_do_not_matches"
+            android:textColor="@color/red_300"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/progressBar4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/passcode_chars" />
+
+        <LinearLayout
+            android:id="@+id/passcode_chars"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/error_msg_passcode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/title_passcode_entry"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="50dp"
-                android:gravity="center"
-                android:text="@string/make_passcode"
-                android:textColor="@color/grey_800"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/passcode_chars"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <RadioButton
+                android:id="@+id/char1"
+                style="@style/Point"
+                android:checked="false"
+                android:enabled="false" />
 
-            <LinearLayout
-                android:id="@+id/passcode_chars"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="60dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_passcode_entry">
+            <RadioButton
+                android:id="@+id/char2"
+                style="@style/Point" />
 
-                <RadioButton
-                    android:id="@+id/char1"
-                    style="@style/Point"
-                    android:checked="false"
-                    android:enabled="false" />
+            <RadioButton
+                android:id="@+id/char3"
+                style="@style/Point" />
 
-                <RadioButton
-                    android:id="@+id/char2"
-                    style="@style/Point" />
+            <RadioButton
+                android:id="@+id/char4"
+                style="@style/Point" />
 
-                <RadioButton
-                    android:id="@+id/char3"
-                    style="@style/Point" />
+            <RadioButton
+                android:id="@+id/char5"
+                style="@style/Point"
+                android:background="@null"
+                app:buttonTint="@null"
+                app:useMaterialThemeColors="false" />
 
-                <RadioButton
-                    android:id="@+id/char4"
-                    style="@style/Point" />
-
-                <RadioButton
-                    android:id="@+id/char5"
-                    style="@style/Point"
-                    android:background="@null"
-                    app:buttonTint="@null"
-                    app:useMaterialThemeColors="false" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_passcode_entry">
-
-                <EditText
-                    android:id="@+id/edit_text_creation_passcode"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:autofillHints="21212"
-                    android:ems="10"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:freezesText="false"
-                    android:gravity="center"
-                    android:hint="@string/_12345"
-                    android:includeFontPadding="false"
-                    android:inputType="numberPassword"
-                    android:maxLength="5"
-                    android:text="@string/_12345"
-                    android:textSize="34sp" />
-
-                <ImageButton
-                    android:id="@+id/button_show_passcode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    app:srcCompat="@android:drawable/ic_menu_view" />
-
-            </LinearLayout>
-
-            <TableLayout
-                android:id="@+id/tableLayout"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="130dp"
-                android:layout_marginBottom="32dp"
-                android:gravity="center"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/passcode_chars">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <Button
-                        android:id="@+id/button1"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_1" />
-
-                    <Button
-                        android:id="@+id/button2"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_2" />
-
-                    <Button
-                        android:id="@+id/button3"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_3" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <Button
-                        android:id="@+id/button4"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_4" />
-
-                    <Button
-                        android:id="@+id/button5"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_5" />
-
-                    <Button
-                        android:id="@+id/button6"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_6" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <Button
-                        android:id="@+id/button7"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_7" />
-
-                    <Button
-                        android:id="@+id/button8"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_8" />
-
-                    <Button
-                        android:id="@+id/button9"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_9" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center">
-
-                    <Button
-                        android:id="@+id/button00"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:textSize="24sp"
-                        android:visibility="invisible" />
-
-                    <Button
-                        android:id="@+id/button0"
-                        style="@style/KeyBoardButton"
-                        android:text="@string/_0" />
-
-                    <ImageButton
-                        android:id="@+id/button_clear_passcode"
-                        style="@style/KeyBoardButton"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/ic_delete" />
-
-                </TableRow>
-
-            </TableLayout>
-
-            <TextView
-                android:id="@+id/error_msg_passcode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="39dp"
-                android:gravity="center"
-                android:text="@string/passcode_do_not_matches"
-                android:textColor="@color/red_300"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toTopOf="@+id/tableLayout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/passcode_chars"
-                app:layout_constraintVertical_bias="0.206" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
         android:id="@+id/button_next"
+        style="@style/ButtonSave"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -261,6 +121,111 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TableLayout
+        android:id="@+id/tableLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button1"
+                style="@style/KeyBoardButton"
+                android:text="@string/_1" />
+
+            <Button
+                android:id="@+id/button2"
+                style="@style/KeyBoardButton"
+                android:text="@string/_2" />
+
+            <Button
+                android:id="@+id/button3"
+                style="@style/KeyBoardButton"
+                android:text="@string/_3" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button4"
+                style="@style/KeyBoardButton"
+                android:text="@string/_4" />
+
+            <Button
+                android:id="@+id/button5"
+                style="@style/KeyBoardButton"
+                android:text="@string/_5" />
+
+            <Button
+                android:id="@+id/button6"
+                style="@style/KeyBoardButton"
+                android:text="@string/_6" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button7"
+                style="@style/KeyBoardButton"
+                android:text="@string/_7" />
+
+            <Button
+                android:id="@+id/button8"
+                style="@style/KeyBoardButton"
+                android:text="@string/_8" />
+
+            <Button
+                android:id="@+id/button9"
+                style="@style/KeyBoardButton"
+                android:text="@string/_9" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/button00"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textSize="24sp"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/button0"
+                style="@style/KeyBoardButton"
+                android:text="@string/_0" />
+
+            <ImageButton
+                android:id="@+id/button_clear_passcode"
+                style="@style/KeyBoardButton"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_delete" />
+
+        </TableRow>
+
+    </TableLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

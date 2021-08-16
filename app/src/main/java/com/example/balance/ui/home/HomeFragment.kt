@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
@@ -20,6 +21,7 @@ import com.example.balance.presentation.HomeState
 import com.example.balance.presentation.HomeViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
+import com.example.balance.ui.recycler_view.DividerItemDecoration
 import com.example.balance.ui.recycler_view.adapter.HomeAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -91,10 +93,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         if (isImportant) {
             bottomSheetDialog.findViewById<TextView>(R.id.label_important)?.text =
                 "Удалить из избранного"
-            bottomSheetDialog.findViewById<TextView>(R.id.image_important)?.background =
+            bottomSheetDialog.findViewById<ImageView>(R.id.important_image)?.background =
                 ResourcesCompat.getDrawable(resources, R.drawable.ic_no_star, null)
         }
-
         unpin?.setOnClickListener {
             mViewModel.onSetImportant(recordId, isImportant)
             bottomSheetDialog.dismiss()
@@ -107,16 +108,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             if (state.isContentLoaded && state.isSumLoaded) {
                 homeAdapter.updateBalance(state.cash.toString(), state.cards.toString())
                 View.GONE
-            }
-            else {
+            } else {
                 View.VISIBLE
             }
         mBinding?.floatingButtonCreateNewRecord?.isVisible = !state.hasNoRecords
     }
 
     private fun initRecyclerView() {
+        homeRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)?.let {
+            DividerItemDecoration(it)
+        }?.let { homeRecyclerView.addItemDecoration(it) }
         homeRecyclerView.adapter = homeAdapter
-        homeRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     private fun onAddRecordClick() {

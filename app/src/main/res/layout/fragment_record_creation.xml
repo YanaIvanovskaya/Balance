@@ -75,25 +75,16 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:background="@null"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView"
-                    app:boxStrokeWidth="0dp"
-                    app:boxStrokeWidthFocused="0dp">
+                    app:layout_constraintTop_toBottomOf="@+id/horizontalScrollView">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/edit_text_sum_money"
-                        style="@null"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_sum"
-                        android:digits="0987654321"
-                        android:hint="@string/hint_sum_of_operation"
-                        android:inputType="numberSigned|number"
-                        android:maxLength="9"
-                        android:singleLine="true"
-                        android:textColor="@color/grey_800"
-                        android:textColorHint="@color/grey_800" />
+                        style="@style/SumEditText"
+                        android:hint="@string/hint_sum_of_operation" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -219,12 +210,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginLeft="16dp"
+                        app:boxStrokeWidth="0dp"
+                        app:boxStrokeWidthFocused="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/button_change_category"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:boxStrokeWidth="0dp"
-                        app:boxStrokeWidthFocused="0dp">
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/category_name"
@@ -249,7 +240,7 @@
                         android:layout_marginLeft="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:background="#00FFFFFF"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:padding="7dp"
                         app:layout_constraintBottom_toBottomOf="@+id/category_textInputLayout"
                         app:layout_constraintEnd_toStartOf="@+id/button_add_category"
@@ -264,7 +255,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         android:layout_marginRight="16dp"
-                        android:background="#00FFFFFF"
+                        android:background="?attr/selectableItemBackgroundBorderless"
                         android:padding="7dp"
                         app:layout_constraintBottom_toBottomOf="@+id/button_change_category"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -279,6 +270,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:background="?attr/selectableItemBackground"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -303,11 +295,11 @@
                         android:layout_height="18dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginLeft="8dp"
-                        app:tint="@color/grey_800"
                         app:layout_constraintBottom_toBottomOf="@+id/textView8"
                         app:layout_constraintStart_toEndOf="@+id/textView8"
                         app:layout_constraintTop_toTopOf="@+id/textView8"
-                        app:srcCompat="@drawable/ic_down_arrow" />
+                        app:srcCompat="@drawable/ic_down_arrow"
+                        app:tint="@color/grey_800" />
 
                     <Switch
                         android:id="@+id/switch_is_important_record"
@@ -357,7 +349,6 @@
                         android:visibility="gone"
                         app:boxStrokeWidth="0dp"
                         app:boxStrokeWidthFocused="0dp"
-                        app:helperTextEnabled="false"
                         app:layout_constraintBottom_toTopOf="@+id/switch_is_important_record"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -365,13 +356,9 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_name_template"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_comment"
                             android:hint="@string/name_template"
-                            android:maxLength="15"
-                            android:singleLine="true"
-                            android:textColor="@color/grey_800" />
+                            style="@style/AppEditText"/>
+
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
