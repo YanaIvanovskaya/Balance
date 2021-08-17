@@ -1,4 +1,4 @@
-package com.example.balance.presentation
+package com.example.balance.presentation.settings
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-
 
 data class CategoryState(
     val currentChip: Int,
@@ -71,17 +70,21 @@ class CategoriesViewModel(
         )
     }
 
-    fun getProfitCategoryNames(): List<String> {
-        return state.value?.profitCategories?.filterIsInstance<CategoryItem>()?.map {
-            it.name
-        } ?: listOf()
-    }
+    fun getProfitCategoryNames(): List<String> =
+        state.value?.profitCategories
+            ?.filterIsInstance<CategoryItem>()
+            ?.map {
+                it.name
+            }
+            ?: listOf()
 
-    fun getCostsCategoryNames(): List<String> {
-        return state.value?.costsCategories?.filterIsInstance<CategoryItem>()?.map {
-            it.name
-        } ?: listOf()
-    }
+    fun getCostsCategoryNames(): List<String> =
+        state.value?.costsCategories
+            ?.filterIsInstance<CategoryItem>()
+            ?.map {
+                it.name
+            }
+            ?: listOf()
 
     fun onSaveNewCategory(categoryName: String, categoryType: CategoryType) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -98,10 +101,11 @@ class CategoriesViewModel(
     fun removeCategory(categoryId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             categoryRepository.deleteCategoryById(categoryId)
-            val templatesWithLink = templateRepository.allTemplates.first().filter {
-                recordRepository.getRecordById(it.recordId).first().categoryId == categoryId
-            }
-
+            val templatesWithLink =
+                templateRepository.allTemplates.first()
+                    .filter {
+                        recordRepository.getRecordById(it.recordId).first().categoryId == categoryId
+                    }
             if (templatesWithLink.isNotEmpty()) {
                 templatesWithLink.forEach {
                     templateRepository.deleteTemplateById(it.id)
@@ -115,25 +119,23 @@ class CategoriesViewModel(
         categoryType: CategoryType? = null
     ): MutableList<Item> {
         val allCategories: MutableList<Item> = mutableListOf()
-
         items.reversed().forEach { category ->
-
-            val chipCondition = if (categoryType != null) {
-                category.type == categoryType
-            } else true
-
+            val chipCondition =
+                if (categoryType != null) category.type == categoryType
+                else true
             if (chipCondition) {
                 allCategories.add(
                     CategoryItem(
                         id = category.id,
                         name = category.name,
                         categoryType = category.type,
-                        dateCreation = "${category.day} ${
-                            getMonthName(
-                                category.month ?: 0,
-                                Case.OF
-                            )
-                        } ${category.year}"
+                        dateCreation = "${category.day} " +
+                                getMonthName(
+                                    category.month ?: 0,
+                                    Case.OF
+                                )
+                                +
+                                "${category.year}"
                     )
                 )
             }
@@ -141,9 +143,18 @@ class CategoriesViewModel(
         if (allCategories.isEmpty()) {
             allCategories.add(
                 when (categoryType) {
-                    CategoryType.CATEGORY_COSTS -> NoItemsItem(message = "Здесь будут категории расходов",enableAdd = false)
-                    CategoryType.CATEGORY_PROFIT -> NoItemsItem(message = "Здесь будут категории доходов",enableAdd = false)
-                    null -> NoItemsItem(message = "Здесь будут все ваши категории",enableAdd = false)
+                    CategoryType.CATEGORY_COSTS -> NoItemsItem(
+                        message = "Здесь будут категории расходов",
+                        enableAdd = false
+                    )
+                    CategoryType.CATEGORY_PROFIT -> NoItemsItem(
+                        message = "Здесь будут категории доходов",
+                        enableAdd = false
+                    )
+                    null -> NoItemsItem(
+                        message = "Здесь будут все ваши категории",
+                        enableAdd = false
+                    )
                 }
             )
         }

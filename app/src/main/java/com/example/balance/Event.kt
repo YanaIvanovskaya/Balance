@@ -15,7 +15,7 @@ class Event<T>(
 
 }
 
-class EventComplete<T>(
+class EventComplete(
     private val isComplete: Boolean
 ) {
     private var mIsConsumed = false

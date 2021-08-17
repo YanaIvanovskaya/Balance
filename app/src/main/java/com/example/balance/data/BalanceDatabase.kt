@@ -14,7 +14,11 @@ import com.example.balance.data.template.TemplateDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [Record::class, Category::class, Template::class], version = 2, exportSchema = false)
+@Database(
+    entities = [Record::class, Category::class, Template::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class BalanceDatabase : RoomDatabase() {
 
     abstract fun RecordDao(): RecordDao
@@ -31,14 +35,25 @@ abstract class BalanceDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 scope.launch {
-                    populateDatabase(database.RecordDao())
+                    populateDatabase(
+                        database.RecordDao(),
+                        database.CategoryDao(),
+                        database.TemplateDao()
+                    )
                 }
             }
         }
 
-        suspend fun populateDatabase(recordDao: RecordDao) {
+        suspend fun populateDatabase(
+            recordDao: RecordDao,
+            categoryDao: CategoryDao,
+            templateDao: TemplateDao
+        ) {
             recordDao.deleteAll()
+            categoryDao.deleteAll()
+            templateDao.deleteAll()
         }
+
     }
 
     companion object {
@@ -63,4 +78,5 @@ abstract class BalanceDatabase : RoomDatabase() {
             }
         }
     }
+
 }

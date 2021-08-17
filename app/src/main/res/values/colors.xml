@@ -8,10 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="app_background">#fffffb</color>
-    <color name="app_nav_bar">#F06292</color>
     <color name="app_money">#2F9371</color>
-
 
     <color name="grey_50">#FAFAFA</color>
     <color name="grey_100">#F5F5F5</color>
@@ -46,8 +43,5 @@
     <color name="blue_300">#64B5F6</color>
     <color name="blue_100">#BBDEFB</color>
     <color name="blue_200">#90CAF9</color>
-
-    <color name="teal_800">#00695C</color>
-
 
 </resources>

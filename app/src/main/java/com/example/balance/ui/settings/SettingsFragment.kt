@@ -10,7 +10,7 @@ import androidx.navigation.Navigation
 import com.example.balance.R
 import com.example.balance.databinding.FragmentSettingsBinding
 
-class SettingsFragment: Fragment(R.layout.fragment_settings) {
+class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private var mBinding: FragmentSettingsBinding? = null
     private lateinit var mNavController: NavController
@@ -23,8 +23,12 @@ class SettingsFragment: Fragment(R.layout.fragment_settings) {
         val binding = FragmentSettingsBinding.inflate(inflater, container, false)
         mBinding = binding
         mNavController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-        initViews()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initViews()
     }
 
     private fun initViews() {

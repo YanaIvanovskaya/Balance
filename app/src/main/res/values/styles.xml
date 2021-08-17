@@ -34,7 +34,6 @@
         <item name="useMaterialThemeColors">false</item>
     </style>
 
-
     <style name="ButtonSave" parent="@style/Widget.MaterialComponents.Button">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -52,7 +51,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">16dp</item>
         <item name="android:background">@drawable/bg_add_button</item>
-
         <item name="android:paddingLeft">30dp</item>
         <item name="android:paddingRight">30dp</item>
         <item name="android:text">@string/add</item>

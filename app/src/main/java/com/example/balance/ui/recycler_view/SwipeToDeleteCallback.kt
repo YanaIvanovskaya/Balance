@@ -45,7 +45,6 @@ abstract class SwipeToDeleteCallback(context: Context) :
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-
         val itemView = viewHolder.itemView
         val itemHeight = itemView.bottom - itemView.top
         val isCanceled = dX == 0f && !isCurrentlyActive
@@ -88,4 +87,5 @@ abstract class SwipeToDeleteCallback(context: Context) :
     private fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
         c?.drawRect(left, top, right, bottom, clearPaint)
     }
+
 }

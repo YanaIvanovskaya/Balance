@@ -1,4 +1,4 @@
-package com.example.balance.presentation
+package com.example.balance.presentation.onboarding
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -53,8 +53,11 @@ class BalanceCreationViewModel(
         }
     }
 
-    fun onChangeSum(sumCash: String, sumCards: String) =
-        saveSumStates(sumCash, sumCards)
+    fun onChangeSum(sumCash: String, sumCards: String) {
+        if (sumCash != state.value?.sumCash || sumCards != state.value?.sumCards) {
+            saveSumStates(sumCash, sumCards)
+        }
+    }
 
     fun onSaveBalance() {
         viewModelScope.launch(Dispatchers.IO) {

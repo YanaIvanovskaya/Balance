@@ -131,7 +131,7 @@ class StatisticsViewModel(
                             val barEntry = BarEntry(
                                 counter.toFloat(),
                                 value.toFloat(),
-                                month
+                                listOf(month, year)
                             )
                             entries.add(barEntry)
                         }

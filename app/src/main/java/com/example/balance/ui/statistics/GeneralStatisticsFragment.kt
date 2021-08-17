@@ -10,26 +10,21 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentGeneralStatisticsBinding
-import com.example.balance.presentation.GeneralStatisticsState
-import com.example.balance.presentation.GeneralStatisticsViewModel
+import com.example.balance.presentation.statistics.GeneralStatisticsState
+import com.example.balance.presentation.statistics.GeneralStatisticsViewModel
 import com.example.balance.presentation.getViewModel
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.charts.PieChart
 
 class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics) {
 
     private var mBinding: FragmentGeneralStatisticsBinding? = null
-    private var mPagerGeneralStat: ViewPager2? = null
     private lateinit var mGeneralChartFragment: GeneralChartFragment
     private lateinit var mProfitLossChartFragment: ProfitLossChartFragment
     private lateinit var mCostsPieChartFragment: CostsPieChartFragment
     private lateinit var mProfitPieChartFragment: ProfitPieChartFragment
-
+    private var mPagerGeneralStat: ViewPager2? = null
     private lateinit var mFragmentStateAdapter: ViewPagerFragmentStateAdapter
-
     private val mViewModel by getViewModel {
         GeneralStatisticsViewModel()
     }
@@ -41,6 +36,8 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
     ): View {
         val binding = FragmentGeneralStatisticsBinding.inflate(inflater, container, false)
         mBinding = binding
+        println("onCreateView")
+        println(mViewModel.state.value)
         return binding.root
     }
 
@@ -61,14 +58,14 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
                 mProfitPieChartFragment
             )
         )
+        mViewModel.state.observe(viewLifecycleOwner, ::render)
         mPagerGeneralStat?.adapter = mFragmentStateAdapter
         mPagerGeneralStat?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                mViewModel.savePagePosition(position)
                 super.onPageSelected(position)
+                mViewModel.savePagePosition(position)
             }
         })
-        mViewModel.state.observe(viewLifecycleOwner, ::render)
     }
 
     private fun render(state: GeneralStatisticsState) {
@@ -77,6 +74,8 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
     }
 
     override fun onDestroyView() {
+        println("onDestroyView")
+        println(mViewModel.state.value)
         mBinding = null
         super.onDestroyView()
     }
@@ -86,13 +85,10 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
         private val fragmentList: List<Fragment>
     ) :
         FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int {
-            return fragmentList.size
-        }
 
-        override fun createFragment(position: Int): Fragment {
-            return fragmentList[position]
-        }
+        override fun getItemCount(): Int = fragmentList.size
+
+        override fun createFragment(position: Int): Fragment = fragmentList[position]
 
     }
 

@@ -1,4 +1,4 @@
-package com.example.balance.presentation
+package com.example.balance.presentation.settings
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -50,8 +50,14 @@ class TemplatesViewModel(
             .onEach { newTemplateList ->
                 state.value = state.value?.copy(
                     commonTemplates = mapItems(newTemplateList),
-                    costsTemplates = mapItems(newTemplateList, recordType = RecordType.COSTS),
-                    profitTemplates = mapItems(newTemplateList, recordType = RecordType.PROFITS)
+                    costsTemplates = mapItems(
+                        newTemplateList,
+                        recordType = RecordType.COSTS
+                    ),
+                    profitTemplates = mapItems(
+                        newTemplateList,
+                        recordType = RecordType.PROFITS
+                    )
                 )
             }
             .launchIn(viewModelScope)
@@ -74,9 +80,7 @@ class TemplatesViewModel(
         recordType: RecordType? = null
     ): MutableList<Item> {
         val allTemplates: MutableList<Item> = mutableListOf()
-
         items.reversed().forEach { template ->
-
             val record = withContext(Dispatchers.IO) {
                 recordRepository.getRecordById(template.recordId).first()
             }
@@ -84,16 +88,14 @@ class TemplatesViewModel(
                 categoryRepository.getNameById(record.categoryId).first()
             }
 
-            val chipCondition = if (recordType != null) {
-                record.recordType == recordType
-            } else true
-
+            val chipCondition =
+                if (recordType != null) record.recordType == recordType
+                else true
             if (chipCondition) {
                 allTemplates.add(
                     TemplateItem(
                         id = template.id,
                         name = template.name,
-                        usage = template.frequencyOfUse,
                         sumMoney = record.sumOfMoney,
                         recordType = record.recordType,
                         moneyType = record.moneyType,
@@ -113,7 +115,10 @@ class TemplatesViewModel(
                         message = "здесь будут шаблоны по доходам",
                         enableAdd = false
                     )
-                    null -> NoItemsItem(message = "Здесь будут все ваши шаблоны", enableAdd = false)
+                    null -> NoItemsItem(
+                        message = "Здесь будут все ваши шаблоны",
+                        enableAdd = false
+                    )
                 }
             )
         }

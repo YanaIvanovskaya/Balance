@@ -1,9 +1,10 @@
-package com.example.balance.presentation
+package com.example.balance.presentation.auth
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.balance.data.UserDataStore
+import com.example.balance.presentation.PasscodeScreenType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ data class PasscodeEntryState(
         fun default() = PasscodeEntryState(
             passcode = "",
 
-            // для входа в приложение без ввода пароля
+            // для входа в приложение без ввода пароля true
             canComplete = false,
             isMatches = false,
 

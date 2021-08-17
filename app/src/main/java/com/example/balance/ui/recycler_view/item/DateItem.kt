@@ -7,9 +7,7 @@ class DateItem(
     private val date: String,
 ) : Item {
 
-    override fun getItemViewType(): Int {
-        return Item.DATE_ITEM_TYPE
-    }
+    override fun getItemViewType(): Int = Item.DATE_ITEM_TYPE
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
         val dateViewHolder = viewHolder as ViewHolderFactory.DateViewHolder

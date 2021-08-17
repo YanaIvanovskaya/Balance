@@ -3,7 +3,6 @@ package com.example.balance.ui.recycler_view.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.ui.recycler_view.ViewHolderFactory
-import com.example.balance.ui.recycler_view.item.CategoryChartItem
 import com.example.balance.ui.recycler_view.item.Item
 
 class StatisticsAdapter(

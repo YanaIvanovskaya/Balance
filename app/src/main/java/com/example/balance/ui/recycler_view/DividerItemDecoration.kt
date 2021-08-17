@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 
 class DividerItemDecoration(private val mDivider: Drawable) : ItemDecoration() {
+
     private var mOrientation = 0
 
     override fun onDraw(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
@@ -61,9 +62,10 @@ class DividerItemDecoration(private val mDivider: Drawable) : ItemDecoration() {
             val parentTop: Int = child.bottom + params.bottomMargin
             val parentBottom = parentTop + mDivider.intrinsicHeight
             mDivider.setBounds(
-                offset , parentTop, parentRight, parentBottom
+                offset, parentTop, parentRight, parentBottom
             )
             mDivider.draw(canvas)
         }
     }
+
 }

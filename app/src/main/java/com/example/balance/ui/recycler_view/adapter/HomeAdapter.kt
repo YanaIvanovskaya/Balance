@@ -7,11 +7,10 @@ import com.example.balance.ui.recycler_view.item.BalanceItem
 import com.example.balance.ui.recycler_view.item.Item
 import com.example.balance.ui.recycler_view.item.NoItemsItem
 import com.example.balance.ui.recycler_view.item.RecordItem
-import timber.log.Timber
 
 class HomeAdapter(
     var dataSet: MutableList<Item> = mutableListOf(),
-    private val onLongItemClickListener: (recordId: Int,isImportant:Boolean) -> Boolean,
+    private val onLongItemClickListener: (recordId: Int, isImportant: Boolean) -> Boolean,
     private val onClickAddListener: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -59,38 +58,3 @@ class HomeAdapter(
     }
 
 }
-
-//class ItemDiffUtilCallback(val oldList: List<Item>, val newList: List<Item>) :
-//    DiffUtil.Callback() {
-//
-//    override fun getOldListSize(): Int = oldList.size
-//
-//    override fun getNewListSize(): Int = newList.size
-//
-//    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//        val oldItem = oldList[oldItemPosition]
-//        val newItem = oldList[newItemPosition]
-//        return when {
-//            oldItem is RecordItem && newItem is Item.RecordItem -> {
-//                oldItem.id == newItem.id
-//            }
-//            else -> false
-//        }
-//    }
-//
-//    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-//        val oldItem = oldList[oldItemPosition]
-//        val newItem = oldList[newItemPosition]
-//        return when {
-//            oldItem is Item.RecordItem && newItem is Item.RecordItem -> {
-//                oldItem.sumMoney == newItem.sumMoney &&
-//                        oldItem.recordType == newItem.recordType &&
-//                        oldItem.moneyType == newItem.moneyType &&
-//                        oldItem.category == newItem.category &&
-//                        oldItem.comment == newItem.comment &&
-//                        oldItem.isImportant == newItem.isImportant
-//            }
-//            else -> false
-//        }
-//    }
-//}

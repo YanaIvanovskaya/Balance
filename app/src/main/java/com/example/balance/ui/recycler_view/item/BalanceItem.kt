@@ -1,11 +1,10 @@
 package com.example.balance.ui.recycler_view.item
 
 import androidx.recyclerview.widget.RecyclerView
+import com.example.balance.formatAsSum
 import com.example.balance.getTime
 import com.example.balance.ui.recycler_view.ViewHolderFactory
 import org.threeten.bp.LocalTime
-import java.text.NumberFormat
-import java.util.*
 
 class BalanceItem(
     private var sumCash: String,
@@ -13,28 +12,22 @@ class BalanceItem(
 ) : Item {
 
     val balance: String
-        get() {
-            return (Integer.parseInt(sumCash) + Integer.parseInt(sumCards)).toString()
-        }
+        get() = (Integer.parseInt(sumCash) + Integer.parseInt(sumCards)).toString()
 
-    override fun getItemViewType(): Int {
-        return Item.BALANCE_ITEM_TYPE
-    }
+    override fun getItemViewType(): Int = Item.BALANCE_ITEM_TYPE
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
         val balanceViewHolder = viewHolder as ViewHolderFactory.BalanceViewHolder
-
-        val formatter: NumberFormat = NumberFormat.getInstance(Locale("ru", "RU"))
-
-        val sumCash = "${formatter.format(sumCash.toInt())} ₽"
-        balanceViewHolder.cashSum.text = sumCash
-        val sumCard = "${formatter.format(sumCards.toInt())} ₽"
-        balanceViewHolder.cardsSum.text = sumCard
-        val balance = "${formatter.format(balance.toInt())} ₽"
-        balanceViewHolder.balanceSum.text = balance
-
-        val balanceTitle = "Баланс на сегодня ${getTime(LocalTime.now().toString())}"
-        balanceViewHolder.balanceTitle.text = balanceTitle
+        val sumCash = "${sumCash.toInt().formatAsSum()} ₽"
+        val sumCard = "${sumCards.toInt().formatAsSum()} ₽"
+        val balance = "${balance.toInt().formatAsSum()} ₽"
+        val balanceTitleText = "Баланс на сегодня ${getTime(LocalTime.now().toString())}"
+        balanceViewHolder.apply {
+            cashSum.text = sumCash
+            cardsSum.text = sumCard
+            balanceSum.text = balance
+            balanceTitle.text = balanceTitleText
+        }
     }
 
     fun update(cash: String, cards: String) {

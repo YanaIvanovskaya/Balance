@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/template_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,7 +14,6 @@
         android:id="@+id/name_template"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="nametemplate"
         android:textColor="@color/grey_800"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,12 +23,11 @@
         android:id="@+id/sum_template"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="- 123 890 P"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/name_template"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/category" />
+        app:layout_constraintTop_toTopOf="@+id/name_template" />
 
     <ImageView
         android:id="@+id/image_money_type_template"
@@ -46,7 +43,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="category"
         android:textColor="@color/grey_800"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_template" />

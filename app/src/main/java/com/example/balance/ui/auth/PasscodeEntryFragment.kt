@@ -1,11 +1,10 @@
-package com.example.balance.ui.onboarding
+package com.example.balance.ui.auth
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -13,21 +12,21 @@ import androidx.navigation.fragment.navArgs
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentPasscodeBinding
-import com.example.balance.presentation.PasscodeEntryState
-import com.example.balance.presentation.PasscodeEntryViewModel
 import com.example.balance.presentation.PasscodeScreenType
+import com.example.balance.presentation.auth.PasscodeEntryState
+import com.example.balance.presentation.auth.PasscodeEntryViewModel
 import com.example.balance.presentation.getViewModel
 
 class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
 
     private var mBinding: FragmentPasscodeBinding? = null
+    private lateinit var mNavController: NavController
     private val mViewModel by getViewModel {
         PasscodeEntryViewModel(
             dataStore = BalanceApp.dataStore,
             screenType = args.screenType
         )
     }
-    private lateinit var mNavController: NavController
     private val args: PasscodeEntryFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -35,15 +34,17 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         val binding = FragmentPasscodeBinding.inflate(inflater, container, false)
         mBinding = binding
         mNavController = NavHostFragment.findNavController(this)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mViewModel.state.observe(viewLifecycleOwner, ::render)
         applyScreenType()
         initButtons()
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        return binding.root
     }
 
     override fun onDestroyView() {
@@ -56,18 +57,15 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
             PasscodeScreenType.AUTH -> {
                 mBinding?.buttonNext?.visibility = View.INVISIBLE
                 mBinding?.titlePasscodeEntry?.text =
-                    context?.resources?.getString(R.string.greeting)
+                    requireContext().resources.getString(R.string.enter_the_passcode)
             }
-            PasscodeScreenType.ONBOARDING -> {
-            }
-            PasscodeScreenType.SETTINGS -> {
-            }
+            PasscodeScreenType.ONBOARDING -> Unit
+            PasscodeScreenType.SETTINGS -> Unit
         }
     }
 
     private fun render(state: PasscodeEntryState) {
         val passcodeLength = state.passcode.length
-
         mBinding?.char1?.isChecked = passcodeLength >= 1
         mBinding?.char2?.isPressed = passcodeLength == 1
         mBinding?.char2?.isChecked = passcodeLength >= 2
@@ -115,7 +113,6 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
     private fun initButtons() {
         mBinding?.buttonClearPasscode?.setOnClickListener { mViewModel.onClickClear() }
         mBinding?.buttonNext?.setOnClickListener { onNextClick() }
-
         val buttonKeyBoard = listOf(
             mBinding?.button0,
             mBinding?.button1,
@@ -128,8 +125,11 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
             mBinding?.button8,
             mBinding?.button9
         )
-        for (button in buttonKeyBoard)
-            button?.setOnClickListener { mViewModel.onNumberClick(button.text as String) }
+        buttonKeyBoard.forEach {
+            it?.setOnClickListener { _ ->
+                mViewModel.onNumberClick(it.text as String)
+            }
+        }
     }
 
 }

@@ -2,11 +2,9 @@ package com.example.balance.ui.recycler_view.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.balance.ui.recycler_view.item.CategoryItem
 import com.example.balance.ui.recycler_view.ViewHolderFactory
+import com.example.balance.ui.recycler_view.item.CategoryItem
 import com.example.balance.ui.recycler_view.item.Item
-import com.example.balance.ui.recycler_view.item.NoItemsItem
-import com.example.balance.ui.recycler_view.item.RecordItem
 
 class CategoryAdapter(
     var dataSet: MutableList<Item> = mutableListOf(),

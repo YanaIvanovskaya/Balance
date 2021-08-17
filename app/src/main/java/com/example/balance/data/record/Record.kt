@@ -4,8 +4,6 @@ import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
-import java.sql.Time
-import java.util.*
 
 enum class RecordType {
     COSTS,
@@ -21,16 +19,13 @@ enum class MoneyType {
 data class Record(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
-
     var time: String = LocalTime.now().toString(),
     var day: Int = currentDate.dayOfMonth,
     var month: Int = currentDate.month.value,
     var year: Int = currentDate.year,
     var weekDay: Int = currentDate.dayOfWeek.value,
-
     var isVisible: Boolean = true,
     var isImportant: Boolean = false,
-
     var sumOfMoney: Int,
     var recordType: RecordType,
     var moneyType: MoneyType,
@@ -54,8 +49,17 @@ interface RecordDao {
     @Query("SELECT * FROM record_table WHERE id = :recordId")
     fun getRecordById(recordId: Int): Flow<Record>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(record: Record): Long
+    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType AND moneyType =:moneyType")
+    fun getSum(recordType: RecordType, moneyType: MoneyType): Flow<Int?>
+
+    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType")
+    fun getSum(recordType: RecordType): Flow<Int?>
+
+    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE moneyType =:moneyType")
+    fun getSumByMoneyType(moneyType: MoneyType): Flow<Int?>
+
+    @Query("SELECT SUM(sumOfMoney) FROM record_table")
+    fun getCommonSum(): Flow<Int?>
 
     @Query("UPDATE record_table SET sumOfMoney=:sumOfMoney,recordType= :recordType,moneyType=:moneyType,category_id=:categoryId,comment=:comment WHERE id = :recordId")
     suspend fun update(
@@ -76,17 +80,8 @@ interface RecordDao {
     @Query("DELETE FROM record_table WHERE id=:recordId")
     suspend fun deleteRecordById(recordId: Int)
 
-    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType AND moneyType =:moneyType")
-    fun getSum(recordType: RecordType, moneyType: MoneyType): Flow<Int?>
-
-    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE recordType =:recordType")
-    fun getSum(recordType: RecordType): Flow<Int?>
-
-    @Query("SELECT SUM(sumOfMoney) FROM record_table WHERE moneyType =:moneyType")
-    fun getSumByMoneyType(moneyType: MoneyType): Flow<Int?>
-
-    @Query("SELECT SUM(sumOfMoney) FROM record_table")
-    fun getCommonSum(): Flow<Int?>
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(record: Record): Long
 
 
     // statistics

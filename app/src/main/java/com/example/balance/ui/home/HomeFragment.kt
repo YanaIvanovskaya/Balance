@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentHomeBinding
-import com.example.balance.presentation.HomeState
-import com.example.balance.presentation.HomeViewModel
+import com.example.balance.presentation.home.HomeState
+import com.example.balance.presentation.home.HomeViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
 import com.example.balance.ui.recycler_view.DividerItemDecoration
@@ -78,7 +78,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val unpin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)
         val edit = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_templates)
         val delete = bottomSheetDialog.findViewById<LinearLayout>(R.id.delete_record)
-
         edit?.setOnClickListener {
             val action = BottomNavigationFragmentDirections
                 .actionBottomNavigationFragmentToRecordEditingFragment(recordId)
@@ -89,7 +88,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             mViewModel.removeRecord(recordId)
             bottomSheetDialog.dismiss()
         }
-
         if (isImportant) {
             bottomSheetDialog.findViewById<TextView>(R.id.label_important)?.text =
                 "Удалить из избранного"
@@ -115,10 +113,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun initRecyclerView() {
-        homeRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)?.let {
-            DividerItemDecoration(it)
-        }?.let { homeRecyclerView.addItemDecoration(it) }
+        homeRecyclerView.layoutManager =
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)
+            ?.let { DividerItemDecoration(it) }
+            ?.let { homeRecyclerView.addItemDecoration(it) }
         homeRecyclerView.adapter = homeAdapter
     }
 

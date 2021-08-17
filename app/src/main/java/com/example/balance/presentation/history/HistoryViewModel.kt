@@ -1,4 +1,4 @@
-package com.example.balance.presentation
+package com.example.balance.presentation.history
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,9 +21,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-
 
 data class HistoryState(
     val currentChip: Int,
@@ -64,15 +62,22 @@ class HistoryViewModel(
                     hasNoRecords = newRecordList.isEmpty()
                 )
                 val allRecords = mapItems(newRecordList)
-
                 state.value = state.value?.copy(
                     allRecords = allRecords,
                     isContentLoaded = allRecords.isNotEmpty(),
-                    costsRecords = mapItems(newRecordList, recordType = RecordType.COSTS),
-                    profitRecords = mapItems(newRecordList, recordType = RecordType.PROFITS),
-                    importantRecords = mapItems(newRecordList, onlyImportant = true)
+                    costsRecords = mapItems(
+                        items = newRecordList,
+                        recordType = RecordType.COSTS
+                    ),
+                    profitRecords = mapItems(
+                        items = newRecordList,
+                        recordType = RecordType.PROFITS
+                    ),
+                    importantRecords = mapItems(
+                        items = newRecordList,
+                        onlyImportant = true
+                    )
                 )
-
             }
             .launchIn(viewModelScope)
     }
@@ -106,28 +111,24 @@ class HistoryViewModel(
             var currentDate = ""
 
             items.reversed().forEach { record ->
-                val isRecordValid = if (recordType != null) {
-                    record.recordType == recordType
-                } else if (onlyImportant == true) {
-                    record.isImportant
-                } else true
-
+                val isRecordValid =
+                    when (true) {
+                        recordType != null -> record.recordType == recordType
+                        onlyImportant == true -> record.isImportant
+                        else -> true
+                    }
                 if (isRecordValid) {
-                    val recordDate =
-                        "${record.day} ${getMonthName(record.month, Case.OF)} ${record.year}"
+                    val recordDate = "${record.day} " +
+                            "${getMonthName(record.month, Case.OF)} " +
+                            "${record.year}"
                     if (currentDate.isEmpty() || currentDate != recordDate) {
                         val dateItem = DateItem(
-                            date =
-                            "${getWeekDay(record.weekDay)} ${record.day} ${
-                                getMonthName(
-                                    record.month,
-                                    Case.OF
-                                )
-                            }"
+                            date = "${getWeekDay(record.weekDay)} " +
+                                    "${record.day} " +
+                                    getMonthName(record.month, Case.OF)
                         )
                         allHistoryRecords.add(dateItem)
                     }
-
                     val sumRecord = record.sumOfMoney
                     allHistoryRecords.add(
                         RecordItem(
@@ -146,7 +147,6 @@ class HistoryViewModel(
                     currentDate = recordDate
                 }
             }
-
             if (allHistoryRecords.isEmpty()) {
                 allHistoryRecords.add(
                     when (recordType) {
@@ -158,17 +158,15 @@ class HistoryViewModel(
                             message = "Здесь будет история ваших доходов",
                             enableAdd = false
                         )
-                        null -> {
-                            when (onlyImportant) {
-                                true -> NoItemsItem(
-                                    message = "Здесь будет история ваших избранных записей",
-                                    enableAdd = false
-                                )
-                                else -> NoItemsItem(
-                                    message = "Здесь будет общая история ваших записей",
-                                    enableAdd = false
-                                )
-                            }
+                        null -> when (onlyImportant) {
+                            true -> NoItemsItem(
+                                message = "Здесь будет история ваших избранных записей",
+                                enableAdd = false
+                            )
+                            else -> NoItemsItem(
+                                message = "Здесь будет общая история ваших записей",
+                                enableAdd = false
+                            )
                         }
                     }
                 )

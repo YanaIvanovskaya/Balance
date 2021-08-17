@@ -6,16 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.balance.Case
 import com.example.balance.R
-import com.example.balance.data.StatisticsAccessor
-import com.example.balance.data.record.RecordType
 import com.example.balance.databinding.FragmentGeneralChartBinding
+import com.example.balance.formatAsSum
 import com.example.balance.getMonthName
 import com.example.balance.presentation.getViewModel
+import com.example.balance.presentation.statistics.GeneralChartViewModel
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -25,80 +22,6 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-
-data class GeneralChartState(
-    val selectedBar: Int,
-    val entries: List<BarEntry>
-) {
-
-    companion object {
-        fun default() = GeneralChartState(
-            selectedBar = 0,
-            entries = listOf()
-        )
-    }
-
-}
-
-class GeneralChartViewModel : ViewModel() {
-
-    val state = MutableLiveData(GeneralChartState.default())
-
-    init {
-        viewModelScope.launch {
-            val entries = getEntries()
-            state.value = state.value?.copy(
-                entries = entries
-            )
-        }
-    }
-
-    private suspend fun getEntries(): List<BarEntry> {
-        return withContext(Dispatchers.IO) {
-            val entries = mutableListOf<BarEntry>()
-            val yearsOfUse = StatisticsAccessor.getListYearsOfUse()
-
-            if (!yearsOfUse.isNullOrEmpty()) {
-                var counter = 1
-
-                yearsOfUse.forEach { year ->
-                    val months = StatisticsAccessor.getListMonthsInYear(year)
-                    months.forEach { month ->
-                        val profitValue = StatisticsAccessor.getMonthlySumByRecordType(
-                            recordType = RecordType.PROFITS,
-                            month = month,
-                            year = year
-                        )
-                        val costsValue = StatisticsAccessor.getMonthlySumByRecordType(
-                            recordType = RecordType.COSTS,
-                            month = month,
-                            year = year
-                        )
-                        if (profitValue != 0 || costsValue != 0) {
-                            entries.add(
-                                BarEntry(
-                                    counter.toFloat(),
-                                    floatArrayOf(
-                                        costsValue.toFloat() * -1,
-                                        profitValue.toFloat()
-                                    ),
-                                    month
-                                )
-                            )
-                        }
-                        counter++
-                    }
-                }
-            }
-            entries
-        }
-    }
-
-}
 
 class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
 
@@ -107,13 +30,17 @@ class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
     private val mViewModel by getViewModel {
         GeneralChartViewModel()
     }
-
     private val onValueSelectedListener = object : OnChartValueSelectedListener {
         override fun onValueSelected(e: Entry?, h: Highlight?) {
             if (e is BarEntry) {
-                val month = getMonthName(e.data as Int, Case.NONE).uppercase()
+                val data = e.data
                 val sumMoney = e.yVals[h!!.stackIndex].toInt()
-                val message = "$month  $sumMoney P"
+                val message = if (data is List<*>) {
+                    val monthNumber = data[0] as Int
+                    val month = getMonthName(monthNumber, Case.SHORT).uppercase()
+                    val year = data[1].toString()
+                    "$month $year  ${sumMoney.formatAsSum()} ₽"
+                } else ""
                 mBinding?.resumeGeneralChart?.text = message
             }
         }
@@ -146,65 +73,67 @@ class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
     }
 
     private fun createGeneralBarChart() {
-        mGeneralBarChart.setOnChartValueSelectedListener(onValueSelectedListener)
-        mGeneralBarChart.setExtraOffsets(5f, 10f, 5f, 10f)
-        mGeneralBarChart.setDrawGridBackground(false)
-        mGeneralBarChart.description.isEnabled = false
-        mGeneralBarChart.setFitBars(true)
-        mGeneralBarChart.setDrawValueAboveBar(true)
-        mGeneralBarChart.animateX(500)
-        mGeneralBarChart.animateY(700)
-
-        mGeneralBarChart.setNoDataText("Пока тут ничего нет")
-        mGeneralBarChart.setNoDataTextColor(
-            ResourcesCompat.getColor(
-                resources,
-                R.color.grey_800,
-                null
+        mGeneralBarChart.apply {
+            setOnChartValueSelectedListener(onValueSelectedListener)
+            setExtraOffsets(5f, 10f, 5f, 10f)
+            setDrawGridBackground(false)
+            setFitBars(true)
+            setDrawValueAboveBar(true)
+            setNoDataText("Пока тут ничего нет")
+            setNoDataTextColor(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.grey_800,
+                    null
+                )
             )
-        )
-
-        val barChartRender =
-            CustomBarChartRender(mGeneralBarChart, mGeneralBarChart.animator, mGeneralBarChart.viewPortHandler)
-        barChartRender.setRadius(20)
-        mGeneralBarChart.renderer = barChartRender
-
-        mGeneralBarChart.axisRight.isEnabled = false
-        mGeneralBarChart.axisLeft.isEnabled = false
-
-        val xAxis = mGeneralBarChart.xAxis
-        xAxis.position = XAxis.XAxisPosition.TOP
-        xAxis.setDrawGridLines(false)
-        xAxis.setDrawAxisLine(false)
-        xAxis.textSize = 11f
-        xAxis.granularity = 1f
-        xAxis.yOffset = 20f
-        xAxis.valueFormatter = XAxisFormatter(mGeneralBarChart)
-        mGeneralBarChart.setXAxisRenderer(
-            CustomXAxisRenderer(
-                mGeneralBarChart.viewPortHandler,
-                mGeneralBarChart.xAxis,
-                mGeneralBarChart.getTransformer(YAxis.AxisDependency.LEFT)
+            setXAxisRenderer(
+                CustomXAxisRenderer(
+                    mGeneralBarChart.viewPortHandler,
+                    mGeneralBarChart.xAxis,
+                    mGeneralBarChart.getTransformer(YAxis.AxisDependency.LEFT)
+                )
             )
-        )
-        mGeneralBarChart.legend.isEnabled = false
+            description.isEnabled = false
+            renderer = RoundedBarChartRenderer(
+                this,
+                animator,
+                viewPortHandler
+            ).apply { setRadius(20) }
+            axisRight.isEnabled = false
+            axisLeft.isEnabled = false
+            legend.isEnabled = false
+            animateX(500)
+            animateY(700)
+        }
+
+        mGeneralBarChart.xAxis.apply {
+            position = XAxis.XAxisPosition.TOP
+            setDrawGridLines(false)
+            setDrawAxisLine(false)
+            textSize = 11f
+            granularity = 1f
+            yOffset = 20f
+            valueFormatter = XAxisFormatter(mGeneralBarChart)
+        }
     }
 
     private fun updateGeneralBarChart(barEntries: List<BarEntry>) {
         if (barEntries.isNullOrEmpty()) {
             return
         }
-        val set = BarDataSet(barEntries, "")
-        set.valueTextSize = 12f
-        set.valueFormatter = BarValueFormatter()
-        set.setColors(
-            ResourcesCompat.getColor(resources, R.color.red_200, null),
-            ResourcesCompat.getColor(resources, R.color.green_200, null),
-        )
+        val set = BarDataSet(barEntries, "").apply {
+            valueTextSize = 12f
+            valueFormatter = BarValueFormatter()
+            setColors(
+                ResourcesCompat.getColor(resources, R.color.red_200, null),
+                ResourcesCompat.getColor(resources, R.color.green_200, null)
+            )
+        }
         val data = BarData(set)
         mGeneralBarChart.data = data
-        mGeneralBarChart.setVisibleXRangeMaximum(6f)
         mGeneralBarChart.invalidate()
+        mGeneralBarChart.setVisibleXRangeMaximum(6f)
     }
 
 }

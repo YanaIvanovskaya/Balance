@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/passcodeCreationFragment"
-        android:name="com.example.balance.ui.onboarding.PasscodeEntryFragment"
+        android:name="com.example.balance.ui.auth.PasscodeEntryFragment"
         android:label="PasscodeCreationFragment"
         tools:layout="@layout/fragment_passcode">
         <action

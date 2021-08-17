@@ -68,16 +68,16 @@ object ViewHolderFactory {
     class RecordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val categoryText: TextView = itemView.findViewById(R.id.category)
         val sumText: TextView = itemView.findViewById(R.id.sum)
-        val dateText: TextView = itemView.findViewById(R.id.date)
+        val timeText: TextView = itemView.findViewById(R.id.date)
         val moneyTypeText: ImageView = itemView.findViewById(R.id.image_MoneyType)
         val layout: ConstraintLayout = itemView.findViewById(R.id.record_layout)
         val buttonShowComment: ImageButton = itemView.findViewById(R.id.button_show_comment)
-        val comment: TextView = itemView.findViewById(R.id.comment)
+        val commentText: TextView = itemView.findViewById(R.id.comment)
         val imageImportant: ImageView = itemView.findViewById(R.id.image_important)
     }
 
     class DateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val date: TextView = itemView.findViewById(R.id.usage_template)
+        val date: TextView = itemView.findViewById(R.id.dateText)
     }
 
     class BalanceViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -108,20 +108,19 @@ object ViewHolderFactory {
     }
 
     class CostsStatInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val sumGeneralCosts: TextView = itemView.findViewById(R.id.sum_general_costs)
-        val sumAvgMonthlyCosts: TextView = itemView.findViewById(R.id.sum_avg_monthly_costs)
-        val amountMonthlyPurchases: TextView = itemView.findViewById(R.id.amount_purchases)
+        val sumGeneralCostsText: TextView = itemView.findViewById(R.id.sum_general_costs)
+        val sumAvgMonthlyCostsText: TextView = itemView.findViewById(R.id.sum_avg_monthly_costs)
+        val amountMonthlyPurchasesText: TextView = itemView.findViewById(R.id.amount_purchases)
     }
 
     class ProfitStatInfoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val sumGeneralProfit: TextView = itemView.findViewById(R.id.sum_general_profits)
-        val sumAvgMonthlyProfit: TextView = itemView.findViewById(R.id.sum_avg_monthly_profit)
-        val sumAvgMonthlyBalance: TextView = itemView.findViewById(R.id.amount_balance)
+        val sumGeneralProfitText: TextView = itemView.findViewById(R.id.sum_general_profits)
+        val sumAvgMonthlyProfitText: TextView = itemView.findViewById(R.id.sum_avg_monthly_profit)
+        val sumAvgMonthlyBalanceText: TextView = itemView.findViewById(R.id.amount_balance)
     }
 
     class NoItemsItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val image: ImageView = itemView.findViewById(R.id.image_no_items)
-        val message: TextView = itemView.findViewById(R.id.text_no_items)
+        val messageText: TextView = itemView.findViewById(R.id.text_no_items)
         val buttonAdd: TextView = itemView.findViewById(R.id.button_no_items)
     }
 

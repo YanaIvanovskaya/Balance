@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stat_costs_cardView" />
 
     <androidx.cardview.widget.CardView
@@ -37,7 +38,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
-                android:text="999 999 Р"
                 android:textColor="@color/grey_800"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -48,7 +48,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
-                android:text="999 999 Р"
                 android:textColor="@color/grey_800"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -59,7 +58,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
-                android:text="999"
                 android:textColor="@color/grey_800"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"

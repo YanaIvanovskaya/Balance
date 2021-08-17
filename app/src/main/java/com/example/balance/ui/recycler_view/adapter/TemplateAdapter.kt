@@ -19,4 +19,9 @@ class TemplateAdapter(
 
     override fun getItemCount(): Int = dataSet.size
 
+    fun removeAt(position: Int) {
+        dataSet.removeAt(position)
+        notifyDataSetChanged()
+    }
+
 }

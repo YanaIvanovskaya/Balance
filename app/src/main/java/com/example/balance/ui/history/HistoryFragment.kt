@@ -16,9 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentHistoryBinding
-import com.example.balance.presentation.HistoryState
-import com.example.balance.presentation.HistoryViewModel
-import com.example.balance.presentation.TemplateState
+import com.example.balance.presentation.history.HistoryState
+import com.example.balance.presentation.history.HistoryViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
 import com.example.balance.ui.recycler_view.DividerItemDecoration
@@ -48,6 +47,11 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         mBinding = binding
         historyRecyclerView = binding.historyRecyclerView
         mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         historyAdapter = HistoryAdapter(
             onLongItemClickListener = { recordId, isImportant ->
                 showRecordMenu(recordId, isImportant)
@@ -56,7 +60,6 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         mViewModel.state.observe(viewLifecycleOwner, ::render)
         initRecyclerView()
         initChips()
-        return binding.root
     }
 
     private fun render(state: HistoryState) {
@@ -85,35 +88,39 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     }
 
     private fun initRecyclerView() {
-        historyRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)?.let {
-            DividerItemDecoration(it)
-        }?.let { historyRecyclerView.addItemDecoration(it) }
+        historyRecyclerView.layoutManager =
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)
+            ?.let { DividerItemDecoration(it) }
+            ?.let { historyRecyclerView.addItemDecoration(it) }
         historyRecyclerView.adapter = historyAdapter
     }
 
     private fun initChips() {
-        mBinding?.chipAllHistory?.setOnCheckedChangeListener { buttonView, isChecked ->
+        mBinding?.chipAllHistory?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 mViewModel.saveCurrentChip(0)
             }
         }
-        mBinding?.chipProfitHistory?.setOnCheckedChangeListener { buttonView, isChecked ->
+        mBinding?.chipProfitHistory?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 mViewModel.saveCurrentChip(1)
             }
         }
-        mBinding?.chipCostsHistory?.setOnCheckedChangeListener { buttonView, isChecked ->
+        mBinding?.chipCostsHistory?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 mViewModel.saveCurrentChip(2)
             }
         }
-        mBinding?.chipImportantHistory?.setOnCheckedChangeListener { buttonView, isChecked ->
+        mBinding?.chipImportantHistory?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 mViewModel.saveCurrentChip(3)
             }
         }
-
     }
 
     private fun showRecordMenu(recordId: Int, isImportant: Boolean) {
@@ -122,7 +129,6 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         val unpin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)
         val edit = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_templates)
         val delete = bottomSheetDialog.findViewById<LinearLayout>(R.id.delete_record)
-
         edit?.setOnClickListener {
             val action = BottomNavigationFragmentDirections
                 .actionBottomNavigationFragmentToRecordEditingFragment(recordId)
@@ -133,16 +139,12 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
             mViewModel.removeRecord(recordId)
             bottomSheetDialog.dismiss()
         }
-
         if (isImportant) {
             bottomSheetDialog.findViewById<TextView>(R.id.label_important)?.text =
                 "Удалить из избранного"
-            println(bottomSheetDialog.findViewById<ImageView>(R.id.image_important)?.background)
-            bottomSheetDialog.findViewById<ImageView>(R.id.image_important)?.background =
+            bottomSheetDialog.findViewById<ImageView>(R.id.important_image)?.background =
                 ResourcesCompat.getDrawable(resources, R.drawable.ic_no_star, null)
-            println(bottomSheetDialog.findViewById<ImageView>(R.id.image_important)?.background)
         }
-
         unpin?.setOnClickListener {
             mViewModel.onSetImportant(recordId, isImportant)
             bottomSheetDialog.dismiss()

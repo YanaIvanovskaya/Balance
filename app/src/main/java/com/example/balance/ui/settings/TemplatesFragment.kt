@@ -15,8 +15,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentMyTemplatesBinding
-import com.example.balance.presentation.TemplateState
-import com.example.balance.presentation.TemplatesViewModel
+import com.example.balance.presentation.settings.TemplateState
+import com.example.balance.presentation.settings.TemplatesViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.DividerItemDecoration
 import com.example.balance.ui.recycler_view.SwipeToDeleteCallback
@@ -25,11 +25,11 @@ import com.example.balance.ui.recycler_view.item.TemplateItem
 import com.google.android.material.snackbar.Snackbar
 
 class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
+
     private var mBinding: FragmentMyTemplatesBinding? = null
     private lateinit var mNavController: NavController
-    private lateinit var templateRecyclerView: RecyclerView
-    private lateinit var templateAdapter: TemplateAdapter
-
+    private lateinit var mTemplateRecyclerView: RecyclerView
+    private lateinit var mTemplateAdapter: TemplateAdapter
     private val mViewModel by getViewModel {
         TemplatesViewModel(
             recordRepository = BalanceApp.recordRepository,
@@ -45,41 +45,64 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
     ): View {
         val binding = FragmentMyTemplatesBinding.inflate(inflater, container, false)
         mBinding = binding
-        templateRecyclerView = binding.templatesRecyclerView
-        templateAdapter = TemplateAdapter()
         mNavController = findNavController()
-        initRecyclerView()
-        initButtons()
+        mTemplateRecyclerView = binding.templatesRecyclerView
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mTemplateAdapter = TemplateAdapter()
         mViewModel.state.observe(viewLifecycleOwner, ::render)
+        initRecyclerView()
+        initButtons()
     }
 
     private fun initRecyclerView() {
-        templateRecyclerView.layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
-        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)?.let {
-            DividerItemDecoration(it)
-        }?.let { templateRecyclerView.addItemDecoration(it) }
-        templateRecyclerView.adapter = templateAdapter
+        mTemplateRecyclerView.layoutManager =
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)
+            ?.let { DividerItemDecoration(it) }
+            ?.let { mTemplateRecyclerView.addItemDecoration(it) }
+        mTemplateRecyclerView.adapter = mTemplateAdapter
 
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
                 viewHolder.itemView.visibility = View.GONE
-                templateAdapter.notifyDataSetChanged()
+                val deletedTemplate = mTemplateAdapter.dataSet[position] as TemplateItem
+                mTemplateAdapter.removeAt(position)
 
-                val deletedTemplate = templateAdapter.dataSet[position] as TemplateItem
                 val undoSnackBar =
                     Snackbar.make(requireView(), "Шаблон удален", Snackbar.LENGTH_LONG)
-                undoSnackBar.setBackgroundTint(ResourcesCompat.getColor(resources,R.color.grey_400,null))
-                undoSnackBar.setActionTextColor(ResourcesCompat.getColor(resources,R.color.green_400,null))
-                undoSnackBar.setTextColor(ResourcesCompat.getColor(resources,R.color.grey_800,null))
+                undoSnackBar.setBackgroundTint(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.grey_400,
+                        null
+                    )
+                )
+                undoSnackBar.setActionTextColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.green_400,
+                        null
+                    )
+                )
+                undoSnackBar.setTextColor(
+                    ResourcesCompat.getColor(
+                        resources,
+                        R.color.grey_800,
+                        null
+                    )
+                )
                 undoSnackBar.setAction("Восстановить") {
                     viewHolder.itemView.visibility = View.VISIBLE
-                    templateAdapter.notifyDataSetChanged()
+                    mTemplateAdapter.notifyDataSetChanged()
                 }
 
                 val dismissCallback = object : Snackbar.Callback() {
@@ -96,44 +119,40 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(templateRecyclerView)
+        itemTouchHelper.attachToRecyclerView(mTemplateRecyclerView)
     }
 
     private fun render(state: TemplateState) {
         when (state.currentChip) {
             0 -> {
                 mBinding?.commonTemplates?.isChecked = true
-                templateAdapter.dataSet = state.commonTemplates
+                mTemplateAdapter.dataSet = state.commonTemplates
             }
             1 -> {
                 mBinding?.profitTemplates?.isChecked = true
-                templateAdapter.dataSet = state.profitTemplates
+                mTemplateAdapter.dataSet = state.profitTemplates
             }
             2 -> {
                 mBinding?.costsTemplates?.isChecked = true
-                templateAdapter.dataSet = state.costsTemplates
+                mTemplateAdapter.dataSet = state.costsTemplates
             }
         }
-        templateAdapter.notifyDataSetChanged()
+        mTemplateAdapter.notifyDataSetChanged()
     }
 
     private fun initButtons() {
-        mBinding?.costsTemplates?.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
+        mBinding?.costsTemplates?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
                 mViewModel.saveCurrentChip(2)
-            }
         }
-        mBinding?.profitTemplates?.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
+        mBinding?.profitTemplates?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
                 mViewModel.saveCurrentChip(1)
-            }
         }
-        mBinding?.commonTemplates?.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
+        mBinding?.commonTemplates?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
                 mViewModel.saveCurrentChip(0)
-            }
         }
-
         mBinding?.toolbarMyTemplates?.setNavigationOnClickListener {
             mNavController.popBackStack()
         }

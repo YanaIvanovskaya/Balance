@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -301,7 +300,7 @@
                         app:srcCompat="@drawable/ic_down_arrow"
                         app:tint="@color/grey_800" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switch_is_important_record"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -312,7 +311,7 @@
                         android:layout_marginBottom="8dp"
                         android:paddingTop="15dp"
                         android:paddingBottom="15dp"
-                        android:text="Добавить в избранное"
+                        android:text="@string/add_to_favorites"
                         android:textColor="@color/grey_800"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -320,7 +319,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/name_template_textInputLayout" />
 
-                    <Switch
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switch_is_template"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -331,7 +330,7 @@
                         android:layout_marginRight="16dp"
                         android:paddingTop="15dp"
                         android:paddingBottom="15dp"
-                        android:text="Сохранить как шаблон"
+                        android:text="@string/save_as_template"
                         android:textColor="@color/grey_800"
                         android:visibility="gone"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -356,8 +355,8 @@
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edit_text_name_template"
-                            android:hint="@string/name_template"
-                            style="@style/AppEditText"/>
+                            style="@style/AppEditText"
+                            android:hint="@string/name_template" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -374,6 +373,7 @@
                     android:layout_marginRight="16dp"
                     android:background="@drawable/bg_comment"
                     android:hint="@string/comment"
+                    android:inputType="textCapSentences"
                     android:paddingLeft="15dp"
                     android:paddingTop="10dp"
                     android:paddingRight="15dp"

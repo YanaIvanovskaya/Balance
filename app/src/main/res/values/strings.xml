@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">BalanceApp</string>
-    <string name="continue_btn">Продолжить</string>
-    <string name="greeting_new_user">Привет Я Balance Я помогу тебе быть спокойнее за свои деньги</string>
-    <string name="enter_the_passcode">Придумай пароль для входа, чтобы твои данные были в безопасности</string>
-    <string name="_12345">12345</string>
+    <string name="balance">Balance</string>
+    <string name="app">App</string>
+
     <string name="_2">2</string>
     <string name="_1">1</string>
     <string name="_3">3</string>
@@ -14,59 +13,73 @@
     <string name="_8">8</string>
     <string name="_9">9</string>
     <string name="_0">0</string>
-    <string name="next_btn">Вперед</string>
-    <string name="previous_btn">Назад</string>
-    <string name="greeting_new_user_image">TODO</string>
-    <string name="title_creation_balance">Время посчитать свои денежки</string>
+
+    // слова
+    <string name="all">Все</string>
+    <string name="favorites">Избранное</string>
+    <string name="common">Общая</string>
+    <string name="profits">Доходы</string>
+    <string name="costs">Расходы</string>
+    <string name="hint_sum_of_operation">Сумма</string>
+    <string name="balance_title">Баланс</string>
+    <string name="comment">Комментарий</string>
+    <string name="without_template">Без шаблона</string>
+    <string name="category">Категория</string>
+    <string name="extra_widgets">Дополнительно</string>
     <string name="balance_cash">Наличными</string>
     <string name="balance_cards">На картах</string>
-    <string name="greeting">Доброе утро!</string>
+    <string name="cash">Наличные</string>
+    <string name="card">Карта</string>
+    <string name="rub_month">₽ /мес</string>
+
+    // действия
+    <string name="next">Продолжить</string>
+    <string name="add">Добавить</string>
+    <string name="edit">Редактировать</string>
+    <string name="delete">Удалить</string>
+    <string name="save">Сохранить</string>
+    <string name="add_to_favorites">Добавить в избранное</string>
+    <string name="mark_as_important">Отметить как важную</string>
+    <string name="save_as_template">Сохранить как шаблон</string>
+
+    // предложения
+    <string name="make_passcode">Придумай пароль</string>
+    <string name="choose_a_category">Выберите категорию</string>
+    <string name="enter_the_passcode">Введите пароль</string>
+
+    // словосочетания
+    <string name="text_stat_general_costs">Всего потрачено</string>
+    <string name="text_stat_average_costs_month">Средний расход в месяц</string>
+    <string name="text_stat_average_purchase">Среднее количество покупок в месяц</string>
+    <string name="text_stat_general_profit">Всего получено</string>
+    <string name="text_stat_average_profit_month">Средний доход в месяц</string>
+    <string name="text_stat_average_rest">Средний остаток в месяц</string>
+    <string name="name_template">Название шаблона</string>
+    <string name="new_category">Новая категория</string>
+    <string name="name_category">Название категории</string>
+    <string name="recently_records">Недавние записи</string>
+    <string name="new_balance">Новый баланс</string>
+
+    // заголовки
+    <string name="profit_structure">Структура доходов</string>
+    <string name="costs_structure">Структура расходов</string>
+    <string name="title_general_diagram">Диаграмма расходов и доходов по месяцам</string>
+    <string name="title_profit_loss_chart">Диаграмма денежного остатка по месяцам</string>
     <string name="home">Главная</string>
     <string name="history">История</string>
     <string name="statistics">Статистика</string>
     <string name="settings">Настройки</string>
-    <string name="profits">Доходы</string>
-    <string name="costs">Расходы</string>
-    <string name="cash">Наличные</string>
-    <string name="card">Карта</string>
-    <string name="create_record">Сохранить</string>
     <string name="new_record">Новая запись</string>
-    <string name="hint_sum_of_operation">Сумма</string>
-    <string name="error_msg_sum_of_money">Введите целое число</string>
-    <string name="balance_title">Баланс</string>
-    <string name="change">Изменить</string>
-    <string name="use_template">По шаблону</string>
-    <string name="mark_as_important">Отметить как важную</string>
-    <string name="save_as_template">Сохранить как шаблон</string>
-    <string name="comment">Комментарий</string>
-    <string name="extra">Еще</string>
-    <string name="text_stat_general_costs">Всего потрачено</string>
-    <string name="text_stat_average_costs_month">Средний расход в месяц</string>
-    <string name="text_stat_average_purchase">Среднее количество покупок в месяц</string>
-    <string name="without_template">Без шаблона</string>
-    <string name="category">Категория</string>
-    <string name="extra_widgets">Дополнительно</string>
-    <string name="name_template">Название шаблона</string>
-    <string name="new_category">Новая категория</string>
-    <string name="name_category">Название категории</string>
-    <string name="save">Сохранить</string>
-    <string name="choose_a_category">Выберите категорию</string>
-    <string name="all">Все</string>
-    <string name="favorites">Избранное</string>
-    <string name="common">Общая</string>
-    <string name="add_to_favorites">Добавить в избранное</string>
-    <string name="edit">Редактировать</string>
-    <string name="delete">Удалить</string>
     <string name="my_templates">Мои шаблоны</string>
     <string name="my_categories">Мои категории</string>
-    <string name="balance">Balance</string>
-    <string name="app">App</string>
-    <string name="make_passcode">Придумай пароль</string>
-    <string name="next">Продолжить</string>
+    <string name="extra">Еще</string>
+
+
+    // сообщения
     <string name="passcode_do_not_matches">Пароль не совпадает</string>
-    <string name="add">Добавить</string>
-    <string name="title_general_diagram">Диаграмма расходов и доходов по месяцам</string>
-    <string name="profit_structure">Структура доходов</string>
-    <string name="costs_structure">Структура расходов</string>
-    <string name="title_profit_loss_chart">Диаграмма денежного остатка по месяцам</string>
+    <string name="no_categories_yet">Категорий пока нет</string>
+    <string name="it_is_time_to_count_the_money">Время посчитать свои деньги)</string>
+    <string name="be_calm_about_your_money">Будь спокоен за свои деньги</string>
+    <string name="statistics_will_be_here_soon">Скоро тут будет на что посмотреть)</string>
+
 </resources>

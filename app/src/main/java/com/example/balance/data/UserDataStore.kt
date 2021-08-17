@@ -50,17 +50,12 @@ class UserDataStore(
 
     suspend fun clearBalance() {
         mDataStore.edit { preferences ->
-            preferences[KEY_CARDS] =  0
-            println(preferences[KEY_CARDS])
+            preferences[KEY_CARDS] = 0
         }
-
         mDataStore.edit { preferences ->
-            preferences[KEY_CASH] =  0
-            println(preferences[KEY_CASH])
+            preferences[KEY_CASH] = 0
         }
     }
-
-
 
     companion object {
         val KEY_PASSCODE = stringPreferencesKey("key_passcode")

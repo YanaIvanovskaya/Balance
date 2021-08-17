@@ -1,4 +1,4 @@
-package com.example.balance.presentation
+package com.example.balance.presentation.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
-import timber.log.Timber
 
 data class HomeState(
     val sumCostsCash: Int,
@@ -59,9 +58,7 @@ class HomeViewModel(
 ) : ViewModel() {
 
     val state = MutableLiveData(HomeState.default())
-
     val allHomeRecords = MutableLiveData<List<Item>>(listOf())
-
     private var sumCash: Int = balanceRepository.sumCash
     private var sumCards: Int = balanceRepository.sumCards
 
@@ -69,42 +66,40 @@ class HomeViewModel(
         recordRepository.getCommonSum()
             .distinctUntilChanged()
             .onEach {
-                state.value = state.value?.copy(hasNoRecords = it == 0)
-
-                val sumCostsCash = withContext(Dispatchers.IO) {
-                    recordRepository.getSum(
-                        RecordType.COSTS,
-                        MoneyType.CASH
-                    ).first()
+                val hasNoRecords = it == 0
+                state.value = state.value?.copy(hasNoRecords = hasNoRecords)
+                if (!hasNoRecords) {
+                    val sumCostsCash = withContext(Dispatchers.IO) {
+                        recordRepository.getSum(
+                            RecordType.COSTS,
+                            MoneyType.CASH
+                        ).first()
+                    }
+                    val sumProfitCash = withContext(Dispatchers.IO) {
+                        recordRepository.getSum(
+                            RecordType.PROFITS,
+                            MoneyType.CASH
+                        ).first()
+                    }
+                    val sumCostsCards = withContext(Dispatchers.IO) {
+                        recordRepository.getSum(
+                            RecordType.COSTS,
+                            MoneyType.CARDS
+                        ).first()
+                    }
+                    val sumProfitCards = withContext(Dispatchers.IO) {
+                        recordRepository.getSum(
+                            RecordType.PROFITS,
+                            MoneyType.CARDS
+                        ).first()
+                    }
+                    state.value = state.value?.copy(
+                        sumCostsCash = sumCostsCash,
+                        sumCostsCards = sumCostsCards,
+                        sumProfitCash = sumProfitCash,
+                        sumProfitCards = sumProfitCards,
+                    )
                 }
-
-                val sumProfitCash = withContext(Dispatchers.IO) {
-                    recordRepository.getSum(
-                        RecordType.PROFITS,
-                        MoneyType.CASH
-                    ).first()
-                }
-
-                val sumCostsCards = withContext(Dispatchers.IO) {
-                    recordRepository.getSum(
-                        RecordType.COSTS,
-                        MoneyType.CARDS
-                    ).first()
-                }
-
-                val sumProfitCards = withContext(Dispatchers.IO) {
-                    recordRepository.getSum(
-                        RecordType.PROFITS,
-                        MoneyType.CARDS
-                    ).first()
-                }
-
-                state.value = state.value?.copy(
-                    sumCostsCash = sumCostsCash,
-                    sumCostsCards = sumCostsCards,
-                    sumProfitCash = sumProfitCash,
-                    sumProfitCards = sumProfitCards,
-                )
                 measureBalance()
             }.launchIn(viewModelScope)
 
@@ -116,7 +111,6 @@ class HomeViewModel(
             }
             .onEach(allHomeRecords::setValue)
             .launchIn(viewModelScope)
-
     }
 
     fun setContentLoaded(isContentLoaded: Boolean) {
@@ -139,15 +133,16 @@ class HomeViewModel(
     private suspend fun mapItems(items: List<Record>): MutableList<Item> {
         return withContext(Dispatchers.IO) {
             val allHomeRecords: MutableList<Item> = mutableListOf()
-
             allHomeRecords.add(
                 BalanceItem(
                     sumCash = state.value?.cash.toString(),
                     sumCards = state.value?.cards.toString()
                 )
             )
-
-            val recentlyRecords = items.filter {
+            val lastRecords =
+                if (items.size > 15) items.subList(0, 15)
+                else items
+            val recentlyRecords = lastRecords.filter {
                 ChronoUnit.DAYS.between(
                     LocalDate.of(it.year, it.month, it.day),
                     LocalDate.now()
@@ -167,7 +162,6 @@ class HomeViewModel(
                             isImportant = record.isImportant
                         )
                     )
-
                 }
             } else {
                 allHomeRecords.add(NoItemsItem(message = "Пока у вас нет недавних записей"))
@@ -185,11 +179,10 @@ class HomeViewModel(
         val sumCostsCards = state.value?.sumCostsCards ?: 0
         val cards = sumCards + sumProfitCards - sumCostsCards
 
-        val isSumsLoaded =
-            !(sumProfitCash == 0
-                    && sumCostsCash == 0
-                    && sumProfitCards == 0
-                    && sumCostsCards == 0)
+        val isSumsLoaded = !(sumProfitCash == 0
+                && sumCostsCash == 0
+                && sumProfitCards == 0
+                && sumCostsCards == 0)
 
         val balanceIsLoaded = state.value?.hasNoRecords == true || isSumsLoaded
         state.value = state.value?.copy(isSumLoaded = balanceIsLoaded)

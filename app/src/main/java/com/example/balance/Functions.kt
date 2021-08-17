@@ -3,9 +3,10 @@ package com.example.balance
 import com.example.balance.data.record.Record
 import org.threeten.bp.Duration
 import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
 import org.threeten.bp.LocalTime
 import org.threeten.bp.temporal.ChronoUnit
+import java.text.NumberFormat
+import java.util.*
 
 enum class Case {
     NONE, // январь
@@ -17,7 +18,9 @@ enum class Case {
 fun getTime(time: String): String {
     val timeObj = LocalTime.parse(time)
     val currentHour = timeObj.hour
-    val currentMinute = if (timeObj.minute < 10) "0${timeObj.minute}" else timeObj.minute.toString()
+    val currentMinute =
+        if (timeObj.minute < 10) "0${timeObj.minute}"
+        else timeObj.minute.toString()
     return "$currentHour:$currentMinute"
 }
 
@@ -32,6 +35,17 @@ fun getWeekDay(dayNumber: Int): String {
         7 -> "вс"
         else -> ""
     }
+}
+
+fun Double.roundTo(digit: Int): String {
+    val formatter = NumberFormat.getInstance(Locale("ru", "RU"))
+    formatter.maximumFractionDigits = digit
+    return formatter.format(this)
+}
+
+fun Int.formatAsSum(): String {
+    val formatter = NumberFormat.getInstance(Locale("ru", "RU"))
+    return formatter.format(this)
 }
 
 fun getTimeLabel(record: Record, isHistory: Boolean): String {
@@ -59,10 +73,9 @@ fun getTimeLabel(record: Record, isHistory: Boolean): String {
         }
         1L -> "вчера"
         else -> {
-            if (isHistory) {
-                getTime(record.time)
-            } else {
-                "${record.day} " +
+            when (isHistory) {
+                true -> getTime(record.time)
+                false -> "${record.day} " +
                         "${getMonthName(record.month, Case.OF)} " +
                         "${record.year}"
             }
@@ -176,4 +189,5 @@ fun getMonthName(monthNumber: Int, case: Case): String {
         }
         else -> ""
     }
+
 }

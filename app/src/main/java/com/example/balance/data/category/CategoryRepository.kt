@@ -14,11 +14,6 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
 
     suspend fun insert(category: Category) = categoryDao.insert(category)
 
-    fun getCategoryNames(categoryType: CategoryType): List<String> =
-        categoryDao.getCategoryNames(categoryType)
-
-    suspend fun deleteAll() = categoryDao.deleteAll()
-
     suspend fun deleteCategoryById(id: Int) = categoryDao.deleteCategoryById(id)
 
     fun getId(name: String) = categoryDao.getId(name)

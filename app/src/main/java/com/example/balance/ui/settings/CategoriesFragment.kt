@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RadioButton
-import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -20,10 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.data.category.CategoryType
-import com.example.balance.data.record.RecordType
 import com.example.balance.databinding.FragmentMyCategoriesBinding
-import com.example.balance.presentation.CategoriesViewModel
-import com.example.balance.presentation.CategoryState
+import com.example.balance.presentation.settings.CategoriesViewModel
+import com.example.balance.presentation.settings.CategoryState
 import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.*
 import com.example.balance.ui.recycler_view.adapter.CategoryAdapter
@@ -33,12 +30,11 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
-
 class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
     private var mBinding: FragmentMyCategoriesBinding? = null
     private lateinit var mNavController: NavController
-    private lateinit var categoryRecyclerView: RecyclerView
-    private lateinit var categoryAdapter: CategoryAdapter
+    private lateinit var mCategoryRecyclerView: RecyclerView
+    private lateinit var mCategoryAdapter: CategoryAdapter
 
     private val mViewModel by getViewModel {
         CategoriesViewModel(
@@ -55,58 +51,58 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
     ): View {
         val binding = FragmentMyCategoriesBinding.inflate(inflater, container, false)
         mBinding = binding
-        categoryRecyclerView = binding.categoriesRecyclerView
-        categoryAdapter = CategoryAdapter()
         mNavController = findNavController()
-        initRecyclerView()
-        initButtons()
+        mCategoryRecyclerView = binding.categoriesRecyclerView
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mViewModel.state.observe(viewLifecycleOwner, ::render)
+        mCategoryAdapter = CategoryAdapter()
+        initRecyclerView()
+        initButtons()
     }
 
     private fun render(state: CategoryState) {
         when (state.currentChip) {
             0 -> {
                 mBinding?.commonCategories?.isChecked = true
-                categoryAdapter.dataSet = state.commonCategories
+                mCategoryAdapter.dataSet = state.commonCategories
             }
             1 -> {
                 mBinding?.profitCategories?.isChecked = true
-                categoryAdapter.dataSet = state.profitCategories
+                mCategoryAdapter.dataSet = state.profitCategories
             }
             2 -> {
                 mBinding?.costsCategories?.isChecked = true
-                categoryAdapter.dataSet = state.costsCategories
+                mCategoryAdapter.dataSet = state.costsCategories
             }
         }
-        categoryAdapter.notifyDataSetChanged()
-
+        mCategoryAdapter.notifyDataSetChanged()
     }
 
     private fun initRecyclerView() {
-        categoryRecyclerView.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)?.let {
-            DividerItemDecoration(it)
-        }?.let { categoryRecyclerView.addItemDecoration(it) }
-        categoryRecyclerView.adapter = categoryAdapter
+        mCategoryRecyclerView.layoutManager =
+            LinearLayoutManager(
+                context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)
+            ?.let { DividerItemDecoration(it) }
+            ?.let { mCategoryRecyclerView.addItemDecoration(it) }
+        mCategoryRecyclerView.adapter = mCategoryAdapter
 
         val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (viewHolder is ViewHolderFactory.CategoryViewHolder) {
                     val position = viewHolder.bindingAdapterPosition
-
-                    val deletedCategory = categoryAdapter.dataSet[position] as CategoryItem
-
-                    categoryAdapter.removeAt(position)
+                    val deletedCategory = mCategoryAdapter.dataSet[position] as CategoryItem
+                    mCategoryAdapter.removeAt(position)
 
                     val undoSnackBar =
                         Snackbar.make(requireView(), "Категория удалена", Snackbar.LENGTH_SHORT)
-
                     undoSnackBar.setBackgroundTint(
                         ResourcesCompat.getColor(
                             resources,
@@ -129,8 +125,8 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
                         )
                     )
                     undoSnackBar.setAction("Восстановить") {
-                        categoryAdapter.insertAt(position, deletedCategory)
-                        categoryAdapter.notifyDataSetChanged()
+                        mCategoryAdapter.insertAt(position, deletedCategory)
+                        mCategoryAdapter.notifyDataSetChanged()
                     }
 
                     val dismissCallback = object : Snackbar.Callback() {
@@ -147,17 +143,15 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(categoryRecyclerView)
+        itemTouchHelper.attachToRecyclerView(mCategoryRecyclerView)
     }
 
 
     private fun showAddCategoryBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
-
         val profitCategoryNames = mViewModel.getProfitCategoryNames()
         val costsCategoryNames = mViewModel.getCostsCategoryNames()
-
         val categoryCosts =
             bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_costs)
         val categoryProfit =
@@ -176,12 +170,13 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
         var currentCategoryName = ""
         categoryName?.doAfterTextChanged {
             currentCategoryName = it.toString().trim()
-            if ((categoryCosts?.isChecked == true && it.toString().trim() in costsCategoryNames) ||
-                (categoryProfit?.isChecked == true && it.toString().trim() in profitCategoryNames)
-            ) {
+            val alreadyInCosts =
+                categoryCosts?.isChecked == true && it.toString().trim() in costsCategoryNames
+            val alreadyInProfits =
+                categoryProfit?.isChecked == true && it.toString().trim() in profitCategoryNames
+            if (alreadyInCosts || alreadyInProfits) {
                 textInputLayout?.helperText = "Такая категория уже существует"
                 buttonSave?.isEnabled = false
-
             } else if (categoryName.text?.trim()?.isEmpty() == true) {
                 textInputLayout?.helperText = "Пустое название категории"
                 buttonSave?.isEnabled = false
@@ -190,7 +185,6 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
                 buttonSave?.isEnabled = true
             }
         }
-
         buttonSave?.setOnClickListener {
             val type = when (categoryCosts?.isChecked ?: false) {
                 true -> CategoryType.CATEGORY_COSTS
@@ -203,22 +197,18 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
     }
 
     private fun initButtons() {
-        mBinding?.costsCategories?.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
+        mBinding?.costsCategories?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
                 mViewModel.saveCurrentChip(2)
-            }
         }
-        mBinding?.profitCategories?.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
+        mBinding?.profitCategories?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
                 mViewModel.saveCurrentChip(1)
-            }
         }
-        mBinding?.commonCategories?.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
+        mBinding?.commonCategories?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked)
                 mViewModel.saveCurrentChip(0)
-            }
         }
-
         mBinding?.floatingButtonCreateNewCategory?.setOnClickListener {
             showAddCategoryBottomSheet()
         }
@@ -226,7 +216,6 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
         mBinding?.toolbarMyCategories?.setNavigationOnClickListener {
             mNavController.popBackStack()
         }
-
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
             object : OnBackPressedCallback(true) {
