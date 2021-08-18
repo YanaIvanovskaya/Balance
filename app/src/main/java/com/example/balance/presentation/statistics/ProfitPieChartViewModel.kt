@@ -8,20 +8,23 @@ import com.example.balance.data.category.CategoryType
 import com.example.balance.toUpperFirst
 import com.github.mikephil.charting.data.PieEntry
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 data class ProfitPieChartState(
     val selectedBar: Int,
     val entries: List<PieEntry>,
-    val maxProfitCategory: String
+    val maxProfitCategory: String,
+    val isContentLoaded: Boolean
 ) {
 
     companion object {
         fun default() = ProfitPieChartState(
             selectedBar = 0,
             entries = listOf(),
-            maxProfitCategory = ""
+            maxProfitCategory = "",
+            isContentLoaded = false
         )
     }
 
@@ -33,9 +36,11 @@ class ProfitPieChartViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            val entries = getEntries()
+            val entries = async { getEntries() }
+            entries.join()
             state.value = state.value?.copy(
-                entries = entries
+                entries = entries.await(),
+                isContentLoaded = true
             )
         }
     }

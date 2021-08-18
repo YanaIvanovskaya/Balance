@@ -15,4 +15,6 @@ class TemplateRepository(private val templateDao: TemplateDao) {
 
     suspend fun deleteTemplateById(id: Int) = templateDao.deleteTemplateById(id)
 
+    suspend fun deleteAll() = templateDao.deleteAll()
+
 }

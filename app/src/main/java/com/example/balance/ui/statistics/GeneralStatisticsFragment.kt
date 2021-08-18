@@ -36,8 +36,6 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
     ): View {
         val binding = FragmentGeneralStatisticsBinding.inflate(inflater, container, false)
         mBinding = binding
-        println("onCreateView")
-        println(mViewModel.state.value)
         return binding.root
     }
 
@@ -60,12 +58,15 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
         )
         mViewModel.state.observe(viewLifecycleOwner, ::render)
         mPagerGeneralStat?.adapter = mFragmentStateAdapter
-        mPagerGeneralStat?.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                mViewModel.savePagePosition(position)
-            }
-        })
+        if (savedInstanceState == null) {
+            mPagerGeneralStat?.registerOnPageChangeCallback(object :
+                ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    mViewModel.savePagePosition(position)
+                }
+            })
+        }
     }
 
     private fun render(state: GeneralStatisticsState) {
@@ -74,8 +75,6 @@ class GeneralStatisticsFragment : Fragment(R.layout.fragment_general_statistics)
     }
 
     override fun onDestroyView() {
-        println("onDestroyView")
-        println(mViewModel.state.value)
         mBinding = null
         super.onDestroyView()
     }

@@ -53,6 +53,8 @@ class RecordRepository(private val recordDao: RecordDao) {
 
     suspend fun deleteRecordById(recordId: Int) = recordDao.deleteRecordById(recordId)
 
+    suspend fun deleteAll() = recordDao.deleteAll()
+
     suspend fun setImportance(recordId: Int, isImportant: Boolean) =
         recordDao.setImportance(recordId, isImportant)
 

@@ -17,6 +17,7 @@ import com.example.balance.ui.recycler_view.item.Item
 import com.example.balance.ui.recycler_view.item.NoItemsItem
 import com.example.balance.ui.recycler_view.item.RecordItem
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -61,23 +62,37 @@ class HistoryViewModel(
                 state.value = state.value?.copy(
                     hasNoRecords = newRecordList.isEmpty()
                 )
-                val allRecords = mapItems(newRecordList)
-                state.value = state.value?.copy(
-                    allRecords = allRecords,
-                    isContentLoaded = allRecords.isNotEmpty(),
-                    costsRecords = mapItems(
-                        items = newRecordList,
-                        recordType = RecordType.COSTS
-                    ),
-                    profitRecords = mapItems(
-                        items = newRecordList,
-                        recordType = RecordType.PROFITS
-                    ),
-                    importantRecords = mapItems(
-                        items = newRecordList,
-                        onlyImportant = true
+                viewModelScope.launch {
+                    val allRecords = async { mapItems(newRecordList) }
+
+                    val costsRecords = async {
+                        mapItems(
+                            items = newRecordList,
+                            recordType = RecordType.COSTS
+                        )
+                    }
+                    val profitRecords = async {
+                        mapItems(
+                            items = newRecordList,
+                            recordType = RecordType.PROFITS
+                        )
+                    }
+                    val importantRecords = async {
+                        mapItems(
+                            items = newRecordList,
+                            onlyImportant = true
+                        )
+                    }
+                    state.value = state.value?.copy(
+                        allRecords = allRecords.await(),
+                        isContentLoaded = true
                     )
-                )
+                    state.value = state.value?.copy(
+                        costsRecords = costsRecords.await(),
+                        profitRecords = profitRecords.await(),
+                        importantRecords = importantRecords.await(),
+                    )
+                }
             }
             .launchIn(viewModelScope)
     }

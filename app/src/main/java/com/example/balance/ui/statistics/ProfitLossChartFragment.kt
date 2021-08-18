@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.balance.Case
 import com.example.balance.R
@@ -22,6 +23,8 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ProfitLossChartFragment : Fragment(R.layout.fragment_profit_loss_chart) {
 
@@ -64,6 +67,7 @@ class ProfitLossChartFragment : Fragment(R.layout.fragment_profit_loss_chart) {
         createProfitLossBarChart()
         mViewModel.state.observe(viewLifecycleOwner, {
             updateProfitLossChart(it.entries)
+            mBinding?.preloaderProfitLossChart?.isVisible = !it.isContentLoaded
         })
     }
 
@@ -147,10 +151,11 @@ class ProfitLossChartFragment : Fragment(R.layout.fragment_profit_loss_chart) {
             valueTextColor = ResourcesCompat.getColor(resources, R.color.grey_800, null)
             valueFormatter = BarValueFormatter()
         }
-        val data = BarData(set)
-        mProfitLossBarChart.data = data
-        mProfitLossBarChart.invalidate()
-        mProfitLossBarChart.setVisibleXRangeMaximum(6f)
+        mProfitLossBarChart.apply {
+            data = BarData(set)
+            setVisibleXRangeMaximum(6f)
+            moveViewToX(Collections.max(barEntries.map { it.x }))
+        }
     }
 
 }

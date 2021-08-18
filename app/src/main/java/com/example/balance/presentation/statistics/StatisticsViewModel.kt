@@ -1,4 +1,4 @@
-package com.example.balance.presentation
+package com.example.balance.presentation.statistics
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +14,7 @@ import com.example.balance.ui.recycler_view.item.StatCostsInfoItem
 import com.example.balance.ui.recycler_view.item.StatProfitInfoItem
 import com.github.mikephil.charting.data.BarEntry
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,7 +24,8 @@ data class StatisticsState(
     val profitStatItems: List<Item>,
     val costsStatItems: List<Item>,
     val mapCategoryAvgSum: Map<Int, Int>,
-    val hasNoRecords: Boolean
+    val hasNoRecords: Boolean,
+    val isContentLoaded: Boolean
 ) {
 
     companion object {
@@ -32,7 +34,8 @@ data class StatisticsState(
             profitStatItems = mutableListOf(),
             costsStatItems = mutableListOf(),
             mapCategoryAvgSum = mutableMapOf(),
-            hasNoRecords = true
+            hasNoRecords = false,
+            isContentLoaded = false
         )
     }
 
@@ -51,12 +54,10 @@ class StatisticsViewModel(
 
             if (yearsOfUse.isNotEmpty()) {
                 state.value = state.value?.copy(
-                    yearsOfUse = yearsOfUse,
-                    hasNoRecords = false
+                    yearsOfUse = yearsOfUse
                 )
 
                 val generalAmountOfMonths = StatisticsAccessor.getAmountMonthsOfUse()
-
                 val categoryIds = StatisticsAccessor.getListCategoryIds()
                 val mapCategoryAvgSum = mutableMapOf<Int, Int>()
                 categoryIds.forEach {
@@ -67,9 +68,6 @@ class StatisticsViewModel(
                 state.value = state.value?.copy(
                     mapCategoryAvgSum = mapCategoryAvgSum
                 )
-
-                val profitStatItems = getStatisticsItems(CategoryType.CATEGORY_PROFIT)
-                val costsStatItems = getStatisticsItems(CategoryType.CATEGORY_COSTS)
 
                 val sumGeneralCosts = StatisticsAccessor.getSumGeneralCosts()
                 val sumGeneralProfit = StatisticsAccessor.getSumGeneralProfit()
@@ -93,15 +91,24 @@ class StatisticsViewModel(
                     sumAvgMonthlyBalance = sumAvgMonthlyBalance
                 )
 
+                val profitStatItems = async { getStatisticsItems(CategoryType.CATEGORY_PROFIT) }
+                val costsStatItems = async { getStatisticsItems(CategoryType.CATEGORY_COSTS) }
+
                 val costItems = mutableListOf<Item>(statCostsInfoItem)
-                costItems.addAll(costsStatItems)
+                costItems.addAll(costsStatItems.await())
 
                 val profitItems = mutableListOf<Item>(statProfitInfoItem)
-                profitItems.addAll(profitStatItems)
+                profitItems.addAll(profitStatItems.await())
 
                 state.value = state.value?.copy(
                     profitStatItems = profitItems,
-                    costsStatItems = costItems
+                    costsStatItems = costItems,
+                    isContentLoaded = true
+                )
+            } else {
+                state.value = state.value?.copy(
+                    hasNoRecords = true,
+                    isContentLoaded = true
                 )
             }
         }
@@ -147,12 +154,14 @@ class StatisticsViewModel(
         return withContext(Dispatchers.IO) {
             val items = mutableListOf<Item>()
 
-            val categories = when (categoryType) {
-                CategoryType.CATEGORY_COSTS -> categoryRepository.allCostsCategory.first()
-                CategoryType.CATEGORY_PROFIT -> categoryRepository.allProfitCategory.first()
+            val categories = async {
+                when (categoryType) {
+                    CategoryType.CATEGORY_COSTS -> categoryRepository.allCostsCategory.first()
+                    else -> categoryRepository.allProfitCategory.first()
+                }
             }
 
-            categories.forEach {
+            categories.await().forEach {
                 val barEntries = getEntriesForCategoryChart(it)
                 if (barEntries.isNotEmpty()) {
                     val item = CategoryChartItem(

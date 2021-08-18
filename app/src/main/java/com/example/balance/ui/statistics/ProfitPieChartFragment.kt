@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.balance.R
 import com.example.balance.databinding.FragmentProfitPieChartBinding
@@ -50,6 +51,7 @@ class ProfitPieChartFragment : Fragment(R.layout.fragment_profit_pie_chart) {
                     "Больше всего получено по категории \"${it.maxProfitCategory}\""
                 else ""
             updateProfitPieChart(entries)
+            mBinding?.preloaderProfitPieChart?.isVisible = !it.isContentLoaded
         })
     }
 

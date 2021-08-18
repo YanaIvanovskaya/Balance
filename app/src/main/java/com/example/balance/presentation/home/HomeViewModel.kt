@@ -51,7 +51,7 @@ data class HomeState(
 }
 
 class HomeViewModel(
-    balanceRepository: BalanceRepository,
+    val balanceRepository: BalanceRepository,
     val recordRepository: RecordRepository,
     val templateRepository: TemplateRepository,
     val categoryRepository: CategoryRepository
@@ -189,6 +189,9 @@ class HomeViewModel(
 
         if (balanceIsLoaded) {
             state.value = state.value?.copy(cash = cash, cards = cards)
+            viewModelScope.launch(Dispatchers.IO) {
+                balanceRepository.saveBalance(cash, cards)
+            }
         }
     }
 

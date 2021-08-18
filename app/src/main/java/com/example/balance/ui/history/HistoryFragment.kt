@@ -28,8 +28,8 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
 
     private var mBinding: FragmentHistoryBinding? = null
     private lateinit var mNavController: NavController
-    private lateinit var historyRecyclerView: RecyclerView
-    private lateinit var historyAdapter: HistoryAdapter
+    private lateinit var mHistoryRecyclerView: RecyclerView
+    private lateinit var mHistoryAdapter: HistoryAdapter
     private val mViewModel by getViewModel {
         HistoryViewModel(
             recordRepository = BalanceApp.recordRepository,
@@ -45,16 +45,16 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     ): View {
         val binding = FragmentHistoryBinding.inflate(inflater, container, false)
         mBinding = binding
-        historyRecyclerView = binding.historyRecyclerView
+        mHistoryRecyclerView = binding.historyRecyclerView
         mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        historyAdapter = HistoryAdapter(
-            onLongItemClickListener = { recordId, isImportant ->
-                showRecordMenu(recordId, isImportant)
+        mHistoryAdapter = HistoryAdapter(
+            onLongItemClickListener = { recordId, position, isImportant ->
+                showRecordMenu(recordId, position, isImportant)
                 true
             })
         mViewModel.state.observe(viewLifecycleOwner, ::render)
@@ -66,29 +66,29 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         when (state.currentChip) {
             0 -> {
                 mBinding?.chipAllHistory?.isChecked = true
-                historyAdapter.dataSet = state.allRecords
+                mHistoryAdapter.dataSet = state.allRecords
             }
             1 -> {
                 mBinding?.chipProfitHistory?.isChecked = true
-                historyAdapter.dataSet = state.profitRecords
+                mHistoryAdapter.dataSet = state.profitRecords
             }
             2 -> {
                 mBinding?.chipCostsHistory?.isChecked = true
-                historyAdapter.dataSet = state.costsRecords
+                mHistoryAdapter.dataSet = state.costsRecords
             }
             3 -> {
                 mBinding?.chipImportantHistory?.isChecked = true
-                historyAdapter.dataSet = state.importantRecords
+                mHistoryAdapter.dataSet = state.importantRecords
             }
         }
-        historyAdapter.notifyDataSetChanged()
+        mHistoryAdapter.notifyDataSetChanged()
         mBinding?.preloaderHistory?.visibility =
             if (state.hasNoRecords || state.isContentLoaded) View.GONE
             else View.VISIBLE
     }
 
     private fun initRecyclerView() {
-        historyRecyclerView.layoutManager =
+        mHistoryRecyclerView.layoutManager =
             LinearLayoutManager(
                 context,
                 LinearLayoutManager.VERTICAL,
@@ -96,8 +96,9 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
             )
         ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)
             ?.let { DividerItemDecoration(it) }
-            ?.let { historyRecyclerView.addItemDecoration(it) }
-        historyRecyclerView.adapter = historyAdapter
+            ?.let { mHistoryRecyclerView.addItemDecoration(it) }
+        mHistoryAdapter.setHasStableIds(true)
+        mHistoryRecyclerView.adapter = mHistoryAdapter
     }
 
     private fun initChips() {
@@ -123,7 +124,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
     }
 
-    private fun showRecordMenu(recordId: Int, isImportant: Boolean) {
+    private fun showRecordMenu(recordId: Int, position: Int, isImportant: Boolean) {
         val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_record_menu)
         val unpin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)
@@ -137,6 +138,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
         delete?.setOnClickListener {
             mViewModel.removeRecord(recordId)
+            mHistoryAdapter.notifyItemRemoved(position)
             bottomSheetDialog.dismiss()
         }
         if (isImportant) {
@@ -147,6 +149,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
         unpin?.setOnClickListener {
             mViewModel.onSetImportant(recordId, isImportant)
+            mHistoryAdapter.notifyItemChanged(position)
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.balance.Case
 import com.example.balance.R
@@ -22,6 +23,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import java.util.Collections.max
 
 class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
 
@@ -64,6 +66,7 @@ class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
         createGeneralBarChart()
         mViewModel.state.observe(viewLifecycleOwner, {
             updateGeneralBarChart(it.entries)
+            mBinding?.preloaderGeneralChart?.isVisible = !it.isContentLoaded
         })
     }
 
@@ -130,10 +133,11 @@ class GeneralChartFragment : Fragment(R.layout.fragment_general_chart) {
                 ResourcesCompat.getColor(resources, R.color.green_200, null)
             )
         }
-        val data = BarData(set)
-        mGeneralBarChart.data = data
-        mGeneralBarChart.invalidate()
-        mGeneralBarChart.setVisibleXRangeMaximum(6f)
+        mGeneralBarChart.apply {
+            data = BarData(set)
+            setVisibleXRangeMaximum(6f)
+            moveViewToX(max(barEntries.map { it.x }))
+        }
     }
 
 }

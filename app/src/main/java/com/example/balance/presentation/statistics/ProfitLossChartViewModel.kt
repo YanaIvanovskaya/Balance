@@ -7,18 +7,21 @@ import com.example.balance.data.StatisticsAccessor
 import com.example.balance.data.record.RecordType
 import com.github.mikephil.charting.data.BarEntry
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 data class ProfitLossChartState(
     val selectedBar: Int,
-    val entries: List<BarEntry>
+    val entries: List<BarEntry>,
+    val isContentLoaded: Boolean
 ) {
 
     companion object {
         fun default() = ProfitLossChartState(
             selectedBar = 0,
-            entries = listOf()
+            entries = listOf(),
+            isContentLoaded = false
         )
     }
 
@@ -30,9 +33,11 @@ class ProfitLossChartViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            val entries = getEntries()
+            val entries = async { getEntries() }
+            entries.join()
             state.value = state.value?.copy(
-                entries = entries
+                entries = entries.await(),
+                isContentLoaded = true
             )
         }
     }

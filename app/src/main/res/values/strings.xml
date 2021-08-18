@@ -81,5 +81,7 @@
     <string name="it_is_time_to_count_the_money">Время посчитать свои деньги)</string>
     <string name="be_calm_about_your_money">Будь спокоен за свои деньги</string>
     <string name="statistics_will_be_here_soon">Скоро тут будет на что посмотреть)</string>
+    <string name="access_recovery">Восстановление доступа</string>
+    <string name="message_access_recovery">При нажатии на кнопку \"Продолжить\" все ваши записи будут безвозвратно удалены.\nБаланс и категории не будут изменены.</string>
 
 </resources>

@@ -83,29 +83,27 @@ class CategoryChartItem(
                 chart.getTransformer(AxisDependency.LEFT)
             )
         )
-        val barChartRender = RoundedBarChartRenderer(
-            chart,
-            chart.animator,
-            chart.viewPortHandler
-        )
-        barChartRender.setRadius(20)
-        chart.renderer = barChartRender
+        chart.renderer =
+            RoundedBarChartRenderer(
+                chart,
+                chart.animator,
+                chart.viewPortHandler
+            ).apply { setRadius(20) }
         barEntries.forEach { _ ->
             when (category.type) {
                 CategoryType.CATEGORY_COSTS -> colors.add(red200)
                 else -> colors.add(green200)
             }
         }
-        val set = BarDataSet(barEntries, "")
-        set.colors = colors
-        set.valueFormatter = BarValueFormatter()
-        val data = BarData(set)
-        data.setValueTextSize(12f)
-        chart.data = data
-        chart.invalidate()
-        chart.setVisibleXRangeMaximum(6f)
-        chart.scrollX = (max(barEntries.map{it.x}).toInt())
-
+        val set = BarDataSet(barEntries, "").apply {
+            this.colors = colors
+            valueFormatter = BarValueFormatter()
+        }
+        chart.apply {
+            data = BarData(set).apply { setValueTextSize(12f) }
+            setVisibleXRangeMaximum(6f)
+            moveViewToX(max(barEntries.map { it.x }))
+        }
     }
 
 }

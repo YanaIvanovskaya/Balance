@@ -14,6 +14,8 @@ class CategoryRepository(private val categoryDao: CategoryDao) {
 
     suspend fun insert(category: Category) = categoryDao.insert(category)
 
+    suspend fun update(id: Int, name: String) = categoryDao.update(id, name)
+
     suspend fun deleteCategoryById(id: Int) = categoryDao.deleteCategoryById(id)
 
     fun getId(name: String) = categoryDao.getId(name)

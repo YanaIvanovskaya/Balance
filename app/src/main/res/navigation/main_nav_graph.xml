@@ -49,8 +49,8 @@
 
         <argument
             android:name="currentRecord"
-            app:argType="integer"
-            android:defaultValue="-1"/>
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
 
     <fragment
@@ -64,8 +64,8 @@
 
         <argument
             android:name="currentRecord"
-            app:argType="integer"
-            android:defaultValue="-1"/>
+            android:defaultValue="-1"
+            app:argType="integer" />
 
     </fragment>
 

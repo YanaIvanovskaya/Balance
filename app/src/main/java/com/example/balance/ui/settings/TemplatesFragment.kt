@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentMyTemplatesBinding
+import com.example.balance.presentation.getViewModel
 import com.example.balance.presentation.settings.TemplateState
 import com.example.balance.presentation.settings.TemplatesViewModel
-import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.recycler_view.DividerItemDecoration
 import com.example.balance.ui.recycler_view.SwipeToDeleteCallback
 import com.example.balance.ui.recycler_view.adapter.TemplateAdapter
@@ -70,7 +70,7 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
             ?.let { mTemplateRecyclerView.addItemDecoration(it) }
         mTemplateRecyclerView.adapter = mTemplateAdapter
 
-        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+        val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
                 viewHolder.itemView.visibility = View.GONE
@@ -118,8 +118,21 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
                 undoSnackBar.show()
             }
         }
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(mTemplateRecyclerView)
+        val itemDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
+        itemDeleteHelper.attachToRecyclerView(mTemplateRecyclerView)
+
+//        val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
+//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+//                if (viewHolder is ViewHolderFactory.TemplateViewHolder) {
+//                    val position = viewHolder.bindingAdapterPosition
+//                    val editedTemplate = mTemplateAdapter.dataSet[position] as TemplateItem
+//                }
+//            }
+//        }
+//        val itemEditHelper = ItemTouchHelper(swipeEditHandler)
+//        itemEditHelper.attachToRecyclerView(mTemplateRecyclerView)
+
+
     }
 
     private fun render(state: TemplateState) {

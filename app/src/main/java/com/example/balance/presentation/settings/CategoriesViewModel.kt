@@ -98,19 +98,27 @@ class CategoriesViewModel(
         }
     }
 
+    fun onEditCategory(categoryId: Int, categoryName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            categoryRepository.update(
+                id = categoryId,
+                name = categoryName
+            )
+        }
+    }
+
     fun removeCategory(categoryId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             categoryRepository.deleteCategoryById(categoryId)
             val templatesWithLink =
                 templateRepository.allTemplates.first()
                     .filter {
-                        recordRepository.getRecordById(it.recordId).first().categoryId == categoryId
+                        recordRepository.getRecordById(it.recordId)
+                            .first().categoryId == categoryId
                     }
-            if (templatesWithLink.isNotEmpty()) {
-                templatesWithLink.forEach {
-                    templateRepository.deleteTemplateById(it.id)
-                }
-            }
+            templatesWithLink
+                .takeIf { it.isNotEmpty() }
+                ?.forEach { templateRepository.deleteTemplateById(it.id) }
         }
     }
 

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.balance.R
 import com.example.balance.databinding.FragmentCostsPieChartBinding
@@ -50,6 +51,7 @@ class CostsPieChartFragment : Fragment(R.layout.fragment_costs_pie_chart) {
                     "Больше всего потрачено на категорию \"${it.maxCostsCategory}\""
                 else ""
             updateCostsPieChart(entries)
+            mBinding?.preloaderCostsPieChart?.isVisible = !it.isContentLoaded
         })
     }
 

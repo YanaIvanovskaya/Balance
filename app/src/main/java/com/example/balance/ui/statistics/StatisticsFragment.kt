@@ -11,8 +11,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.balance.BalanceApp
 import com.example.balance.R
 import com.example.balance.databinding.FragmentStatisticsBinding
-import com.example.balance.presentation.StatisticsState
-import com.example.balance.presentation.StatisticsViewModel
+import com.example.balance.presentation.statistics.StatisticsState
+import com.example.balance.presentation.statistics.StatisticsViewModel
 import com.example.balance.presentation.getViewModel
 
 class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
@@ -92,9 +92,11 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
     }
 
     private fun render(state: StatisticsState) {
-        mBinding?.frameNoStatistics?.isVisible = state.hasNoRecords
-        mBinding?.chipGroup?.isVisible = !state.hasNoRecords
-        mBinding?.frame?.isVisible = !state.hasNoRecords
+        if (state.isContentLoaded) {
+            mBinding?.frameNoStatistics?.isVisible = state.hasNoRecords
+            mBinding?.chipGroup?.isVisible = !state.hasNoRecords
+            mBinding?.frame?.isVisible = !state.hasNoRecords
+        }
     }
 
     override fun onDestroyView() {

@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RadioButton
+import android.widget.RadioGroup
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.doAfterTextChanged
@@ -94,7 +96,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
             ?.let { mCategoryRecyclerView.addItemDecoration(it) }
         mCategoryRecyclerView.adapter = mCategoryAdapter
 
-        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+        val swipeToDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (viewHolder is ViewHolderFactory.CategoryViewHolder) {
                     val position = viewHolder.bindingAdapterPosition
@@ -142,39 +144,70 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
                 }
             }
         }
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(mCategoryRecyclerView)
+        val itemDeleteHelper = ItemTouchHelper(swipeToDeleteHandler)
+        itemDeleteHelper.attachToRecyclerView(mCategoryRecyclerView)
+
+        val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                if (viewHolder is ViewHolderFactory.CategoryViewHolder) {
+                    val position = viewHolder.bindingAdapterPosition
+                    val editedCategory = mCategoryAdapter.dataSet[position] as CategoryItem
+                    showAddCategoryBottomSheet(categoryItem = editedCategory)
+                }
+            }
+        }
+        val itemEditHelper = ItemTouchHelper(swipeEditHandler)
+        itemEditHelper.attachToRecyclerView(mCategoryRecyclerView)
     }
 
 
-    private fun showAddCategoryBottomSheet() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
+    private fun showAddCategoryBottomSheet(categoryItem: CategoryItem? = null) {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
         val profitCategoryNames = mViewModel.getProfitCategoryNames()
         val costsCategoryNames = mViewModel.getCostsCategoryNames()
-        val categoryCosts =
-            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_costs)
-        val categoryProfit =
-            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_profit)
         val categoryName =
             bottomSheetDialog.findViewById<TextInputEditText>(R.id.text_category_name)
         val buttonSave = bottomSheetDialog.findViewById<Button>(R.id.button_save_category)
         val textInputLayout =
             bottomSheetDialog.findViewById<TextInputLayout>(R.id.text_input_layout)
+        val categoryCosts =
+            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_costs)
+        val categoryProfit =
+            bottomSheetDialog.findViewById<RadioButton>(R.id.radioButton_category_profit)
 
-        when (mViewModel.state.value?.currentChip) {
-            1 -> categoryProfit?.isChecked = true
-            else -> categoryCosts?.isChecked = true
+        when (categoryItem) {
+            null -> {
+                when (mViewModel.state.value?.currentChip) {
+                    1 -> categoryProfit?.isChecked = true
+                    else -> categoryCosts?.isChecked = true
+                }
+            }
+            else -> {
+                when (categoryItem.categoryType) {
+                    CategoryType.CATEGORY_PROFIT -> categoryProfit?.isChecked = true
+                    else -> categoryCosts?.isChecked = true
+                }
+                bottomSheetDialog
+                    .findViewById<TextView>(R.id.title_category_creation)
+                    ?.text = "Редактирование категории"
+                categoryName?.setText(categoryItem.name)
+                buttonSave?.text = "Сохранить изменения"
+                bottomSheetDialog
+                    .findViewById<RadioGroup>(R.id.category_type_radioGroup)
+                    ?.visibility = View.GONE
+            }
         }
 
         var currentCategoryName = ""
+
         categoryName?.doAfterTextChanged {
             currentCategoryName = it.toString().trim()
             val alreadyInCosts =
                 categoryCosts?.isChecked == true && it.toString().trim() in costsCategoryNames
             val alreadyInProfits =
                 categoryProfit?.isChecked == true && it.toString().trim() in profitCategoryNames
-            if (alreadyInCosts || alreadyInProfits) {
+            if ((alreadyInCosts || alreadyInProfits) && categoryItem == null) {
                 textInputLayout?.helperText = "Такая категория уже существует"
                 buttonSave?.isEnabled = false
             } else if (categoryName.text?.trim()?.isEmpty() == true) {
@@ -186,11 +219,16 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
             }
         }
         buttonSave?.setOnClickListener {
-            val type = when (categoryCosts?.isChecked ?: false) {
-                true -> CategoryType.CATEGORY_COSTS
-                false -> CategoryType.CATEGORY_PROFIT
+            when (categoryItem) {
+                null -> {
+                    val type = when (categoryCosts?.isChecked ?: false) {
+                        true -> CategoryType.CATEGORY_COSTS
+                        false -> CategoryType.CATEGORY_PROFIT
+                    }
+                    mViewModel.onSaveNewCategory(currentCategoryName, type)
+                }
+                else -> mViewModel.onEditCategory(categoryItem.id, currentCategoryName)
             }
-            mViewModel.onSaveNewCategory(currentCategoryName, type)
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()

@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.balance.ui.recycler_view.ViewHolderFactory
 
 class DateItem(
-    private val date: String,
+    val date: String,
 ) : Item {
 
     override fun getItemViewType(): Int = Item.DATE_ITEM_TYPE

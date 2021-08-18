@@ -15,10 +15,30 @@
             android:id="@+id/action_passcodeEntryFragment_to_bottomNavigationFragment"
             app:destination="@id/bottomNavigationFragment" />
 
+        <action
+            android:id="@+id/action_passcodeEntryFragment_to_passcodeUpdatingFragment"
+            app:destination="@id/passcodeUpdatingFragment" />
+
         <argument
             android:name="screenType"
-            app:argType="com.example.balance.presentation.PasscodeScreenType"
-            android:defaultValue="AUTH"/>
+            android:defaultValue="AUTH"
+            app:argType="com.example.balance.presentation.PasscodeScreenType" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/passcodeUpdatingFragment"
+        android:name="com.example.balance.ui.auth.PasscodeEntryFragment"
+        android:label="passcodeUpdatingFragment"
+        tools:layout="@layout/fragment_passcode">
+
+        <action
+            android:id="@+id/action_passcodeUpdatingFragment_to_bottomNavigationFragment"
+            app:destination="@id/bottomNavigationFragment" />
+
+        <argument
+            android:name="screenType"
+            android:defaultValue="SETTINGS"
+            app:argType="com.example.balance.presentation.PasscodeScreenType" />
 
     </fragment>
 

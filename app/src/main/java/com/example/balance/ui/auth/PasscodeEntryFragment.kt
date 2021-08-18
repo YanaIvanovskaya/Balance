@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.res.ResourcesCompat
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -24,6 +24,8 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
     private val mViewModel by getViewModel {
         PasscodeEntryViewModel(
             dataStore = BalanceApp.dataStore,
+            recordRepository = BalanceApp.recordRepository,
+            templateRepository = BalanceApp.templateRepository,
             screenType = args.screenType
         )
     }
@@ -58,9 +60,16 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
                 mBinding?.buttonNext?.visibility = View.INVISIBLE
                 mBinding?.titlePasscodeEntry?.text =
                     requireContext().resources.getString(R.string.enter_the_passcode)
+                mBinding?.viewForgotThePasscode?.visibility = View.VISIBLE
             }
-            PasscodeScreenType.ONBOARDING -> Unit
-            PasscodeScreenType.SETTINGS -> Unit
+            PasscodeScreenType.ONBOARDING -> {
+                mBinding?.viewForgotThePasscode?.visibility = View.INVISIBLE
+            }
+            PasscodeScreenType.SETTINGS -> {
+                mBinding?.titlePasscodeEntry?.text = "Придумайте новый пароль"
+                mBinding?.buttonNext?.visibility = View.INVISIBLE
+                mBinding?.viewForgotThePasscode?.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -77,7 +86,7 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
         mBinding?.char5?.isChecked = passcodeLength == 5
 
         when (args.screenType) {
-            PasscodeScreenType.ONBOARDING -> {
+            PasscodeScreenType.ONBOARDING, PasscodeScreenType.SETTINGS -> {
                 mBinding?.buttonNext?.visibility = when (state.canComplete) {
                     true -> View.VISIBLE
                     false -> View.INVISIBLE
@@ -101,13 +110,27 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
                         View.VISIBLE
                     } else View.INVISIBLE
             }
-            else -> Unit
         }
     }
 
     private fun onNextClick() {
         mViewModel.onSavePasscode()
-        mNavController.navigate(R.id.balanceCreationFragment)
+        when (args.screenType) {
+            PasscodeScreenType.ONBOARDING -> mNavController.navigate(R.id.balanceCreationFragment)
+            PasscodeScreenType.SETTINGS -> mNavController.navigate(R.id.bottomNavigationFragment)
+            else -> Unit
+        }
+    }
+
+    private fun onForgotPasscodeClick() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(R.layout.dialog_access_recovery)
+            .setPositiveButton("Продолжить") { _, _ ->
+                mViewModel.onAccessRecovery()
+                mNavController.navigate(R.id.passcodeUpdatingFragment)
+            }.setNegativeButton("Отмена", null)
+        val dialog = builder.create()
+        dialog.show()
     }
 
     private fun initButtons() {
@@ -130,6 +153,7 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
                 mViewModel.onNumberClick(it.text as String)
             }
         }
+        mBinding?.viewForgotThePasscode?.setOnClickListener { onForgotPasscodeClick() }
     }
 
 }
