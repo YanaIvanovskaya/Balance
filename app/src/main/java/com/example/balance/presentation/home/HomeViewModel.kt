@@ -64,42 +64,39 @@ class HomeViewModel(
 
     init {
         recordRepository.getCommonSum()
-            .distinctUntilChanged()
             .onEach {
                 val hasNoRecords = it == 0
                 state.value = state.value?.copy(hasNoRecords = hasNoRecords)
-                if (!hasNoRecords) {
-                    val sumCostsCash = withContext(Dispatchers.IO) {
-                        recordRepository.getSum(
-                            RecordType.COSTS,
-                            MoneyType.CASH
-                        ).first()
-                    }
-                    val sumProfitCash = withContext(Dispatchers.IO) {
-                        recordRepository.getSum(
-                            RecordType.PROFITS,
-                            MoneyType.CASH
-                        ).first()
-                    }
-                    val sumCostsCards = withContext(Dispatchers.IO) {
-                        recordRepository.getSum(
-                            RecordType.COSTS,
-                            MoneyType.CARDS
-                        ).first()
-                    }
-                    val sumProfitCards = withContext(Dispatchers.IO) {
-                        recordRepository.getSum(
-                            RecordType.PROFITS,
-                            MoneyType.CARDS
-                        ).first()
-                    }
-                    state.value = state.value?.copy(
-                        sumCostsCash = sumCostsCash,
-                        sumCostsCards = sumCostsCards,
-                        sumProfitCash = sumProfitCash,
-                        sumProfitCards = sumProfitCards,
-                    )
+                val sumCostsCash = withContext(Dispatchers.IO) {
+                    recordRepository.getSum(
+                        RecordType.COSTS,
+                        MoneyType.CASH
+                    ).first()
                 }
+                val sumProfitCash = withContext(Dispatchers.IO) {
+                    recordRepository.getSum(
+                        RecordType.PROFITS,
+                        MoneyType.CASH
+                    ).first()
+                }
+                val sumCostsCards = withContext(Dispatchers.IO) {
+                    recordRepository.getSum(
+                        RecordType.COSTS,
+                        MoneyType.CARDS
+                    ).first()
+                }
+                val sumProfitCards = withContext(Dispatchers.IO) {
+                    recordRepository.getSum(
+                        RecordType.PROFITS,
+                        MoneyType.CARDS
+                    ).first()
+                }
+                state.value = state.value?.copy(
+                    sumCostsCash = sumCostsCash,
+                    sumCostsCards = sumCostsCards,
+                    sumProfitCash = sumProfitCash,
+                    sumProfitCards = sumProfitCards,
+                )
                 measureBalance()
             }.launchIn(viewModelScope)
 
@@ -119,8 +116,8 @@ class HomeViewModel(
 
     fun removeRecord(recordId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            recordRepository.deleteRecordById(recordId)
             templateRepository.deleteTemplateByRecordId(recordId)
+            recordRepository.deleteRecordById(recordId)
         }
     }
 

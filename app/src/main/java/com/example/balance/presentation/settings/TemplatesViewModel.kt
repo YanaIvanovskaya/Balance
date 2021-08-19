@@ -22,7 +22,8 @@ data class TemplateState(
     val currentChip: Int,
     val commonTemplates: MutableList<Item>,
     val costsTemplates: MutableList<Item>,
-    val profitTemplates: MutableList<Item>
+    val profitTemplates: MutableList<Item>,
+    val isContentLoaded: Boolean
 
 ) {
 
@@ -31,7 +32,8 @@ data class TemplateState(
             currentChip = 0,
             commonTemplates = mutableListOf(),
             costsTemplates = mutableListOf(),
-            profitTemplates = mutableListOf()
+            profitTemplates = mutableListOf(),
+            isContentLoaded = false
         )
     }
 
@@ -58,6 +60,9 @@ class TemplatesViewModel(
                         newTemplateList,
                         recordType = RecordType.PROFITS
                     )
+                )
+                state.value = state.value?.copy(
+                    isContentLoaded = true
                 )
             }
             .launchIn(viewModelScope)
@@ -104,24 +109,24 @@ class TemplatesViewModel(
                 )
             }
         }
-        if (allTemplates.isEmpty()) {
-            allTemplates.add(
-                when (recordType) {
-                    RecordType.COSTS -> NoItemsItem(
-                        message = "Здесь будут шаблоны по расходам",
-                        enableAdd = false
-                    )
-                    RecordType.PROFITS -> NoItemsItem(
-                        message = "здесь будут шаблоны по доходам",
-                        enableAdd = false
-                    )
-                    null -> NoItemsItem(
-                        message = "Здесь будут все ваши шаблоны",
-                        enableAdd = false
-                    )
-                }
-            )
-        }
+//        if (allTemplates.isEmpty()) {
+//            allTemplates.add(
+//                when (recordType) {
+//                    RecordType.COSTS -> NoItemsItem(
+//                        message = "Здесь будут шаблоны по расходам",
+//                        enableAdd = false
+//                    )
+//                    RecordType.PROFITS -> NoItemsItem(
+//                        message = "здесь будут шаблоны по доходам",
+//                        enableAdd = false
+//                    )
+//                    null -> NoItemsItem(
+//                        message = "Здесь будут все ваши шаблоны",
+//                        enableAdd = false
+//                    )
+//                }
+//            )
+//        }
         return allTemplates
     }
 

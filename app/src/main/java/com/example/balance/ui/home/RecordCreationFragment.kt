@@ -11,6 +11,7 @@ import androidx.core.view.get
 import androidx.core.view.isVisible
 import androidx.core.view.size
 import androidx.core.widget.doAfterTextChanged
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -26,6 +27,7 @@ import com.example.balance.presentation.home.RecordCreationViewModel
 import com.example.balance.presentation.getViewModel
 import com.example.balance.toUpperFirst
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.chip.Chip
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -65,11 +67,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             event.consume { isSavingCompleted ->
                 if (isSavingCompleted) {
                     mNavController.popBackStack()
-                    Toast.makeText(
-                        requireContext(),
-                        "Сохранено",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    showSaveToast()
                 }
             }
         }
@@ -79,6 +77,14 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         initRadioButtons()
         initSwitches()
         applyChangesByArgs()
+    }
+
+    private fun showSaveToast() {
+        Toast.makeText(
+            requireContext(),
+            "Сохранено",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun applyChangesByArgs() {
@@ -111,7 +117,9 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
             MoneyType.CASH -> mBinding?.radioButtonCash?.isChecked = true
             else -> mBinding?.radioButtonCards?.isChecked = true
         }
-        mBinding?.categoryName?.setText(state.selectedCategory.toUpperFirst())
+        mBinding?.categoryName?.setText(
+            state.selectedCategory.takeIf { it.isNotEmpty() } ?: "Не выбрана"
+        )
         mBinding?.switchIsImportantRecord?.isChecked = state.isImportant
         mBinding?.switchIsTemplate?.isChecked = state.isTemplate
         mBinding?.nameTemplateTextInputLayout?.isVisible = state.isTemplate
@@ -139,6 +147,11 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
                     view.isCheckable = true
                     if (index == 0) {
                         view.isChecked = true
+                        view.setOnCheckedChangeListener { _, isChecked ->
+                            if (isChecked) {
+                                mViewModel.onDefault()
+                            }
+                        }
                     } else {
                         view.setOnCheckedChangeListener { _, isChecked ->
                             if (isChecked) {
@@ -258,6 +271,8 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         }
     }
 
+
+
     private fun showChangeCategoryBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_selection)
@@ -288,7 +303,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
     }
 
     private fun showAddCategoryBottomSheet() {
-        val bottomSheetDialog = BottomSheetDialog(requireContext(),R.style.BottomSheetDialog )
+        val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
         val profitCategoryNames = mViewModel.getProfitCategoryNames()
         val costsCategoryNames = mViewModel.getCostsCategoryNames()
@@ -301,10 +316,24 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
         val buttonSave = bottomSheetDialog.findViewById<Button>(R.id.button_save_category)
         val textInputLayout =
             bottomSheetDialog.findViewById<TextInputLayout>(R.id.text_input_layout)
-        when (mViewModel.state.value?.recordType) {
-            RecordType.PROFITS -> categoryProfit?.isChecked = true
-            RecordType.COSTS -> categoryCosts?.isChecked = true
+
+        val title = "Новая категория в " + when (mViewModel.state.value?.recordType) {
+            RecordType.PROFITS -> {
+                categoryProfit?.isChecked = true
+                "доходах"
+            }
+            else -> {
+                categoryCosts?.isChecked = true
+                "расходах"
+            }
         }
+        bottomSheetDialog
+            .findViewById<TextView>(R.id.title_category_creation)
+            ?.text = title
+        bottomSheetDialog
+            .findViewById<RadioGroup>(R.id.category_type_radioGroup)
+            ?.visibility = View.GONE
+
         var currentCategoryName = ""
         categoryName?.doAfterTextChanged {
             currentCategoryName = it.toString().trim()
@@ -329,6 +358,7 @@ class RecordCreationFragment : Fragment(R.layout.fragment_record_creation) {
                 false -> CategoryType.CATEGORY_PROFIT
             }
             mViewModel.onSaveNewCategory(currentCategoryName, type)
+            showSaveToast()
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()

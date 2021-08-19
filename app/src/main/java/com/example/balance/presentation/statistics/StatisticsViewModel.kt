@@ -91,14 +91,14 @@ class StatisticsViewModel(
                     sumAvgMonthlyBalance = sumAvgMonthlyBalance
                 )
 
-                val profitStatItems = async { getStatisticsItems(CategoryType.CATEGORY_PROFIT) }
-                val costsStatItems = async { getStatisticsItems(CategoryType.CATEGORY_COSTS) }
+                val profitStatItems = getStatisticsItems(CategoryType.CATEGORY_PROFIT)
+                val costsStatItems = getStatisticsItems(CategoryType.CATEGORY_COSTS)
 
                 val costItems = mutableListOf<Item>(statCostsInfoItem)
-                costItems.addAll(costsStatItems.await())
+                costItems.addAll(costsStatItems)
 
                 val profitItems = mutableListOf<Item>(statProfitInfoItem)
-                profitItems.addAll(profitStatItems.await())
+                profitItems.addAll(profitStatItems)
 
                 state.value = state.value?.copy(
                     profitStatItems = profitItems,
@@ -154,14 +154,13 @@ class StatisticsViewModel(
         return withContext(Dispatchers.IO) {
             val items = mutableListOf<Item>()
 
-            val categories = async {
+            val categories =
                 when (categoryType) {
                     CategoryType.CATEGORY_COSTS -> categoryRepository.allCostsCategory.first()
                     else -> categoryRepository.allProfitCategory.first()
                 }
-            }
 
-            categories.await().forEach {
+            categories.forEach {
                 val barEntries = getEntriesForCategoryChart(it)
                 if (barEntries.isNotEmpty()) {
                     val item = CategoryChartItem(

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 class CategoryRepository(private val categoryDao: CategoryDao) {
 
     val allCategories: Flow<List<Category>> = categoryDao.getAllCategories()
+    val allCategoriesWithDeleted: Flow<List<Category>> = categoryDao.getAllCategoriesWithDeleted()
 
     val allCostsCategory: Flow<List<Category>> =
         categoryDao.getCategoriesByType(CategoryType.CATEGORY_COSTS)

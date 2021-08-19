@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
@@ -53,8 +54,8 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mHistoryAdapter = HistoryAdapter(
-            onLongItemClickListener = { recordId, position, isImportant ->
-                showRecordMenu(recordId, position, isImportant)
+            onLongItemClickListener = { recordId,isImportant ->
+                showRecordMenu(recordId, isImportant)
                 true
             })
         mViewModel.state.observe(viewLifecycleOwner, ::render)
@@ -63,25 +64,44 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
     }
 
     private fun render(state: HistoryState) {
-        when (state.currentChip) {
+        mBinding?.textNoItems?.text = when (state.currentChip) {
             0 -> {
                 mBinding?.chipAllHistory?.isChecked = true
                 mHistoryAdapter.dataSet = state.allRecords
+                "Здесь будет общая история ваших записей"
             }
             1 -> {
                 mBinding?.chipProfitHistory?.isChecked = true
                 mHistoryAdapter.dataSet = state.profitRecords
+                "Здесь будет история ваших доходов"
             }
             2 -> {
                 mBinding?.chipCostsHistory?.isChecked = true
                 mHistoryAdapter.dataSet = state.costsRecords
+                "Здесь будет история ваших расходов"
             }
             3 -> {
                 mBinding?.chipImportantHistory?.isChecked = true
                 mHistoryAdapter.dataSet = state.importantRecords
+                "Здесь будет история ваших\n избранных записей"
             }
+            else -> ""
         }
+        mBinding?.imageNoItems?.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                when (state.currentChip) {
+                    0 -> R.drawable.ic_menu_history
+                    1 -> R.drawable.ic_profits
+                    2 -> R.drawable.ic_loss
+                    else -> R.drawable.ic_star
+                }, null
+            )
+        )
         mHistoryAdapter.notifyDataSetChanged()
+        val hasNoItems = mHistoryAdapter.dataSet.isEmpty()
+        mHistoryRecyclerView.visibility = if (hasNoItems) View.INVISIBLE else View.VISIBLE
+        mBinding?.frameNoItems?.isVisible = hasNoItems && state.isContentLoaded
         mBinding?.preloaderHistory?.visibility =
             if (state.hasNoRecords || state.isContentLoaded) View.GONE
             else View.VISIBLE
@@ -124,7 +144,7 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
     }
 
-    private fun showRecordMenu(recordId: Int, position: Int, isImportant: Boolean) {
+    private fun showRecordMenu(recordId: Int, isImportant: Boolean) {
         val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_record_menu)
         val unpin = bottomSheetDialog.findViewById<LinearLayout>(R.id.view_my_categories)
@@ -138,7 +158,6 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
         delete?.setOnClickListener {
             mViewModel.removeRecord(recordId)
-            mHistoryAdapter.notifyItemRemoved(position)
             bottomSheetDialog.dismiss()
         }
         if (isImportant) {
@@ -149,7 +168,6 @@ class HistoryFragment : Fragment(R.layout.fragment_history) {
         }
         unpin?.setOnClickListener {
             mViewModel.onSetImportant(recordId, isImportant)
-            mHistoryAdapter.notifyItemChanged(position)
             bottomSheetDialog.dismiss()
         }
         bottomSheetDialog.show()

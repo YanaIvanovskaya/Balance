@@ -63,24 +63,31 @@ class HistoryViewModel(
                     hasNoRecords = newRecordList.isEmpty()
                 )
                 viewModelScope.launch {
-                    val allRecords = async { mapItems(newRecordList) }
-
+                    val listCategories: List<Pair<Int, String>> =
+                        withContext(Dispatchers.IO) {
+                            categoryRepository.allCategoriesWithDeleted.first()
+                                .map { it.id to it.name }
+                        }
+                    val allRecords = async { mapItems(newRecordList, listCategories) }
                     val costsRecords = async {
                         mapItems(
                             items = newRecordList,
-                            recordType = RecordType.COSTS
+                            recordType = RecordType.COSTS,
+                            listCategories = listCategories
                         )
                     }
                     val profitRecords = async {
                         mapItems(
                             items = newRecordList,
-                            recordType = RecordType.PROFITS
+                            recordType = RecordType.PROFITS,
+                            listCategories = listCategories
                         )
                     }
                     val importantRecords = async {
                         mapItems(
                             items = newRecordList,
-                            onlyImportant = true
+                            onlyImportant = true,
+                            listCategories = listCategories
                         )
                     }
                     state.value = state.value?.copy(
@@ -118,6 +125,7 @@ class HistoryViewModel(
 
     private suspend fun mapItems(
         items: List<Record>,
+        listCategories: List<Pair<Int, String>>,
         recordType: RecordType? = null,
         onlyImportant: Boolean? = null
     ): MutableList<Item> {
@@ -152,39 +160,15 @@ class HistoryViewModel(
                             sumMoney = sumRecord,
                             recordType = record.recordType,
                             moneyType = record.moneyType,
-                            category = withContext(Dispatchers.IO) {
-                                categoryRepository.getNameById(record.categoryId).first()
-                            },
+                            category = listCategories.find {
+                                it.first == record.categoryId
+                            }?.second ?: "",
                             comment = record.comment,
                             isImportant = record.isImportant
                         )
                     )
                     currentDate = recordDate
                 }
-            }
-            if (allHistoryRecords.isEmpty()) {
-                allHistoryRecords.add(
-                    when (recordType) {
-                        RecordType.COSTS -> NoItemsItem(
-                            message = "Здесь будет история ваших расходов",
-                            enableAdd = false
-                        )
-                        RecordType.PROFITS -> NoItemsItem(
-                            message = "Здесь будет история ваших доходов",
-                            enableAdd = false
-                        )
-                        null -> when (onlyImportant) {
-                            true -> NoItemsItem(
-                                message = "Здесь будет история ваших избранных записей",
-                                enableAdd = false
-                            )
-                            else -> NoItemsItem(
-                                message = "Здесь будет общая история ваших записей",
-                                enableAdd = false
-                            )
-                        }
-                    }
-                )
             }
             allHistoryRecords
         }

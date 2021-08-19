@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:layout_marginBottom="32dp"
         android:gravity="center"
         android:orientation="vertical"
@@ -22,18 +22,30 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginBottom="20dp"
-            app:srcCompat="@drawable/ic_box" />
+            app:srcCompat="@drawable/ic_recently"
+            app:tint="@color/grey_600" />
 
         <TextView
             android:id="@+id/text_no_items"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey_800" />
+            android:layout_marginBottom="5dp"
+            android:textColor="@color/grey_600" />
 
         <Button
             android:id="@+id/button_no_items"
-            style="@style/ButtonAdd"
-            android:visibility="visible" />
+            style="@style/ButtonSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="10dp"
+            android:text="@string/add"
+            android:visibility="visible"
+            app:icon="@drawable/ic_add"
+            app:iconSize="18dp"
+            app:iconTint="@color/grey_50" />
 
     </LinearLayout>
 

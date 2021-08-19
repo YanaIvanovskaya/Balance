@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -120,37 +121,31 @@ class TemplatesFragment : Fragment(R.layout.fragment_my_templates) {
         }
         val itemDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
         itemDeleteHelper.attachToRecyclerView(mTemplateRecyclerView)
-
-//        val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
-//            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//                if (viewHolder is ViewHolderFactory.TemplateViewHolder) {
-//                    val position = viewHolder.bindingAdapterPosition
-//                    val editedTemplate = mTemplateAdapter.dataSet[position] as TemplateItem
-//                }
-//            }
-//        }
-//        val itemEditHelper = ItemTouchHelper(swipeEditHandler)
-//        itemEditHelper.attachToRecyclerView(mTemplateRecyclerView)
-
-
     }
 
     private fun render(state: TemplateState) {
-        when (state.currentChip) {
+        mBinding?.textNoTemplates?.text = when (state.currentChip) {
             0 -> {
                 mBinding?.commonTemplates?.isChecked = true
                 mTemplateAdapter.dataSet = state.commonTemplates
+                "Здесь будут все ваши шаблоны"
             }
             1 -> {
                 mBinding?.profitTemplates?.isChecked = true
                 mTemplateAdapter.dataSet = state.profitTemplates
+                "Здесь будут шаблоны по доходам"
             }
             2 -> {
                 mBinding?.costsTemplates?.isChecked = true
                 mTemplateAdapter.dataSet = state.costsTemplates
+                "Здесь будут шаблоны по расходам"
             }
+            else -> ""
         }
         mTemplateAdapter.notifyDataSetChanged()
+        val hasNoItems = mTemplateAdapter.dataSet.isEmpty()
+        mTemplateRecyclerView.visibility = if (hasNoItems) View.INVISIBLE else View.VISIBLE
+        mBinding?.frameNoItems?.isVisible = hasNoItems && state.isContentLoaded
     }
 
     private fun initButtons() {

@@ -1,5 +1,6 @@
 package com.example.balance.ui.auth
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -22,6 +23,7 @@ class StartingAppFragment : Fragment(R.layout.fragment_starting_app) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         mNavController = findNavController()
         mViewModel.events.observe(viewLifecycleOwner) { event ->
             event.consume { isNewUser ->

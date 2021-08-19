@@ -3,15 +3,13 @@ package com.example.balance.presentation.auth
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.balance.data.BalanceRepository
 import com.example.balance.data.UserDataStore
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.template.TemplateRepository
 import com.example.balance.presentation.PasscodeScreenType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 
 data class PasscodeEntryState(
     val passcode: String,
@@ -38,6 +36,7 @@ class PasscodeEntryViewModel(
     private val dataStore: UserDataStore,
     private val recordRepository: RecordRepository,
     private val templateRepository: TemplateRepository,
+    private val balanceRepository: BalanceRepository,
     screenType: PasscodeScreenType
 ) : ViewModel() {
 
@@ -97,7 +96,7 @@ class PasscodeEntryViewModel(
         savePasscodeState(newPasscode)
     }
 
-    fun onAccessRecovery() {
+    fun onAccessRecovery(callback: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val job = launch {
                 recordRepository.deleteAll()
@@ -108,7 +107,12 @@ class PasscodeEntryViewModel(
             val balanceCash = async { dataStore.balanceCash.first() }
             dataStore.saveSumCards(balanceCards.await())
             dataStore.saveSumCash(balanceCash.await())
+            balanceRepository.loadBalance()
+            withContext(Dispatchers.Main) {
+                callback()
+            }
         }
+
     }
 
 }

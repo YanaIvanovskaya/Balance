@@ -331,4 +331,20 @@ class RecordCreationViewModel(
         }
     }
 
+    fun onDefault() {
+        state.value = state.value?.copy(
+            selectedTemplatePosition = 0,
+            sumRecord = "",
+            recordType = RecordType.COSTS,
+            moneyType = MoneyType.CASH,
+            isImportant = false,
+            isTemplate = false,
+            templateName = "",
+            isValidTemplateName = false,
+            comment = "",
+            canSave = false
+        )
+
+    }
+
 }

@@ -28,8 +28,6 @@ class BalanceRepository(
         withContext(Dispatchers.IO) {
             datastore.saveBalanceCash(cash)
             datastore.saveBalanceCards(cards)
-            println(datastore.balanceCards.first())
-            println(datastore.balanceCash.first())
         }
     }
 

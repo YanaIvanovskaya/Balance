@@ -23,7 +23,8 @@ data class CategoryState(
     val currentChip: Int,
     val commonCategories: MutableList<Item>,
     val costsCategories: MutableList<Item>,
-    val profitCategories: MutableList<Item>
+    val profitCategories: MutableList<Item>,
+    val isContentLoaded: Boolean
 ) {
 
     companion object {
@@ -31,7 +32,8 @@ data class CategoryState(
             currentChip = 0,
             commonCategories = mutableListOf(),
             costsCategories = mutableListOf(),
-            profitCategories = mutableListOf()
+            profitCategories = mutableListOf(),
+            isContentLoaded = false
         )
     }
 
@@ -59,6 +61,9 @@ class CategoriesViewModel(
                         newCategoryList,
                         categoryType = CategoryType.CATEGORY_PROFIT
                     )
+                )
+                state.value = state.value?.copy(
+                    isContentLoaded = true
                 )
             }
             .launchIn(viewModelScope)
@@ -147,24 +152,6 @@ class CategoriesViewModel(
                     )
                 )
             }
-        }
-        if (allCategories.isEmpty()) {
-            allCategories.add(
-                when (categoryType) {
-                    CategoryType.CATEGORY_COSTS -> NoItemsItem(
-                        message = "Здесь будут категории расходов",
-                        enableAdd = false
-                    )
-                    CategoryType.CATEGORY_PROFIT -> NoItemsItem(
-                        message = "Здесь будут категории доходов",
-                        enableAdd = false
-                    )
-                    null -> NoItemsItem(
-                        message = "Здесь будут все ваши категории",
-                        enableAdd = false
-                    )
-                }
-            )
         }
         return allCategories
     }

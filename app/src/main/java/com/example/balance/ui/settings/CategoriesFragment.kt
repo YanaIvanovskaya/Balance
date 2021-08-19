@@ -10,6 +10,7 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -67,21 +68,29 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
     }
 
     private fun render(state: CategoryState) {
-        when (state.currentChip) {
+        mBinding?.textAddCategoryHint?.text = when (state.currentChip) {
             0 -> {
                 mBinding?.commonCategories?.isChecked = true
                 mCategoryAdapter.dataSet = state.commonCategories
+                "новую категорию"
             }
             1 -> {
                 mBinding?.profitCategories?.isChecked = true
                 mCategoryAdapter.dataSet = state.profitCategories
+                "новую категорию по доходам"
             }
             2 -> {
                 mBinding?.costsCategories?.isChecked = true
                 mCategoryAdapter.dataSet = state.costsCategories
+                "новую категорию по расходам"
             }
+            else -> ""
         }
+
         mCategoryAdapter.notifyDataSetChanged()
+        val hasNoItems = mCategoryAdapter.dataSet.isEmpty()
+        mCategoryRecyclerView.visibility = if (hasNoItems) View.INVISIBLE else View.VISIBLE
+        mBinding?.frameNoItems?.isVisible = hasNoItems && state.isContentLoaded
     }
 
     private fun initRecyclerView() {
@@ -162,7 +171,7 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
 
 
     private fun showAddCategoryBottomSheet(categoryItem: CategoryItem? = null) {
-        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val bottomSheetDialog = BottomSheetDialog(requireContext(), R.style.BottomSheetDialog)
         bottomSheetDialog.setContentView(R.layout.bottom_sheet_category_creation)
         val profitCategoryNames = mViewModel.getProfitCategoryNames()
         val costsCategoryNames = mViewModel.getCostsCategoryNames()

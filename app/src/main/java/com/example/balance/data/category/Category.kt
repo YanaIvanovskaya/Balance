@@ -36,6 +36,9 @@ interface CategoryDao {
     @Query("SELECT * FROM category_table WHERE isDeleted=0")
     fun getAllCategories(): Flow<List<Category>>
 
+    @Query("SELECT * FROM category_table")
+    fun getAllCategoriesWithDeleted(): Flow<List<Category>>
+
     @Query("SELECT * FROM category_table WHERE type = :type AND isDeleted=0")
     fun getCategoriesByType(type: CategoryType): Flow<List<Category>>
 

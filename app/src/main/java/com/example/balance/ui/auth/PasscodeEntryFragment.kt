@@ -26,6 +26,7 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
             dataStore = BalanceApp.dataStore,
             recordRepository = BalanceApp.recordRepository,
             templateRepository = BalanceApp.templateRepository,
+            balanceRepository = BalanceApp.balanceRepository,
             screenType = args.screenType
         )
     }
@@ -126,8 +127,9 @@ class PasscodeEntryFragment : Fragment(R.layout.fragment_passcode) {
         val builder = AlertDialog.Builder(requireContext())
         builder.setView(R.layout.dialog_access_recovery)
             .setPositiveButton("Продолжить") { _, _ ->
-                mViewModel.onAccessRecovery()
-                mNavController.navigate(R.id.passcodeUpdatingFragment)
+                mViewModel.onAccessRecovery {
+                    mNavController.navigate(R.id.passcodeUpdatingFragment)
+                }
             }.setNegativeButton("Отмена", null)
         val dialog = builder.create()
         dialog.show()

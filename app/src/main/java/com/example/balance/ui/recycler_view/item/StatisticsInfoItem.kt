@@ -1,6 +1,7 @@
 package com.example.balance.ui.recycler_view.item
 
 import androidx.recyclerview.widget.RecyclerView
+import com.example.balance.formatAsSum
 import com.example.balance.ui.recycler_view.ViewHolderFactory
 
 class StatCostsInfoItem(
@@ -14,9 +15,9 @@ class StatCostsInfoItem(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
         val statViewHolder = viewHolder as ViewHolderFactory.CostsStatInfoViewHolder
         statViewHolder.apply {
-            sumGeneralCostsText.text = sumGeneralCosts.toString()
-            sumAvgMonthlyCostsText.text = sumAvgMonthlyCosts.toString()
-            amountMonthlyPurchasesText.text = amountMonthlyPurchases.toString()
+            sumGeneralCostsText.text = sumGeneralCosts.formatAsSum() + " ₽"
+            sumAvgMonthlyCostsText.text = sumAvgMonthlyCosts.formatAsSum() + " ₽"
+            amountMonthlyPurchasesText.text = amountMonthlyPurchases.formatAsSum()
         }
     }
 
@@ -33,9 +34,9 @@ class StatProfitInfoItem(
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder?) {
         val statViewHolder = viewHolder as ViewHolderFactory.ProfitStatInfoViewHolder
         statViewHolder.apply {
-            sumGeneralProfitText.text = sumGeneralProfit.toString()
-            sumAvgMonthlyProfitText.text = sumAvgMonthlyProfit.toString()
-            sumAvgMonthlyBalanceText.text = sumAvgMonthlyBalance.toString()
+            sumGeneralProfitText.text = sumGeneralProfit.formatAsSum() + " ₽"
+            sumAvgMonthlyProfitText.text = sumAvgMonthlyProfit.formatAsSum() + " ₽"
+            sumAvgMonthlyBalanceText.text = sumAvgMonthlyBalance.formatAsSum() + " ₽"
         }
     }
 

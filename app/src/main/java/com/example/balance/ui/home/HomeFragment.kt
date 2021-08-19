@@ -1,5 +1,6 @@
 package com.example.balance.ui.home
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,8 +31,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var mBinding: FragmentHomeBinding? = null
     private lateinit var mNavController: NavController
-    private lateinit var homeRecyclerView: RecyclerView
-    private lateinit var homeAdapter: HomeAdapter
+    private lateinit var mHomeRecyclerView: RecyclerView
+    private lateinit var mHomeAdapter: HomeAdapter
     private val mViewModel by getViewModel {
         HomeViewModel(
             balanceRepository = BalanceApp.balanceRepository,
@@ -49,13 +50,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         mBinding = binding
         mNavController = findNavController(requireActivity(), R.id.nav_host_fragment)
-        homeRecyclerView = binding.homeRecyclerView
+        mHomeRecyclerView = binding.homeRecyclerView
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeAdapter = HomeAdapter(
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        mHomeAdapter = HomeAdapter(
             onLongItemClickListener = { recordId, isImportant ->
                 showRecordMenu(recordId, isImportant)
                 true
@@ -63,8 +65,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             onClickAddListener = { onAddRecordClick() }
         )
         mViewModel.allHomeRecords.observe(viewLifecycleOwner) { list ->
-            homeAdapter.dataSet = list.toMutableList()
-            homeAdapter.notifyDataSetChanged()
+            mHomeAdapter.dataSet = list.toMutableList()
+            mHomeAdapter.notifyDataSetChanged()
             mViewModel.setContentLoaded(list.isNotEmpty())
         }
         mViewModel.state.observe(viewLifecycleOwner, ::render)
@@ -102,18 +104,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun render(state: HomeState) {
-        mBinding?.preloaderHome?.visibility =
-            if (state.isContentLoaded && state.isSumLoaded) {
-                homeAdapter.updateBalance(state.cash.toString(), state.cards.toString())
-                View.GONE
-            } else {
-                View.VISIBLE
-            }
-        mBinding?.floatingButtonCreateNewRecord?.isVisible = !state.hasNoRecords
+        mHomeAdapter.updateBalance(state.cash.toString(), state.cards.toString())
+        mBinding?.preloaderHome?.isVisible = !(state.isContentLoaded && state.isSumLoaded)
+        mBinding?.floatingButtonCreateNewRecord?.isVisible = mHomeAdapter.dataSet.size > 2
     }
 
     private fun initRecyclerView() {
-        homeRecyclerView.layoutManager =
+        mHomeRecyclerView.layoutManager =
             LinearLayoutManager(
                 context,
                 LinearLayoutManager.VERTICAL,
@@ -121,8 +118,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             )
         ResourcesCompat.getDrawable(resources, R.drawable.item_divider, null)
             ?.let { DividerItemDecoration(it) }
-            ?.let { homeRecyclerView.addItemDecoration(it) }
-        homeRecyclerView.adapter = homeAdapter
+            ?.let { mHomeRecyclerView.addItemDecoration(it) }
+        mHomeRecyclerView.adapter = mHomeAdapter
     }
 
     private fun onAddRecordClick() {

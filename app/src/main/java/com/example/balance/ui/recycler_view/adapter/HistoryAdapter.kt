@@ -9,7 +9,7 @@ import com.example.balance.ui.recycler_view.item.RecordItem
 
 class HistoryAdapter(
     var dataSet: List<Item> = mutableListOf(),
-    private val onLongItemClickListener: (recordId: Int, position: Int, isImportant: Boolean) -> Boolean
+    private val onLongItemClickListener: (recordId: Int, isImportant: Boolean) -> Boolean
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun getItemViewType(position: Int): Int = dataSet[position].getItemViewType()
@@ -24,7 +24,7 @@ class HistoryAdapter(
             val recordViewHolder: ViewHolderFactory.RecordViewHolder =
                 holder as ViewHolderFactory.RecordViewHolder
             recordViewHolder.layout.setOnLongClickListener {
-                onLongItemClickListener(recordItem.id, position, recordItem.isImportant)
+                onLongItemClickListener(recordItem.id, recordItem.isImportant)
                 true
             }
         }
