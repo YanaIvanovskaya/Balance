@@ -6,8 +6,7 @@ import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.record.RecordRepository
 import com.example.balance.data.template.TemplateRepository
 import com.jakewharton.threetenabp.AndroidThreeTen
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.*
 import timber.log.Timber
 
 class BalanceApp : Application() {
@@ -34,6 +33,5 @@ class BalanceApp : Application() {
         AndroidThreeTen.init(this)
         Timber.plant(Timber.DebugTree())
     }
-
 }
 

@@ -60,7 +60,10 @@ interface CategoryDao {
     @Query("UPDATE category_table SET name=:name WHERE id=:id")
     suspend fun update(id: Int, name: String)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(category: Category)
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insert(categories: List<Category>)
 
 }

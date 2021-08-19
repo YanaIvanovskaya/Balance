@@ -78,7 +78,7 @@ class RecordCreationViewModel(
     }
 
     companion object {
-        private const val MAX_TEMPLATE_NAME_LENGTH = 15
+        private const val MAX_TEMPLATE_NAME_LENGTH = 20
         private const val MIN_TEMPLATE_NAME_LENGTH = 3
     }
 

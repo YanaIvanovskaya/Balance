@@ -240,6 +240,9 @@ class CategoriesFragment : Fragment(R.layout.fragment_my_categories) {
             }
             bottomSheetDialog.dismiss()
         }
+        bottomSheetDialog.setOnDismissListener {
+            mCategoryAdapter.notifyDataSetChanged()
+        }
         bottomSheetDialog.show()
     }
 

@@ -3,6 +3,7 @@ package com.example.balance.presentation.home
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.balance.DatabaseFill
 import com.example.balance.data.BalanceRepository
 import com.example.balance.data.category.CategoryRepository
 import com.example.balance.data.record.MoneyType
@@ -63,6 +64,8 @@ class HomeViewModel(
     private var sumCards: Int = balanceRepository.sumCards
 
     init {
+        //DatabaseFill.fill()
+
         recordRepository.getCommonSum()
             .onEach {
                 val hasNoRecords = it == 0

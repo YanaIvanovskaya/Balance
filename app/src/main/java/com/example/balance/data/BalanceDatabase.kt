@@ -12,7 +12,6 @@ import com.example.balance.data.record.RecordDao
 import com.example.balance.data.template.Template
 import com.example.balance.data.template.TemplateDao
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Database(
     entities = [Record::class, Category::class, Template::class],
@@ -27,31 +26,10 @@ abstract class BalanceDatabase : RoomDatabase() {
 
     abstract fun TemplateDao(): TemplateDao
 
-    private class BalanceDatabaseCallback(
-        private val scope: CoroutineScope
-    ) : RoomDatabase.Callback() {
+    private class BalanceDatabaseCallback : RoomDatabase.Callback() {
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            INSTANCE?.let { database ->
-                scope.launch {
-                    populateDatabase(
-                        database.RecordDao(),
-                        database.CategoryDao(),
-                        database.TemplateDao()
-                    )
-                }
-            }
-        }
-
-        suspend fun populateDatabase(
-            recordDao: RecordDao,
-            categoryDao: CategoryDao,
-            templateDao: TemplateDao
-        ) {
-            recordDao.deleteAll()
-            categoryDao.deleteAll()
-            templateDao.deleteAll()
         }
 
     }
@@ -70,7 +48,7 @@ abstract class BalanceDatabase : RoomDatabase() {
                     BalanceDatabase::class.java,
                     "balance_database"
                 )
-                    .addCallback(BalanceDatabaseCallback(scope))
+                    .addCallback(BalanceDatabaseCallback())
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
