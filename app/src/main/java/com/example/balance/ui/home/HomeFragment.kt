@@ -24,6 +24,7 @@ import com.example.balance.presentation.getViewModel
 import com.example.balance.ui.menu.BottomNavigationFragmentDirections
 import com.example.balance.ui.recycler_view.DividerItemDecoration
 import com.example.balance.ui.recycler_view.adapter.HomeAdapter
+import com.example.balance.ui.recycler_view.item.NoItemsItem
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
@@ -106,7 +107,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun render(state: HomeState) {
         mHomeAdapter.updateBalance(state.cash.toString(), state.cards.toString())
         mBinding?.preloaderHome?.isVisible = !(state.isContentLoaded && state.isSumLoaded)
-        mBinding?.floatingButtonCreateNewRecord?.isVisible = mHomeAdapter.dataSet.size > 2
+        mBinding?.floatingButtonCreateNewRecord?.isVisible =
+            mHomeAdapter.dataSet.filterIsInstance<NoItemsItem>().isEmpty()
     }
 
     private fun initRecyclerView() {
